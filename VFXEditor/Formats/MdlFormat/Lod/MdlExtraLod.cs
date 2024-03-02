@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -21,18 +21,18 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly ushort _CrestChangetMeshIndex;
         private readonly ushort _CrestChangeMeshCount;
 
-        private readonly ParsedShort Unknown1 = new( "Unknown 1" );
-        private readonly ParsedShort Unknown2 = new( "Unknown 2" );
-        private readonly ParsedShort Unknown3 = new( "Unknown 3" );
-        private readonly ParsedShort Unknown4 = new( "Unknown 4" );
-        private readonly ParsedShort Unknown5 = new( "Unknown 5" );
-        private readonly ParsedShort Unknown6 = new( "Unknown 6" );
-        private readonly ParsedShort Unknown7 = new( "Unknown 7" );
-        private readonly ParsedShort Unknown8 = new( "Unknown 8" );
-        private readonly ParsedShort Unknown9 = new( "Unknown 9" );
-        private readonly ParsedShort Unknown10 = new( "Unknown 10" );
-        private readonly ParsedShort Unknown11 = new( "Unknown 11" );
-        private readonly ParsedShort Unknown12 = new( "Unknown 12" );
+        private readonly ParsedShort Unknown1 = new( "未知 1" );
+        private readonly ParsedShort Unknown2 = new( "未知 2" );
+        private readonly ParsedShort Unknown3 = new( "未知 3" );
+        private readonly ParsedShort Unknown4 = new( "未知 4" );
+        private readonly ParsedShort Unknown5 = new( "未知 5" );
+        private readonly ParsedShort Unknown6 = new( "未知 6" );
+        private readonly ParsedShort Unknown7 = new( "未知 7" );
+        private readonly ParsedShort Unknown8 = new( "未知 8" );
+        private readonly ParsedShort Unknown9 = new( "未知 9" );
+        private readonly ParsedShort Unknown10 = new( "未知 10" );
+        private readonly ParsedShort Unknown11 = new( "未知 11" );
+        private readonly ParsedShort Unknown12 = new( "未知 12" );
 
         private readonly List<MdlMesh> LightShaftMeshes = new();
         private readonly UiDropdown<MdlMesh> LightShaftMeshView;
@@ -80,26 +80,26 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) DrawParameters();
             }
 
-            using( var tab = ImRaii.TabItem( "Light Shafts" ) ) {
+            using( var tab = ImRaii.TabItem( "光束" ) ) {
                 if( tab ) LightShaftMeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Glass" ) ) {
+            using( var tab = ImRaii.TabItem( "玻璃" ) ) {
                 if( tab ) GlassMeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Material Change" ) ) {
+            using( var tab = ImRaii.TabItem( "材质变更" ) ) {
                 if( tab ) MaterialChangeMeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Crest Change" ) ) {
+            using( var tab = ImRaii.TabItem( "纹路变更" ) ) {
                 if( tab ) CrestChangeMeshView.Draw();
             }
         }

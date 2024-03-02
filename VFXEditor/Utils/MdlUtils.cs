@@ -1,4 +1,4 @@
-using Lumina.Data.Files;
+﻿using Lumina.Data.Files;
 using Lumina.Models.Models;
 using System.Collections.Generic;
 using System.Numerics;
@@ -13,7 +13,7 @@ namespace VfxEditor.Utils {
             indexesOut = new();
             if( !Dalamud.DataManager.FileExists( localPath ) ) return false;
 
-            Dalamud.Log( "Importing MDL from: " + localPath );
+            Dalamud.Log( "导入 MDL 中: " + localPath );
 
             var file = Dalamud.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
             var mdl = new Model( file );
@@ -28,7 +28,7 @@ namespace VfxEditor.Utils {
                     var uv = v.UV;
 
                     if( pos == null || normal == null || tangent == null || color == null || uv == null ) {
-                        Dalamud.Error( "Missing model data" );
+                        Dalamud.Error( "模型数据丢失" );
                         return false;
                     }
 
@@ -42,7 +42,7 @@ namespace VfxEditor.Utils {
                     ) );
                 }
                 if( mesh.Indices.Length % 3 != 0 ) {
-                    Dalamud.Error( "Indices not multiples of 3" );
+                    Dalamud.Error( "索引数非 3 的倍数" );
                     return false;
                 }
                 for( var triangleIdx = 0; triangleIdx < ( mesh.Indices.Length / 3 ); triangleIdx++ ) {
@@ -53,7 +53,7 @@ namespace VfxEditor.Utils {
                         idxStart + mesh.Indices[idx + 2]
                    ) );
                 }
-                Dalamud.Log( "Imported MDL mesh" );
+                Dalamud.Log( "已导入 MDL 模型网格" );
             }
             return true;
         }

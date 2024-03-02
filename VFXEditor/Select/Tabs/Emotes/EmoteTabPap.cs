@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
 
                 if( papFile.Item2 == EmoteRowType.Normal ) {
                     // bt_common, per race (chara/human/{RACE}/animation/a0001/bt_common/emote/add_yes.pap)
-                    papDict.Add( "Action", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) ) ); // just a dummy node
+                    papDict.Add( "技能", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) ) ); // just a dummy node
 
                 }
                 else if( papFile.Item2 == EmoteRowType.PerJob ) {
@@ -38,7 +38,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
             DrawIcon( Selected.Icon );
             ImGui.TextDisabled( Selected.Command );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             foreach( var (subAction, subActionPaths) in Loaded ) {
@@ -46,9 +46,9 @@ namespace VfxEditor.Select.Tabs.Emotes {
                 if( !tabItem ) continue;
 
                 using var _ = ImRaii.PushId( subAction );
-                using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
+                using var child = ImRaii.Child( "子级", new Vector2( -1 ), false );
 
-                if( subActionPaths.TryGetValue( "Action", out var actionPaths ) ) {
+                if( subActionPaths.TryGetValue( "技能", out var actionPaths ) ) {
                     DrawPaths( actionPaths, $"{Selected.Name} {subAction}" );
                 }
                 else {

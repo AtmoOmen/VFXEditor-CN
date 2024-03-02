@@ -1,4 +1,4 @@
-using FFXIVClientStructs.Havok;
+﻿using FFXIVClientStructs.Havok;
 using SharpGLTF.Animations;
 using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.IO;
@@ -36,7 +36,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
-                if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "显示骨骼名称", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
             }
 
             if( Bones == null ) return;

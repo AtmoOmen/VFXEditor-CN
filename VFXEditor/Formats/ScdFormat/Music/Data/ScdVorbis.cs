@@ -1,4 +1,4 @@
-using NAudio.Vorbis;
+﻿using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
 using SharpDX.Text;
@@ -85,13 +85,13 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
             var headerOffset = Locate( DecodedData, HeaderPattern, 0, true );
             if( headerOffset == null || headerOffset.Length == 0 ) {
-                Dalamud.Error( "Could not find header" );
+                Dalamud.Error( "无法找到标题" );
             }
             var headerSize = headerOffset[0];
 
             var pageOffsets = Locate( DecodedData, PagePattern, headerSize, false );
             if( headerOffset == null || headerOffset.Length == 0 ) {
-                Dalamud.Error( "Could not find pages" );
+                Dalamud.Error( "无法找到页面" );
             }
 
             using var pageMs = new MemoryStream( DecodedData );

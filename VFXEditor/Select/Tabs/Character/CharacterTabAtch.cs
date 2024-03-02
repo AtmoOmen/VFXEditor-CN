@@ -1,9 +1,9 @@
-namespace VfxEditor.Select.Tabs.Character {
+﻿namespace VfxEditor.Select.Tabs.Character {
     public class CharacterTabAtch : CharacterTab {
         public CharacterTabAtch( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Selected.AtchPath, Selected.Name );
+            DrawPath( "路径", Selected.AtchPath, Selected.Name );
         }
     }
 }

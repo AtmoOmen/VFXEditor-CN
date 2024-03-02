@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         public MtrlMaterialParameter( MtrlFile file ) {
             File = file;
             ValueView = new( Values, () => new( "##Value" ), true );
-            Id = new( "Parameter", () => File.ShaderFile?.MaterialParameters, ( ShpkMaterialParmeter item ) => item.GetText(), ( ShpkMaterialParmeter item ) => item.Id.Value );
+            Id = new( "参数", () => File.ShaderFile?.MaterialParameters, ( ShpkMaterialParmeter item ) => item.GetText(), ( ShpkMaterialParmeter item ) => item.Id.Value );
         }
 
         public MtrlMaterialParameter( MtrlFile file, BinaryReader reader ) : this( file ) {

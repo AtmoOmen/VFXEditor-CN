@@ -1,4 +1,4 @@
-using Lumina.Data;
+﻿using Lumina.Data;
 using Lumina.Data.Parsing.Tex;
 using System;
 using System.Collections.Generic;
@@ -325,21 +325,21 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SavePngDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
                 if( !ok ) return;
                 SaveAsPng( res );
             } );
         }
 
         public void SaveDdsDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 SaveAsDds( res );
             } );
         }
 
         public void SaveTexDialog( string ext ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
                 if( !ok ) return;
                 File.WriteAllBytes( res, GetAllData() );
             } );

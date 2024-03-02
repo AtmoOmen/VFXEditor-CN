@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using ImPlotNET;
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
             if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 if( IsColor ) ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
-                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
+                ImPlot.SetupAxes( "帧", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
 
                 if( Keys.Count > 0 ) {
@@ -164,12 +164,12 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( Type == CurveType.Angle ) {
-                if( ImGui.RadioButton( "Radians", !Plugin.Configuration.UseDegreesForAngles ) ) {
+                if( ImGui.RadioButton( "弧度", !Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = false;
                     Plugin.Configuration.Save();
                 }
                 ImGui.SameLine();
-                if( ImGui.RadioButton( "Degrees", Plugin.Configuration.UseDegreesForAngles ) ) {
+                if( ImGui.RadioButton( "度", Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = true;
                     Plugin.Configuration.Save();
                 }
@@ -182,20 +182,20 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Copy", Keys.Count > 0, true ) ) {
+                if( UiUtils.DisabledButton( "复制", Keys.Count > 0, true ) ) {
                     CopiedKeys.Clear();
                     foreach( var key in Keys ) CopiedKeys.Add( key.CopyPasteData );
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) {
+                if( UiUtils.DisabledButton( "粘贴", CopiedKeys.Count > 0, true ) ) {
                     var commands = new List<ICommand>();
                     foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
                     CommandManager.Add( new CompoundCommand( commands, Update ) );
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( "Clear", true ) ) {
+                if( UiUtils.RemoveButton( "清除", true ) ) {
                     CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, new List<AvfxCurveKey>(), Update ) );
                 }
             }
@@ -208,28 +208,28 @@ namespace VfxEditor.AvfxFormat {
                 var color = UiUtils.PARSED_GREEN;
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
 
-                ImGui.TextColored( color, "Ctrl+Left Click" );
+                ImGui.TextColored( color, "Ctrl + 左键" );
                 ImGui.SameLine();
-                ImGui.Text( "to add a new point" );
+                ImGui.Text( "以添加一个新的点" );
 
-                ImGui.TextColored( color, "Left Click" );
+                ImGui.TextColored( color, "单击左键" );
                 ImGui.SameLine();
-                ImGui.Text( "to selected a point" );
+                ImGui.Text( "以选择一个点" );
 
                 ImGui.Text( "Hold" );
                 ImGui.SameLine();
-                ImGui.TextColored( color, "Shift" );
+                ImGui.TextColored( color, "按住 Shift 键" );
                 ImGui.SameLine();
-                ImGui.Text( "to select multiple points" );
+                ImGui.Text( "以多选点" );
 
                 ImGui.EndTooltip();
             }
         }
 
         private void DrawWrongOrder() {
-            ImGui.TextColored( UiUtils.RED_COLOR, "POINTS ARE IN THE WRONG ORDER" );
+            ImGui.TextColored( UiUtils.RED_COLOR, "点的顺序错误" );
             ImGui.SameLine();
-            if( UiUtils.RemoveButton( "Sort", true ) ) {
+            if( UiUtils.RemoveButton( "排序", true ) ) {
                 var sorted = new List<AvfxCurveKey>( Keys );
                 sorted.Sort( ( x, y ) => x.Time.Value.CompareTo( y.Time.Value ) );
                 CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, sorted, Update ) );

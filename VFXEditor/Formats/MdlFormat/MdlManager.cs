@@ -1,12 +1,12 @@
-using VfxEditor.FileManager;
+﻿using VfxEditor.FileManager;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat {
     public unsafe class MdlManager : FileManager<MdlDocument, MdlFile, WorkspaceMetaBasic> {
         public MdlManager() : base( "Mdl Editor", "Mdl" ) {
-            SourceSelect = new MdlSelectDialog( "Mdl Select [LOADED]", this, true );
-            ReplaceSelect = new MdlSelectDialog( "Mdl Select [REPLACED]", this, false );
+            SourceSelect = new MdlSelectDialog( "选择文件 [加载]", this, true );
+            ReplaceSelect = new MdlSelectDialog( "选择文件 [替换]", this, false );
         }
 
         protected override MdlDocument GetNewDocument() => new( this, NewWriteLocation );

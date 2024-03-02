@@ -1,13 +1,13 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.Formats.SkpFormat.Slope {
     public class SkpSlope {
-        private readonly ParsedInt Unknown1 = new( "Unknown 1" );
-        private readonly ParsedInt Unknown2 = new( "Unknown 2" );
-        private readonly ParsedFloat3 CenterOffset = new( "Center Offset" );
+        private readonly ParsedInt Unknown1 = new( "未知 1" );
+        private readonly ParsedInt Unknown2 = new( "未知 2" );
+        private readonly ParsedFloat3 CenterOffset = new( "中心偏移" );
 
         private readonly List<SkpSlopePoint> Points = new();
         private readonly CollapsingHeaders<SkpSlopePoint> PointView;

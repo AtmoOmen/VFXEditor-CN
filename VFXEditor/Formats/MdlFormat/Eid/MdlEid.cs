@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
@@ -6,11 +6,11 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Element {
     public class MdlEid : IUiItem {
-        public readonly ParsedUInt ElementId = new( "Bind Point Id" );
-        public readonly ParsedString ParentBone = new( "Parent Bone" ); // chara/weapon/w2366/obj/body/b0001/model/w2366b0001.mdl
+        public readonly ParsedUInt ElementId = new( "绑定点 ID" );
+        public readonly ParsedString ParentBone = new( "父级骨骼" ); // chara/weapon/w2366/obj/body/b0001/model/w2366b0001.mdl
 
-        private readonly ParsedFloat3 Translation = new( "Translation" );
-        private readonly ParsedFloat3 Rotation = new( "Rotation" );
+        private readonly ParsedFloat3 Translation = new( "平移" );
+        private readonly ParsedFloat3 Rotation = new( "旋转" );
 
         public MdlEid() { }
 

@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
@@ -51,7 +51,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
-                    FileBrowserManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
+                    FileBrowserManager.OpenFileDialog( "选择文件", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
                         SklbReplaced = false;
                         OnUpdate.Invoke( SimpleSklb.LoadFromLocal( res ) );

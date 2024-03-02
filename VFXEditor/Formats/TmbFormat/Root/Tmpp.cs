@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
@@ -11,8 +11,8 @@ namespace VfxEditor.TmbFormat {
         public override int ExtraSize => 0;
 
         public bool IsAssigned => Assigned.Value == true;
-        private readonly ParsedByteBool Assigned = new( "Use Face Library", value: false );
-        private readonly TmbOffsetString Path = new( "Face Library Path" );
+        private readonly ParsedByteBool Assigned = new( "使用面部库", value: false );
+        private readonly TmbOffsetString Path = new( "面部库路径" );
 
         public Tmpp( TmbFile file, TmbReader reader ) : base( file, reader ) {
             reader.Reader.BaseStream.Position = reader.Reader.BaseStream.Position - 8; // go back before magic and size

@@ -1,12 +1,12 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
     public class MdlTerrainShadowSubmesh : MdlSubmeshData<MdlTerrainShadowMesh> {
-        private readonly ParsedShort Unknown1 = new( "Unknown 1" );
-        private readonly ParsedShort Unknown2 = new( "Unknown 2" );
+        private readonly ParsedShort Unknown1 = new( "未知 1" );
+        private readonly ParsedShort Unknown2 = new( "未知 2" );
 
         public MdlTerrainShadowSubmesh( MdlTerrainShadowMesh parent ) : base( parent ) { }
 

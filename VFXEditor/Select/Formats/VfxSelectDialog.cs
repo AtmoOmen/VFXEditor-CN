@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
@@ -21,18 +21,18 @@ namespace VfxEditor.Select.Formats {
         public VfxSelectDialog( string id, AvfxManager manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
             GameTabs.AddRange( new List<SelectTab>() {
                 new ItemTabVfx( this, "Item" ),
-                new StatusTabVfx( this, "Status" ),
-                new ActionTabVfx( this, "Action" ),
-                new ActionTabVfxNonPlayer( this, "Non-Player Action" ),
-                new EmoteTabVfx( this, "Emote" ),
-                new ZoneTabVfx( this, "Zone" ),
-                new GimmickTab( this, "Gimmick" ),
-                new HousingTab( this, "Housing" ),
-                new NpcTabVfx( this, "Npc" ),
-                new MountTabVfx( this, "Mount" ),
-                new CutsceneTab( this, "Cutscene" ),
-                new JournalCutsceneTab( this, "Journal Cutscene" ),
-                new CommonTabVfx( this, "Common" )
+                new StatusTabVfx( this, "状态" ),
+                new ActionTabVfx( this, "技能" ),
+                new ActionTabVfxNonPlayer( this, "非玩家对象动作" ),
+                new EmoteTabVfx( this, "表情" ),
+                new ZoneTabVfx( this, "区域" ),
+                new GimmickTab( this, "机制" ),
+                new HousingTab( this, "房屋" ),
+                new NpcTabVfx( this, "NPC" ),
+                new MountTabVfx( this, "坐骑" ),
+                new CutsceneTab( this, "过场动画" ),
+                new JournalCutsceneTab( this, "可回放过场动画" ),
+                new CommonTabVfx( this, "通常" )
             } );
         }
 
@@ -48,7 +48,7 @@ namespace VfxEditor.Select.Formats {
         public override void PlayPopupItems( string path ) {
             ImGui.Separator();
 
-            if( ImGui.Selectable( "Spawn" ) ) VfxSpawn.OnSelf( path, false );
+            if( ImGui.Selectable( "生成" ) ) VfxSpawn.OnSelf( path, false );
         }
     }
 }

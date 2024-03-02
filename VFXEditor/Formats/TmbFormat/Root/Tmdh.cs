@@ -1,4 +1,4 @@
-using VfxEditor.Parsing;
+﻿using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat {
@@ -7,9 +7,9 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x10;
         public override int ExtraSize => 0;
 
-        private readonly ParsedShort Unk1 = new( "Unknown 1" );
-        private readonly ParsedShort Length = new( "Length" );
-        private readonly ParsedShort Unk3 = new( "Unknown 3" );
+        private readonly ParsedShort Unk1 = new( "未知 1" );
+        private readonly ParsedShort Length = new( "长度" );
+        private readonly ParsedShort Unk3 = new( "未知 3" );
 
         public Tmdh( TmbFile file, TmbReader reader ) : base( file, reader ) {
             Unk1.Read( reader );

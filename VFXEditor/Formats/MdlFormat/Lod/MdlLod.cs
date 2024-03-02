@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -14,8 +14,8 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
     public class MdlLod : IUiItem {
         public readonly MdlFile File;
 
-        private readonly ParsedFloat ModelRange = new( "Model Range" );
-        private readonly ParsedFloat TextureRange = new( "Texture Range" );
+        private readonly ParsedFloat ModelRange = new( "模型范围" );
+        private readonly ParsedFloat TextureRange = new( "纹理范围" );
 
         private readonly ushort _MeshIndex;
         private readonly ushort _MeshCount;
@@ -77,7 +77,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
 
             // ========= VIEWS ==============
 
-            MeshView = new( "Mesh", Meshes );
+            MeshView = new( "网格", Meshes );
             TerrainShadowView = new( "Terrain Shadow", TerrainShadows );
             WaterMeshView = new( "Water Mesh", WaterMeshes );
             ShadowMeshView = new( "Shadow Mesh", ShadowMeshes );
@@ -85,30 +85,30 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Meshes" ) ) {
+            using( var tab = ImRaii.TabItem( "网格" ) ) {
                 if( tab ) MeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Terrain Shadows" ) ) {
+            using( var tab = ImRaii.TabItem( "地形阴影" ) ) {
                 if( tab ) TerrainShadowView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Water" ) ) {
+            using( var tab = ImRaii.TabItem( "水" ) ) {
                 if( tab ) WaterMeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Shadows" ) ) {
+            using( var tab = ImRaii.TabItem( "阴影" ) ) {
                 if( tab ) ShadowMeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Vertical Fog" ) ) {
+            using( var tab = ImRaii.TabItem( "垂直雾" ) ) {
                 if( tab ) VerticalFogMeshView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) {
                     ModelRange.Draw();
                     TextureRange.Draw();

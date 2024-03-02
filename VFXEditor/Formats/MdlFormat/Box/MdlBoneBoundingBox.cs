@@ -1,9 +1,9 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.MdlFormat.Box {
     public class MdlBoneBoundingBox : MdlBoundingBox {
-        public readonly ParsedString Name = new( "Name" );
+        public readonly ParsedString Name = new( "名称" );
 
         public MdlBoneBoundingBox() : base() { }
 

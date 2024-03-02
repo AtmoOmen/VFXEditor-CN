@@ -1,4 +1,4 @@
-namespace VfxEditor.AvfxFormat {
+﻿namespace VfxEditor.AvfxFormat {
     public class AvfxNodeViewAddCommand<T> : ICommand where T : AvfxNode {
         private readonly AvfxNodeRemover<T> Remover;
 

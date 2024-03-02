@@ -1,4 +1,4 @@
-using VfxEditor.Select.Tabs.Mounts;
+﻿using VfxEditor.Select.Tabs.Mounts;
 
 namespace VfxEditor.Select.Tabs.Skeleton {
     public class SkeletonTabMount : MountTab<object> {
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
             DrawIcon( Selected.Icon );
             var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Dalamud.DataManager.FileExists( path ) ) {
-                DrawPath( "Path", path, Selected.Name );
+                DrawPath( "路径", path, Selected.Name );
             }
         }
     }

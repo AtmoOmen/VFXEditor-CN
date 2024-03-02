@@ -1,23 +1,23 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C043 : TmbEntry {
         public const string MAGIC = "C043";
-        public const string DISPLAY_NAME = "Summon Weapon";
+        public const string DISPLAY_NAME = "召唤武器";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x20;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration" );
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedShort WeaponId = new( "Weapon Id" );
-        private readonly ParsedShort BodyId = new( "Body Id" );
-        private readonly ParsedInt VariantId = new( "Variant Id" );
+        private readonly ParsedInt Duration = new( "持续时间" );
+        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
+        private readonly ParsedShort WeaponId = new( "武器 ID" );
+        private readonly ParsedShort BodyId = new( "身体 ID" );
+        private readonly ParsedInt VariantId = new( "分支 ID" );
 
         public C043( TmbFile file ) : base( file ) { }
 

@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -6,7 +6,7 @@ using VfxEditor.Parsing;
 namespace VfxEditor.UldFormat.Headers {
     public class UldListHeader : UldGenericHeader {
         public readonly uint ElementCount = 0;
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk1 = new( "未知 1" );
 
         public UldListHeader( string identifier, string version ) : base( identifier, version ) { }
 

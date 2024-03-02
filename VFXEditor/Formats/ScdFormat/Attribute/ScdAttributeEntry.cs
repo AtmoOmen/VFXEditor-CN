@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -7,14 +7,14 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public class ScdAttributeEntry : ScdEntry, IUiItem {
-        public readonly ParsedByte Version = new( "Version" );
+        public readonly ParsedByte Version = new( "版本" );
         public readonly ParsedReserve Reserved = new( 1 );
-        public readonly ParsedShort AttributeId = new( "Attribute Id" );
-        public readonly ParsedShort SearchAttributeId = new( "Search Attribute Id" );
-        public readonly ParsedByte ConditionFirst = new( "First Condition" );
-        public readonly ParsedByte ArgumentCount = new( "Argument Count" );
-        public readonly ParsedInt SoundLabelLow = new( "Sound Label Low" );
-        public readonly ParsedInt SoundLabelHigh = new( "Sound Label High" );
+        public readonly ParsedShort AttributeId = new( "属性 ID" );
+        public readonly ParsedShort SearchAttributeId = new( "搜索属性 ID" );
+        public readonly ParsedByte ConditionFirst = new( "第一条件" );
+        public readonly ParsedByte ArgumentCount = new( "参数数量" );
+        public readonly ParsedInt SoundLabelLow = new( "低音标签" );
+        public readonly ParsedInt SoundLabelHigh = new( "高音标签" );
 
         public readonly AttributeResultCommand ResultFirst = new();
         public readonly AttributeExtendData Extend1 = new();
@@ -62,18 +62,18 @@ namespace VfxEditor.ScdFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             DrawResult();
-            DrawExtendData( "Extend 1", Extend1 );
-            DrawExtendData( "Extend 2", Extend2 );
-            DrawExtendData( "Extend 3", Extend3 );
-            DrawExtendData( "Extend 4", Extend4 );
+            DrawExtendData( "扩展 1", Extend1 );
+            DrawExtendData( "扩展 2", Extend2 );
+            DrawExtendData( "扩展 3", Extend3 );
+            DrawExtendData( "扩展 4", Extend4 );
         }
 
         private void DrawResult() {
-            using var tabItem = ImRaii.TabItem( "Result" );
+            using var tabItem = ImRaii.TabItem( "结果" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Result" );

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -45,7 +45,7 @@ namespace VfxEditor.TmbFormat.Utils {
             }
             else {
                 if( !TmbUtils.ItemTypes.TryGetValue( magic, out var value ) ) {
-                    Dalamud.Log( $"Unknown Entry {magic}" );
+                    Dalamud.Log( $"未知条目 {magic}" );
                     verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size ); //  skip
                     return;
@@ -54,7 +54,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 var type = value.Type;
                 var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ), typeof( TmbReader ) } );
                 if( constructor == null ) {
-                    Dalamud.Log( $"TmbReader constructor failed for {magic}" );
+                    Dalamud.Log( $"TmbReader 构造函数在 {magic} 处发生错误" );
                     verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size );
                     return;
@@ -62,7 +62,7 @@ namespace VfxEditor.TmbFormat.Utils {
 
                 var item = constructor.Invoke( new object[] { file, this } );
                 if( item == null ) {
-                    Dalamud.Log( $"Constructor failed for {magic}" );
+                    Dalamud.Log( $"构造函数由于 {magic} 发生错误" );
                     verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size );
                     return;

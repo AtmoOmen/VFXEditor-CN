@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxParticleAttribute : AvfxOptional {
@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleAttribute( string avfxName, AvfxParticle particle ) : base( avfxName ) {
             Particle = particle;
             DisplayTabs = new() {
-                ( Display = new UiDisplayList( "Parameters" ) )
+                ( Display = new UiDisplayList( "参数" ) )
             };
         }
 

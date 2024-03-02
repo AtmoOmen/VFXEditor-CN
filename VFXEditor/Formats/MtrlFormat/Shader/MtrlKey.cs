@@ -1,11 +1,11 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Formats.ShpkFormat.Utils;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {
     public class MtrlKey : IUiItem {
         public readonly ParsedCrc Id = new( "Id" );
-        public readonly ParsedCrc Value = new( "Value" );
+        public readonly ParsedCrc Value = new( "值" );
 
         public MtrlKey() { }
 
@@ -29,6 +29,6 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             Value.Draw( CrcMaps.Keys );
         }
 
-        public string GetText( int idx ) => CrcMaps.Keys.TryGetValue( Id.Value, out var text ) ? text : $"Key {idx} (0x{Id.Value:X4})";
+        public string GetText( int idx ) => CrcMaps.Keys.TryGetValue( Id.Value, out var text ) ? text : $"键 {idx} (0x{Id.Value:X4})";
     }
 }

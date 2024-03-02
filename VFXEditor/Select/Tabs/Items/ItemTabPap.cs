@@ -1,4 +1,4 @@
-namespace VfxEditor.Select.Tabs.Items {
+﻿namespace VfxEditor.Select.Tabs.Items {
     public class ItemTabPap : ItemTab<string> {
         public ItemTabPap( SelectDialog dialog, string name ) : base( dialog, name, "Item-Pap", ItemTabFilter.Weapon ) { }
 
@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Items {
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
             if( string.IsNullOrEmpty( Loaded ) ) return;
-            DrawPath( "Animations", Loaded, Selected.Name );
+            DrawPath( "动画", Loaded, Selected.Name );
         }
     }
 }

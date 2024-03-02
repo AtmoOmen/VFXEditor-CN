@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Select.Tabs.Npc;
 
 namespace VfxEditor.Select.Tabs.Skeleton {
@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         }
 
         protected override void DrawSelected() {
-            DrawPaths( "Path", Loaded, Selected.Name );
+            DrawPaths( "路径", Loaded, Selected.Name );
         }
     }
 }

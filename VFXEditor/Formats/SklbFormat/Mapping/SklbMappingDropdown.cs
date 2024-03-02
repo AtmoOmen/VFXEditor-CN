@@ -1,4 +1,4 @@
-using FFXIVClientStructs.Havok;
+﻿using FFXIVClientStructs.Havok;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.Data.Command.ListCommands;
@@ -17,7 +17,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             File = file;
         }
 
-        protected override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
+        protected override string GetText( SklbMapping item, int idx ) => $"映射 {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
 
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 

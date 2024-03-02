@@ -1,4 +1,4 @@
-using VfxEditor.Parsing;
+﻿using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
     public enum GridPartsType : int {
@@ -14,17 +14,17 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
     public class NineGridNodeData : UldGenericData {
         public NineGridNodeData() {
             Parsed.AddRange( new ParsedBase[] {
-                new ParsedUInt( "Part List Id", size: 2 ),
-                new ParsedUInt( "Unknown 1", size: 2 ),
-                new ParsedUInt( "Part Id" ),
-                new ParsedEnum<GridPartsType>( "Grid Parts Type", size: 1 ),
-                new ParsedEnum<GridRenderType>( "Grid Render Type", size: 1 ),
-                new ParsedShort( "Top Offset" ),
-                new ParsedShort( "Bottom Offset" ),
-                new ParsedShort( "Left Offset" ),
-                new ParsedShort( "Right Offset" ),
-                new ParsedInt( "Unknown 2", size: 1 ),
-                new ParsedInt( "Unknown 3", size: 1 ),
+                new ParsedUInt( "分部列表 ID", size: 2 ),
+                new ParsedUInt( "未知 1", size: 2 ),
+                new ParsedUInt( "分部 Id" ),
+                new ParsedEnum<GridPartsType>( "网格部分类型", size: 1 ),
+                new ParsedEnum<GridRenderType>( "网格渲染类型", size: 1 ),
+                new ParsedShort( "顶部偏移" ),
+                new ParsedShort( "底部偏移" ),
+                new ParsedShort( "左部偏移" ),
+                new ParsedShort( "右部偏移" ),
+                new ParsedInt( "未知 2", size: 1 ),
+                new ParsedInt( "未知 3", size: 1 ),
             } );
         }
     }

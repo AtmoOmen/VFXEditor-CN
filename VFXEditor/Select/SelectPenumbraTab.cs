@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Newtonsoft.Json;
 using System;
@@ -65,7 +65,7 @@ namespace VfxEditor.Select {
                 }
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error reading Penumbra mods" );
+                Dalamud.Error( e, "读取 Penumbra 模组时发生错误" );
             }
         }
 
@@ -89,7 +89,7 @@ namespace VfxEditor.Select {
                         var (gamePath, localPath) = file;
                         if( !Path.Exists( localPath ) ) continue;
 
-                        DrawPath( $"File {fileIdx}", Dialog.ShowLocal ? localPath : gamePath, gamePath, $"{Selected} {group.Key} {fileIdx}" );
+                        DrawPath( $"文件 {fileIdx}", Dialog.ShowLocal ? localPath : gamePath, gamePath, $"{Selected} {group.Key} {fileIdx}" );
                     }
                 }
             }

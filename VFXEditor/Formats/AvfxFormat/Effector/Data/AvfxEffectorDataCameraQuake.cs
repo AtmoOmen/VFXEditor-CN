@@ -1,10 +1,10 @@
-namespace VfxEditor.AvfxFormat {
+﻿namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataCameraQuake : AvfxData {
-        public readonly AvfxCurve Attenuation = new( "Attenuation", "Att" );
-        public readonly AvfxCurve RadiusOut = new( "Radius Out", "RdO" );
-        public readonly AvfxCurve RadiusIn = new( "Radius In", "RdI" );
-        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
-        public readonly AvfxCurve3Axis Position = new( "Position", "Pos" );
+        public readonly AvfxCurve Attenuation = new( "衰减", "Att" );
+        public readonly AvfxCurve RadiusOut = new( "外半径", "RdO" );
+        public readonly AvfxCurve RadiusIn = new( "内半径", "RdI" );
+        public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle );
+        public readonly AvfxCurve3Axis Position = new( "位置", "Pos" );
 
         public AvfxEffectorDataCameraQuake() : base() {
             Parsed = new() {

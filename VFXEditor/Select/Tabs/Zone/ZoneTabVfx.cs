@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace VfxEditor.Select.Tabs.Zone {
     public class ZoneTabVfx : ZoneTab<ParsedPaths> {
@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Zone {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.LgbPath );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( "视效", Loaded.Paths, Selected.Name );
         }
     }
 }

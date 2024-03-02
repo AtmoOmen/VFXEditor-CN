@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public class EmoteTabTmb : EmoteTab<List<string>> {
@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPaths( "Path", Loaded, Selected.Name );
+            DrawPaths( "路径", Loaded, Selected.Name );
         }
     }
 }

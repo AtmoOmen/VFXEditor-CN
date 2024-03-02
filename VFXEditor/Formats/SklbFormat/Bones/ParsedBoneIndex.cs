@@ -1,4 +1,4 @@
-using FFXIVClientStructs.Havok;
+﻿using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
@@ -11,9 +11,9 @@ namespace VfxEditor.SklbFormat.Bones {
 
         public ParsedBoneIndex( string name, int value ) : base( name, value ) { }
 
-        public string GetText( List<SklbBone> bones ) => Value == -1 ? "[NONE]" : ( Value >= bones.Count ? "[UNKNOWN]" : bones[Value].Name.Value );
+        public string GetText( List<SklbBone> bones ) => Value == -1 ? "[无]" : ( Value >= bones.Count ? "[UNKNOWN]" : bones[Value].Name.Value );
 
-        public string GetText( hkaSkeleton* skeleton ) => Value == -1 ? "[NONE]" : ( Value >= skeleton->Bones.Length ? "[UNKNOWN]" : skeleton->Bones[Value].Name.String );
+        public string GetText( hkaSkeleton* skeleton ) => Value == -1 ? "[无]" : ( Value >= skeleton->Bones.Length ? "[UNKNOWN]" : skeleton->Bones[Value].Name.String );
 
         public void Draw( List<SklbBone> bones ) => Draw( bones.Select( x => x.Name.Value ).ToList() );
 
@@ -26,13 +26,13 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         public void Draw( List<string> names ) {
-            var text = Value == -1 ? "[NONE]" : ( Value >= names.Count ? "[UNKNOWN]" : names[Value] );
+            var text = Value == -1 ? "[无]" : ( Value >= names.Count ? "[UNKNOWN]" : names[Value] );
 
             using var _ = ImRaii.PushId( Name );
             using var combo = ImRaii.Combo( Name, text );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Value == -1 ) ) {
+            if( ImGui.Selectable( "[无]", Value == -1 ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
             }
 

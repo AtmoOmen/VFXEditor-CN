@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
@@ -37,12 +37,12 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class AttributeExtendData {
-        public readonly ParsedEnum<ConditionType1st> FirstCondition = new( "First Condition", size: 1 );
-        public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "Second Condition", size: 1 );
-        public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "Join Type", size: 1 );
-        public readonly ParsedByte NumberOfConditions = new( "Number of Conditions" );
-        public readonly ParsedInt SelfArgument = new( "Self Argument" );
-        public readonly ParsedInt TargetArgument = new( "Target Argument" );
+        public readonly ParsedEnum<ConditionType1st> FirstCondition = new( "第一条件", size: 1 );
+        public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "第二条件", size: 1 );
+        public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "连接类型", size: 1 );
+        public readonly ParsedByte NumberOfConditions = new( "情况数" );
+        public readonly ParsedInt SelfArgument = new( "自引用参数" );
+        public readonly ParsedInt TargetArgument = new( "目标参数" );
 
         public readonly AttributeResultCommand Result = new();
 

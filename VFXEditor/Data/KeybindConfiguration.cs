@@ -1,4 +1,4 @@
-using Dalamud.Game.ClientState.Keys;
+﻿using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -38,7 +38,7 @@ namespace VfxEditor {
                 ret = true;
             }
 
-            var inputPreview = unassigned ? "[NONE]" : $"{Key.GetFancyName()}";
+            var inputPreview = unassigned ? "[无]" : $"{Key.GetFancyName()}";
             ImGui.SetNextItemWidth( 100f );
             ImGui.SameLine();
             ImGui.InputText( "##Input", ref inputPreview, 255, ImGuiInputTextFlags.ReadOnly );

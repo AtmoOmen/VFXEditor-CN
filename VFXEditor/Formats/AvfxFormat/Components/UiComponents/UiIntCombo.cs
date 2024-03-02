@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Data.Copy;
@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt Literal;
 
         private readonly Dictionary<int, string> Mapping;
-        private string DisplayText => Mapping.TryGetValue( Literal.Value, out var displayText ) ? displayText : "[UNKNOWN]";
+        private string DisplayText => Mapping.TryGetValue( Literal.Value, out var displayText ) ? displayText : "[未知]";
 
         public UiIntCombo( string name, AvfxInt literal, Dictionary<int, string> mapping ) {
             Name = name;

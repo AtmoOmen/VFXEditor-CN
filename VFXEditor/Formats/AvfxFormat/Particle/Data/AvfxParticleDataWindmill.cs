@@ -1,8 +1,8 @@
-using static VfxEditor.AvfxFormat.Enums;
+﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataWindmill : AvfxData {
-        public readonly AvfxEnum<WindmillUVType> WindmillUVType = new( "Windmill UV Type", "WUvT" );
+        public readonly AvfxEnum<WindmillUVType> WindmillUVType = new( "风车 UV 映射类型", "WUvT" );
 
         public readonly UiDisplayList Display;
 
@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
                 WindmillUVType
             };
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
             Display.Add( WindmillUVType );
         }
     }

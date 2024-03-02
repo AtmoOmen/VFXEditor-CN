@@ -1,4 +1,4 @@
-using HelixToolkit.SharpDX.Core;
+﻿using HelixToolkit.SharpDX.Core;
 using VfxEditor.Interop.Havok.Ui;
 
 namespace VfxEditor.PhybFormat.Skeleton {

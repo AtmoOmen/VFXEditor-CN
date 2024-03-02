@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -53,15 +53,15 @@ namespace VfxEditor.ScdFormat {
     public class ScdLayoutEntry : ScdEntry, IUiItem, IItemWithData<ScdLayoutData> {
         public ushort Size = 0x80;
         public readonly ParsedDataEnum<SoundObjectType, ScdLayoutData> Type;
-        public readonly ParsedByte Version = new( "Version" );
+        public readonly ParsedByte Version = new( "版本" );
         public readonly ParsedFlag<SoundObjectFlags1> Flag1 = new( "Flag1", size: 1 );
-        public readonly ParsedByte GroupNumber = new( "Group Number" );
-        public readonly ParsedShort LocalId = new( "Local Id" );
+        public readonly ParsedByte GroupNumber = new( "组数" );
+        public readonly ParsedShort LocalId = new( "本地 ID" );
         public readonly ParsedInt BankId = new( "Bank Id" );
         public readonly ParsedFlag<SoundObjectFlags2> Flag2 = new( "Flag2", size: 1 );
-        public readonly ParsedByte ReverbType = new( "Reverb Type" );
-        public readonly ParsedShort AbGroupNumber = new( "AB Group Number" );
-        public readonly ParsedFloat4 Volume = new( "Volume" );
+        public readonly ParsedByte ReverbType = new( "混响类型" );
+        public readonly ParsedShort AbGroupNumber = new( "AB 组编号" );
+        public readonly ParsedFloat4 Volume = new( "音量" );
 
         private ScdLayoutData Data;
 

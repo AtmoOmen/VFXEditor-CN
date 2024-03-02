@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
@@ -14,8 +14,8 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x18;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt Duration = new( "持续时间" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
         private readonly ParsedInt TmfcId = new( "F-Curve Id" );
 
         public C117( TmbFile file ) : base( file ) { }

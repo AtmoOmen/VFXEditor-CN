@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -81,8 +81,8 @@ namespace VfxEditor.Select {
             ShowLocal = showLocal;
             Action = action;
 
-            RecentTab = new( this, "Recent", manager.GetConfig().RecentItems );
-            FavoritesTab = new( this, "Favorites", manager.GetConfig().Favorites );
+            RecentTab = new( this, "最近", manager.GetConfig().RecentItems );
+            FavoritesTab = new( this, "收藏", manager.GetConfig().Favorites );
             PenumbraTab = new( this );
         }
 
@@ -97,7 +97,7 @@ namespace VfxEditor.Select {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( $"{Manager.GetId()}/{WindowName}" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawGameTabs();
@@ -113,12 +113,12 @@ namespace VfxEditor.Select {
             if( GameTabs.Count == 0 ) return;
             using var _ = ImRaii.PushId( "Game" );
 
-            using var tabItem = ImRaii.TabItem( "Game Items" );
+            using var tabItem = ImRaii.TabItem( "游戏物品" );
             if( !tabItem ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             foreach( var tab in GameTabs ) tab.Draw();
@@ -134,13 +134,13 @@ namespace VfxEditor.Select {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            ImGui.Text( "Game Path" );
+            ImGui.Text( "游戏路径" );
             using( var __ = ImRaii.PushId( "Game" ) )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.InputTextWithHint( "##Path", $"vfx/common/eff/wp_astro1h.{Extension}", ref GamePathInput, 255 );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "SELECT" ) ) SelectGamePath( GamePathInput );
+                if( ImGui.Button( "选择" ) ) SelectGamePath( GamePathInput );
             }
 
             if( ShowLocal ) {
@@ -156,7 +156,7 @@ namespace VfxEditor.Select {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                        FileBrowserManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileDialog( "选择文件", $".{Extension},.*", ( bool ok, string res ) => {
                             if( !ok ) return;
                             Invoke( new SelectResult( SelectResultType.Local, res, "[LOCAL] " + res, res ) );
                         } );
@@ -164,7 +164,7 @@ namespace VfxEditor.Select {
                 }
 
                 ImGui.SameLine();
-                if( ImGui.Button( "SELECT" ) && Path.IsPathRooted( LocalPathInput ) && File.Exists( LocalPathInput ) ) {
+                if( ImGui.Button( "选择" ) && Path.IsPathRooted( LocalPathInput ) && File.Exists( LocalPathInput ) ) {
                     Invoke( new SelectResult( SelectResultType.Local, LocalPathInput, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
                     LocalPathInput = "";
                 }
@@ -182,13 +182,13 @@ namespace VfxEditor.Select {
             if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.SelectDialogLogOpen ) ) Plugin.Configuration.Save();
             if( !Plugin.Configuration.SelectDialogLogOpen ) return;
 
-            if( ImGui.Checkbox( "Log all files", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "记录所有文件", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
 
             using var disabled = ImRaii.Disabled( LoggedFiles.Count == 0 && !Plugin.Configuration.LogAllFiles );
 
             ImGui.SameLine();
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                ImGui.InputTextWithHint( "##Search", "Search", ref LoggedFilesSearch, 255 );
+                ImGui.InputTextWithHint( "##Search", "搜索", ref LoggedFilesSearch, 255 );
 
                 ImGui.SameLine();
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
@@ -197,7 +197,7 @@ namespace VfxEditor.Select {
 
 
             using var windowPadding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            using var child = ImRaii.Child( "子级", new Vector2( -1, -1 ), true );
 
             var searched = LoggedFiles
                 .Where( x => x.EndsWith( Extension ) && ( string.IsNullOrEmpty( LoggedFilesSearch ) || x.ToLower().Contains( LoggedFilesSearch.ToLower() ) ) )

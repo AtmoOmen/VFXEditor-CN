@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Compression;
 using VfxEditor.Ui.Export;
@@ -49,7 +49,7 @@ namespace VfxEditor.Utils {
                     }
                     break;
                 default:
-                    Dalamud.Error( "Invalid path! Could not find DatFile" );
+                    Dalamud.Error( "无效路径! 未找到 Dat 文件" );
                     break;
             }
             simple.ModPackEntry = null;

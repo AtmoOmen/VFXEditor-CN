@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -46,9 +46,9 @@ namespace VfxEditor.PapFormat {
         public short HavokIndex = 0;
         public readonly string HkxTempLocation;
 
-        private readonly ParsedPaddedString Name = new( "Name", "cbbm_replace_this", 32, 0x00 );
+        private readonly ParsedPaddedString Name = new( "名称", "cbbm_replace_this", 32, 0x00 );
         private readonly ParsedShort Type = new( "Type" );
-        private readonly ParsedBool Face = new( "Face Animation" );
+        private readonly ParsedBool Face = new( "面部动画" );
         public TmbFile Tmb;
 
         public PapAnimation( PapFile file, string hkxPath ) {
@@ -98,7 +98,7 @@ namespace VfxEditor.PapFormat {
                 ImGui.SameLine();
                 UiUtils.DrawBoolText( "Blink:", motionData.Blink );
                 ImGui.SameLine();
-                UiUtils.HelpMarker( "These values are hard-coded in the game's MotionTimeline sheet, and are based on the animation name" );
+                UiUtils.HelpMarker( "这些值基于特定的动画名称硬编码于游戏的 MotionTimeline 表格中" );
             }
 
             Name.Draw();
@@ -115,10 +115,10 @@ namespace VfxEditor.PapFormat {
             Face.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            ImGui.TextDisabled( $"This animation has Havok index: {HavokIndex}" );
+            ImGui.TextDisabled( $"此动画的 Havok 索引为: {HavokIndex}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            using var tabBar = ImRaii.TabBar( "AnimationTabs" );
+            using var tabBar = ImRaii.TabBar( "动画栏" );
             if( !tabBar ) return;
 
             DrawTmb();
@@ -127,17 +127,17 @@ namespace VfxEditor.PapFormat {
         }
 
         private void DrawTmb() {
-            using var tabItem = ImRaii.TabItem( "TMB" );
+            using var tabItem = ImRaii.TabItem( "时间线" );
             if( !tabItem ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
-                if( ImGui.Button( "Export" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb", "ExportedTmb" );
+                if( ImGui.Button( "导出" ) ) UiUtils.WriteBytesDialog( ".tmb", Tmb.ToBytes(), "tmb", "ExportedTmb" );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" ) ) {
-                    FileBrowserManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
+                if( ImGui.Button( "替换" ) ) {
+                    FileBrowserManager.OpenFileDialog( "选择文件", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
                             CommandManager.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
                             UiUtils.OkNotification( "Tmb data imported" );
@@ -153,7 +153,7 @@ namespace VfxEditor.PapFormat {
         }
 
         private void DrawMotion() {
-            using var tabItem = ImRaii.TabItem( "Motion" );
+            using var tabItem = ImRaii.TabItem( "动作" );
             if( !tabItem ) return;
 
             File.MotionData.Draw( HavokIndex );

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
 using System.Numerics;
@@ -19,12 +19,12 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         private readonly MtrlFile File;
 
         public readonly ParsedUIntPicker<ShpkParameterInfo> Id;
-        public readonly ParsedEnum<TextureAddressMode> AddressModeU = new( "U Address Mode" );
-        public readonly ParsedEnum<TextureAddressMode> AddressModeV = new( "V Address Mode" );
-        public readonly ParsedFloat LoDBias = new( "LoD Bias" );
-        public readonly ParsedUInt MinLoD = new( "Minimum LoD" );
-        public readonly ParsedUIntHex Flags = new( "Flags" );
-        public readonly ParsedByte TextureIndex = new( "Texture Index" );
+        public readonly ParsedEnum<TextureAddressMode> AddressModeU = new( "横轴地址模式" );
+        public readonly ParsedEnum<TextureAddressMode> AddressModeV = new( "纵轴地址模式" );
+        public readonly ParsedFloat LoDBias = new( "LoD 偏移" );
+        public readonly ParsedUInt MinLoD = new( "最小 LoD" );
+        public readonly ParsedUIntHex Flags = new( "标识" );
+        public readonly ParsedByte TextureIndex = new( "材质索引" );
         private readonly ParsedReserve Padding = new( 3 );
 
         public MtrlSampler( MtrlFile file ) {
@@ -85,7 +85,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         public string GetText( int idx ) {
             var selected = Id.GetSelected();
             if( selected != null ) return selected.GetText();
-            return $"Sampler {idx}"; ;
+            return $"采样器 {idx}"; ;
         }
 
         private static uint Masked( uint flags ) => flags & ( ~( 0x3u | ( 0x3u << 2 ) | ( 0x3FF << 10 ) | ( 0xF << 20 ) ) );

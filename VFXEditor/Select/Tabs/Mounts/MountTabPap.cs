@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Mounts {
@@ -14,7 +14,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Mount", Selected.Pap, $"{Selected.Name} Mount" );
+            DrawPath( "坐骑", Selected.Pap, $"{Selected.Name} Mount" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             DrawPaths( Loaded, Selected.Name );
         }

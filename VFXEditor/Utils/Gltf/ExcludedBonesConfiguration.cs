@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -36,7 +36,7 @@ namespace VfxEditor.Utils.Gltf {
         public string BoneName = "";
 
         public void Draw() {
-            ImGui.InputTextWithHint( "##Bone", "Bone Name", ref BoneName, 255 );
+            ImGui.InputTextWithHint( "##Bone", "骨骼名", ref BoneName, 255 );
         }
     }
 }

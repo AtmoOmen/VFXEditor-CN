@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +49,7 @@ namespace VfxEditor.FileBrowser.Filter {
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 150 );
 
-            var text = Selected == null ? "[NONE]" : ( Selected.Filter == ".*" ? "All Files" : Selected.Filter );
+            var text = Selected == null ? "[无]" : ( Selected.Filter == ".*" ? "All Files" : Selected.Filter );
 
             using var combo = ImRaii.Combo( "##Filters", text, ImGuiComboFlags.None );
             if( !combo ) return;

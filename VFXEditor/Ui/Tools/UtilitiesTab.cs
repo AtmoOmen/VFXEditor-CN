@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Numerics;
@@ -12,14 +12,14 @@ namespace VfxEditor.Ui.Tools {
 
         public void Draw() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            ImGui.TextDisabled( "Extract Raw Game File" );
+            ImGui.TextDisabled( "解压原始游戏文件" );
 
             using( var indent = ImRaii.PushIndent() )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) ) ) {
-                ImGui.InputTextWithHint( "##Extract", "Game Path", ref ExtractPath, 255 );
+                ImGui.InputTextWithHint( "##Extract", "游戏路径", ref ExtractPath, 255 );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Extract" ) ) {
+                if( ImGui.Button( "解压" ) ) {
                     var cleanedPath = ExtractPath.Replace( "\\", "/" );
                     if( Dalamud.DataManager.FileExists( cleanedPath ) ) {
                         try {
@@ -34,19 +34,19 @@ namespace VfxEditor.Ui.Tools {
                             );
                         }
                         catch( Exception e ) {
-                            Dalamud.Error( e, "Could not read file" );
+                            Dalamud.Error( e, "无法读取文件" );
                         }
                     }
                 }
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.TextDisabled( "Image Conversion" );
+            ImGui.TextDisabled( "图像转换" );
 
             using var indent2 = ImRaii.PushIndent();
 
-            if( ImGui.Button( ".atex to PNG" ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
+            if( ImGui.Button( ".atex 转 PNG" ) ) {
+                FileBrowserManager.OpenFileDialog( "选择文件", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureDataFile.LoadFromLocal( res );
                     texFile.SaveAsPng( res + ".png" );
@@ -54,8 +54,8 @@ namespace VfxEditor.Ui.Tools {
             }
 
             ImGui.SameLine();
-            if( ImGui.Button( ".atex to DDS" ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
+            if( ImGui.Button( ".atex 转 DDS" ) ) {
+                FileBrowserManager.OpenFileDialog( "选择文件", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureDataFile.LoadFromLocal( res );
                     texFile.SaveAsDds( res + ".dds" );

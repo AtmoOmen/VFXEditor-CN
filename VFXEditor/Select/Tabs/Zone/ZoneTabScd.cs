@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;

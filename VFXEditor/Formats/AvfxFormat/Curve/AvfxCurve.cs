@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -22,9 +22,9 @@ namespace VfxEditor.AvfxFormat {
         private readonly CurveType Type;
         private readonly int Id;
 
-        public readonly AvfxEnum<CurveBehavior> PreBehavior = new( "Pre Behavior", "BvPr" );
-        public readonly AvfxEnum<CurveBehavior> PostBehavior = new( "Post Behavior", "BvPo" );
-        public readonly AvfxEnum<RandomType> Random = new( "RandomType", "RanT" );
+        public readonly AvfxEnum<CurveBehavior> PreBehavior = new( "前置行为", "BvPr" );
+        public readonly AvfxEnum<CurveBehavior> PostBehavior = new( "后置行为", "BvPo" );
+        public readonly AvfxEnum<RandomType> Random = new( "随机类型", "RanT" );
         public readonly AvfxCurveKeys KeyList;
         public List<AvfxCurveKey> Keys => KeyList.Keys;
 
@@ -118,7 +118,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public static void DrawAssignedCurves( List<AvfxCurve> curves ) {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             foreach( var curve in curves.Where( x => x.IsAssigned() ) ) {

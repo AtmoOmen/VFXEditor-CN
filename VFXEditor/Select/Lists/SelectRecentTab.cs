@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Lists {
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, DefaultWindowPadding );
             if( ImGui.BeginPopup( "RecentPopup" ) ) {
-                if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) ) {
                     Items.Remove( item );
                     Plugin.Configuration.Save();
                     return true;

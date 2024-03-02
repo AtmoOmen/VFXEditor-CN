@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
@@ -12,10 +12,10 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x24;
         public override int ExtraSize => 4 * ( 4 + 4 );
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly TmbOffsetFloat4 Color1 = new( "Color 1", defaultValue: new( 1 ) );
-        private readonly TmbOffsetFloat4 Color2 = new( "Color 2", defaultValue: new( 1 ) );
+        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
+        private readonly TmbOffsetFloat4 Color1 = new( "颜色 1", defaultValue: new( 1 ) );
+        private readonly TmbOffsetFloat4 Color2 = new( "颜色 2", defaultValue: new( 1 ) );
 
         public C068( TmbFile file ) : base( file ) { }
 

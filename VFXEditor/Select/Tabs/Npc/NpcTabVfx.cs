@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Npc {
@@ -6,8 +6,8 @@ namespace VfxEditor.Select.Tabs.Npc {
         public NpcTabVfx( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected() {
-            ImGui.Text( "Variant: " + Selected.Variant );
-            DrawPaths( "VFX", Loaded, Selected.Name );
+            ImGui.Text( "分支: " + Selected.Variant );
+            DrawPaths( "视效", Loaded, Selected.Name );
         }
 
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {

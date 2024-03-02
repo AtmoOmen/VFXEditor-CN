@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
@@ -25,10 +25,10 @@ namespace VfxEditor.Parsing.Int {
                 ( ( Value < 0 || Value >= Items.Count ) ? null : Items[Value] ) :
                 Items.FirstOrDefault( x => ToValue( x ) == Value, null );
 
-            using var combo = ImRaii.Combo( Name, selected == null ? "[NONE]" : selected.GetText() );
+            using var combo = ImRaii.Combo( Name, selected == null ? "[无]" : selected.GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", selected == null ) ) CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
+            if( ImGui.Selectable( "[无]", selected == null ) ) CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
             for( var i = 0; i < Items.Count; i++ ) {
                 using var _ = ImRaii.PushId( i );
                 if( ImGui.Selectable( Items[i].GetText(), Items[i] == selected ) ) {

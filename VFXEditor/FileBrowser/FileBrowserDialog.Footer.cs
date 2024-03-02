@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using VfxEditor.Utils;
 
@@ -27,7 +27,7 @@ namespace VfxEditor.FileBrowser {
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
             ImGui.SameLine();
-            if( UiUtils.RemoveButton( "Cancel" ) ) {
+            if( UiUtils.RemoveButton( "取消" ) ) {
                 IsOk = false;
                 res = true;
             }

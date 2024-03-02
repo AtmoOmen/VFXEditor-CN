@@ -1,4 +1,4 @@
-namespace VfxEditor.Select.Tabs.Job {
+﻿namespace VfxEditor.Select.Tabs.Job {
     public class JobRow {
         public readonly string Name;
         public readonly string Id;

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +21,9 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMtrl loaded ) {
             loaded = new() {
-                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, new List<string>() { "fac_a", "etc_a", "iri_a" } ),
-                Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, new List<string>() { "a" } ),
-                Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, new List<string>() { "hir_a", "acc_b" }, item.Data.HairToIcon ),
+                Faces = GetPart( "脸型", CharacterPart.Face, item, item.Data.FaceOptions, new List<string>() { "fac_a", "etc_a", "iri_a" } ),
+                Bodies = GetPart( "身体", CharacterPart.Body, item, item.Data.BodyOptions, new List<string>() { "a" } ),
+                Hairs = GetPart( "发型", CharacterPart.Hair, item, item.Data.HairOptions, new List<string>() { "hir_a", "acc_b" }, item.Data.HairToIcon ),
                 Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, new List<string>() { "fac_a", "a" } ),
                 Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, new List<string>() { "a" } )
             };
@@ -32,7 +32,7 @@ namespace VfxEditor.Select.Tabs.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Faces" ) ) {

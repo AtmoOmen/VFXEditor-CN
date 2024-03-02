@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -9,9 +9,9 @@ namespace VfxEditor.AvfxFormat {
         public bool Enabled = true;
         // Life is kinda strange, can either be -1 (4 bytes = ffffffff) or Val + ValR + RanT
 
-        public readonly AvfxFloat Value = new( "Value", "Val", value: -1 );
-        public readonly AvfxFloat ValRandom = new( "Random Value", "ValR" );
-        public readonly AvfxEnum<RandomType> ValRandomType = new( "Random Type", "Type" );
+        public readonly AvfxFloat Value = new( "值", "Val", value: -1 );
+        public readonly AvfxFloat ValRandom = new( "随机值", "ValR" );
+        public readonly AvfxEnum<RandomType> ValRandomType = new( "随机类型", "Type" );
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<IUiItem> Display;

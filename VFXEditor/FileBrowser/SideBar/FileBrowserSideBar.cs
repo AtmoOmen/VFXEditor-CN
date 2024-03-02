@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
@@ -57,43 +57,43 @@ namespace VfxEditor.FileBrowser.SideBar {
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Desktop,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
-                    Text = "Desktop"
+                    Text = "桌面"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.File,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
-                    Text = "Documents"
+                    Text = "文档"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Download,
                     Location = Path.Combine( personal, "Downloads" ),
-                    Text = "Downloads"
+                    Text = "下载"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Star,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
-                    Text = "Favorites"
+                    Text = "收藏"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Music,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
-                    Text = "Music"
+                    Text = "音乐"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Image,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
-                    Text = "Pictures"
+                    Text = "图片"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Video,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
-                    Text = "Videos"
+                    Text = "图片"
                 } );
             } );
         }
@@ -126,8 +126,8 @@ namespace VfxEditor.FileBrowser.SideBar {
 
             foreach( var item in Drives ) DrawSideBarItem( item, ref idx );
             foreach( var item in QuickAccess ) DrawSideBarItem( item, ref idx );
-            DrawCategory( Favorites, "Favorites", FontAwesomeIcon.Star, ref idx );
-            DrawCategory( Recent, "Recent", FontAwesomeIcon.History, ref idx );
+            DrawCategory( Favorites, "收藏", FontAwesomeIcon.Star, ref idx );
+            DrawCategory( Recent, "最近", FontAwesomeIcon.History, ref idx );
         }
 
         private void DrawCategory( IEnumerable<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {

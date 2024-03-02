@@ -1,4 +1,4 @@
-using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Internal;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
@@ -29,8 +29,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly List<MtrlDye> Dyes = new();
 
         public MtrlManager() : base( "Mtrl Editor", "Mtrl" ) {
-            SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );
-            ReplaceSelect = new MtrlSelectDialog( "Mtrl Select [REPLACED]", this, false );
+            SourceSelect = new MtrlSelectDialog( "选择文件 [加载]", this, true );
+            ReplaceSelect = new MtrlSelectDialog( "选择文件 [替换]", this, false );
 
             // Tiling textures
             TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );

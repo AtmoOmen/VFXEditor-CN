@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace VfxEditor.Formats.ShpkFormat.Utils {
     public static class CrcMaps {
@@ -308,9 +308,9 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
             { 0x575CA84C, "Lighting" },
             { 0x470E5A1E, "LightingNormal" },
             { 0x2807B89E, "LightingLow" },
-            { 0xB18FE63D, "Default" },
+            { 0xB18FE63D, "默认" },
             { 0x86CA5FE4, "DefaultTechnique" },
-            { 0x61B590F0, "Color" },
+            { 0x61B590F0, "颜色" },
             { 0xFD40C470, "Depth" },
             { 0xF43B2F35, "SUB_VIEW_MAIN" },
             { 0x99B22D1C, "SUB_VIEW_SHADOW_0" },

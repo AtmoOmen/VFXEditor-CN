@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,7 +40,7 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPaths( "Sound", Loaded.Paths, Selected.Name );
+            DrawPaths( "音效", Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

@@ -1,4 +1,4 @@
-namespace VfxEditor.Parsing.Data {
+﻿namespace VfxEditor.Parsing.Data {
     public class ParsedDataEnumCommand<T, S> : ICommand where S : class, IData {
         private readonly ParsedSimpleCommand<T> Command;
         private readonly IItemWithData<S> Item;

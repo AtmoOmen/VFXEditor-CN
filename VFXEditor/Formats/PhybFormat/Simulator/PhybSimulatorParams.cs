@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -14,12 +14,12 @@ namespace VfxEditor.PhybFormat.Simulator {
     }
 
     public class PhybSimulatorParams : PhybData {
-        public readonly ParsedFloat3 Gravity = new( "Gravity" );
-        public readonly ParsedFloat3 Wind = new( "Wind" );
-        public readonly ParsedShort ConstraintLoop = new( "Constraint Loop" );
-        public readonly ParsedShort CollisionLoop = new( "Collision Loop" );
-        public readonly ParsedFlag<SimulatorFlags> Flags = new( "Flags", size: 1 );
-        public readonly ParsedByte Group = new( "Group" );
+        public readonly ParsedFloat3 Gravity = new( "重力" );
+        public readonly ParsedFloat3 Wind = new( "风" );
+        public readonly ParsedShort ConstraintLoop = new( "约束循环" );
+        public readonly ParsedShort CollisionLoop = new( "碰撞循环" );
+        public readonly ParsedFlag<SimulatorFlags> Flags = new( "标识", size: 1 );
+        public readonly ParsedByte Group = new( "组" );
         public readonly ParsedReserve Padding = new( 2 );
 
         public PhybSimulatorParams( PhybFile file ) : base( file ) { }

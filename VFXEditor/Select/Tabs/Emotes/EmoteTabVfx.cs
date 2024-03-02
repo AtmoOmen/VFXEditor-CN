@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public class EmoteTabVfx : EmoteTab<ParsedPaths> {
@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
             DrawIcon( Selected.Icon );
             ImGui.TextDisabled( Selected.Command );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( "视效", Loaded.Paths, Selected.Name );
         }
     }
 }

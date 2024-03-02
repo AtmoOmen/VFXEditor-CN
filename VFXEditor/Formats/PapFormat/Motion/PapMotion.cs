@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core.Animations;
@@ -49,8 +49,8 @@ namespace VfxEditor.PapFormat.Motion {
         private bool Playing = false;
         private DateTime LastTime = DateTime.Now;
 
-        private readonly ParsedString OriginalSkeletonName = new( "Original Skeleton Name" );
-        private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "Blend Hint" );
+        private readonly ParsedString OriginalSkeletonName = new( "原始骨骼名称" );
+        private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "混合提示" );
 
         public PapMotion( PapFile file, HavokData bones, hkaAnimationBinding* binding ) {
             File = file;
@@ -93,7 +93,7 @@ namespace VfxEditor.PapFormat.Motion {
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 100f );
-            if( ImGui.InputInt( "Frame", ref Frame ) ) {
+            if( ImGui.InputInt( "帧", ref Frame ) ) {
                 if( Frame < 0 ) Frame = 0;
                 if( Frame >= TotalFrames ) Frame = TotalFrames - 1;
             }
@@ -125,10 +125,10 @@ namespace VfxEditor.PapFormat.Motion {
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
-            if( ImGui.Button( "Export" ) ) ExportDialog( File.Animations[idx].GetName() );
+            if( ImGui.Button( "导出" ) ) ExportDialog( File.Animations[idx].GetName() );
 
             ImGui.SameLine();
-            if( ImGui.Button( "Replace" ) ) ImportDialog( idx );
+            if( ImGui.Button( "替换" ) ) ImportDialog( idx );
 
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
@@ -158,14 +158,14 @@ namespace VfxEditor.PapFormat.Motion {
         // ======== IMPORT EXPORT =========
 
         private void ExportDialog( string animationName ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Plugin.AddModal( new PapGltfExportModal( this, animationName, res ) );
             } );
         }
 
         private void ImportDialog( int idx ) {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Motion{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "Motion{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     Plugin.AddModal( new PapReplaceModal( this, idx, res ) );

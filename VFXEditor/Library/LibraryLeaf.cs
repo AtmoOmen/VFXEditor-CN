@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
@@ -79,11 +79,11 @@ namespace VfxEditor.Library {
 
             DrawImport();
 
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Edit, "Edit" ) ) {
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Edit, "编辑" ) ) {
                 Editing = true;
             }
 
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) ) {
                 Cleanup();
                 Parent.Remove( this );
                 library.Save();

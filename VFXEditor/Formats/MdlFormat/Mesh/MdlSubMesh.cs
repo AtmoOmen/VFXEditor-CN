@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -52,18 +52,18 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Preview" ) ) {
+            using( var tab = ImRaii.TabItem( "预览" ) ) {
                 if( tab ) DrawPreview();
             }
 
-            using( var tab = ImRaii.TabItem( "Bones" ) ) {
+            using( var tab = ImRaii.TabItem( "骨骼" ) ) {
                 if( tab ) BoneView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Attributes" ) ) {
+            using( var tab = ImRaii.TabItem( "属性" ) ) {
                 if( tab ) AttributeView.Draw();
             }
         }

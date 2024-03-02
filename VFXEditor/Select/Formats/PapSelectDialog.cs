@@ -1,4 +1,4 @@
-using VfxEditor.PapFormat;
+﻿using VfxEditor.PapFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Character;
 using VfxEditor.Select.Tabs.Emotes;
@@ -11,14 +11,14 @@ namespace VfxEditor.Select.Formats {
     public class PapSelectDialog : SelectDialog {
         public PapSelectDialog( string id, PapManager manager, bool isSourceDialog ) : base( id, "pap", manager, isSourceDialog ) {
             GameTabs.AddRange( new SelectTab[]{
-                new ItemTabPap( this, "Weapon" ),
-                new ActionTabPap( this, "Action" ),
-                new ActionTabPapNonPlayer( this, "Non-Player Action" ),
-                new EmoteTabPap( this, "Emote" ),
-                new NpcTabPap( this, "Npc" ),
-                new MountTabPap( this, "Mount" ),
-                new CharacterTabPap( this, "Character" ),
-                new JobTab( this, "Job" ),
+                new ItemTabPap( this, "武器" ),
+                new ActionTabPap( this, "技能" ),
+                new ActionTabPapNonPlayer( this, "非玩家对象动作" ),
+                new EmoteTabPap( this, "表情" ),
+                new NpcTabPap( this, "NPC" ),
+                new MountTabPap( this, "坐骑" ),
+                new CharacterTabPap( this, "角色" ),
+                new JobTab( this, "职业" ),
             } );
         }
     }

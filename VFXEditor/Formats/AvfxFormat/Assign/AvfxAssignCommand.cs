@@ -1,4 +1,4 @@
-using VfxEditor.AvfxFormat;
+﻿using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Formats.AvfxFormat.Assign {
     public class AvfxAssignCommand : ICommand {

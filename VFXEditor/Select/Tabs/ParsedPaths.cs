@@ -1,4 +1,4 @@
-using Lumina.Data;
+﻿using Lumina.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace VfxEditor.Select.Tabs {
                 }
                 loaded = new ParsedPaths( files, regex );
             }
-            catch( Exception e ) { Dalamud.Error( e, "Error reading files" ); }
+            catch( Exception e ) { Dalamud.Error( e, "读取文件时发生错误" ); }
         }
 
         public static void ReadFile( List<string> paths, Regex regex, out List<ParsedPaths> loaded ) {
@@ -58,7 +58,7 @@ namespace VfxEditor.Select.Tabs {
                     if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( new ParsedPaths( Dalamud.DataManager.GetFile( path ), regex ) );
                 }
             }
-            catch( Exception e ) { Dalamud.Error( e, "Error reading files" ); }
+            catch( Exception e ) { Dalamud.Error( e, "读取文件时发生错误" ); }
         }
     }
 }

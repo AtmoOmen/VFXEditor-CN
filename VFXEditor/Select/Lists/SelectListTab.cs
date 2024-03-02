@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Lists {
             DefaultWindowPadding = ImGui.GetStyle().WindowPadding;
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            using var child = ImRaii.Child( "子级", new Vector2( -1, -1 ), true );
 
             if( ImGui.BeginTable( "Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit ) ) {
                 ImGui.TableSetupColumn( "##Column1", ImGuiTableColumnFlags.WidthFixed, 25 );

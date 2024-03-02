@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
@@ -6,9 +6,9 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxBase {
         private static bool UnassignPopup( string name ) {
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign/{name}" );
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"取消设置/{name}" );
 
-            using var popup = ImRaii.Popup( $"Unassign/{name}" );
+            using var popup = ImRaii.Popup( $"取消设置/{name}" );
             if( popup ) {
                 if( ImGui.Selectable( $"Unassign {name.TrimStart( '#' )}" ) ) {
                     ImGui.CloseCurrentPopup();
@@ -32,7 +32,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             }
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             foreach( var item in assigned ) {

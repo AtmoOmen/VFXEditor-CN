@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using System.Linq;
@@ -22,15 +22,15 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Start", Selected.StartPath, $"{Selected.Name} Start" );
+            DrawPath( "开始", Selected.StartPath, $"{Selected.Name} Start" );
             DrawMovementCancel( Selected.StartMotion );
 
-            DrawPath( "End", Selected.EndPath, $"{Selected.Name} End" );
+            DrawPath( "结束", Selected.EndPath, $"{Selected.Name} End" );
             DrawMovementCancel( Selected.EndMotion );
 
-            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit" );
+            DrawPath( "命中", Selected.HitPath, $"{Selected.Name} Hit" );
 
-            DrawPath( "Weapon", Selected.WeaponPath, $"{Selected.Name} Weapon" );
+            DrawPath( "武器", Selected.WeaponPath, $"{Selected.Name} Weapon" );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;
@@ -40,9 +40,9 @@ namespace VfxEditor.Select.Tabs.Actions {
             if( Dialog.ShowLocal ) return;
             ImGui.Indent( 25f );
             UiUtils.IconText( FontAwesomeIcon.QuestionCircle, true );
-            UiUtils.Tooltip( "This parameter is set in the game's Excel sheet, and cannot be removed with VFXEditor" );
+            UiUtils.Tooltip( "这一参数位于游戏的数据表格中，无法被 VFXEditor 移除" );
             ImGui.SameLine();
-            ImGui.TextDisabled( "Animation canceled by movement" );
+            ImGui.TextDisabled( "被移动取消的动画" );
             ImGui.Unindent( 25f );
         }
     }

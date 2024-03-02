@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace VfxEditor.Parsing.Int {
 
             var selected = GetSelected();
 
-            var text = selected == null ? $"[UNKNOWN]" : TextAction( selected );
+            var text = selected == null ? $"[未知]" : TextAction( selected );
             using var combo = ImRaii.Combo( Name, text );
             if( !combo ) return;
 

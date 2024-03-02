@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
     public class C094 : TmbEntry {
         public const string MAGIC = "C094";
-        public const string DISPLAY_NAME = "Invisibility";
+        public const string DISPLAY_NAME = "不可见";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
@@ -29,17 +29,17 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private bool ExtraData = true;
 
-        private readonly ParsedInt FadeTime = new( "Fade Time" );
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedFloat StartVisibility = new( "Start Visibility" );
-        private readonly ParsedFloat EndVisibility = new( "End Visibility" );
+        private readonly ParsedInt FadeTime = new( "淡化时间" );
+        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedFloat StartVisibility = new( "可见性开始" );
+        private readonly ParsedFloat EndVisibility = new( "可见性结束" );
 
         // these are parsed separately
-        private readonly ParsedBool EnableFilter = new( "Enable Filter" );
-        private readonly ParsedFlag<InvisibilityFilter> Filter = new( "Filter" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
-        private readonly ParsedInt Unk5 = new( "Unknown 5" );
-        private readonly ParsedInt Unk6 = new( "Unknown 6" );
+        private readonly ParsedBool EnableFilter = new( "启用筛选器" );
+        private readonly ParsedFlag<InvisibilityFilter> Filter = new( "筛选器" );
+        private readonly ParsedInt Unk4 = new( "未知 4" );
+        private readonly ParsedInt Unk5 = new( "未知 5" );
+        private readonly ParsedInt Unk6 = new( "未知 6" );
 
         // Unk2 = 1, Unk3 = 8 -> ExtraSize = 0x14
 
@@ -77,7 +77,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override void DrawBody() {
             base.DrawBody();
 
-            ImGui.Checkbox( "Extra Data", ref ExtraData );
+            ImGui.Checkbox( "额外数据", ref ExtraData );
             if( ExtraData ) {
                 EnableFilter.Draw();
 

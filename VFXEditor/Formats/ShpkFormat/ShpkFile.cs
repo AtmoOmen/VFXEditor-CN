@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
@@ -119,7 +119,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             VertexView = new( "Vertex Shader", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
             PixelView = new( "Pixel Shader", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
 
-            MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new() );
+            MaterialParameterView = new( "参数", MaterialParameters, false, null, () => new() );
 
             ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
             SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
@@ -197,20 +197,20 @@ namespace VfxEditor.Formats.ShpkFormat {
 
         public override void Draw() {
             ImGui.Separator();
-            ImGui.TextDisabled( $"Version: {Version} DirectX: {DxVersion}" );
+            ImGui.TextDisabled( $"版本: {Version} DirectX: {DxVersion}" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Vertex Shaders" ) ) {
+            using( var tab = ImRaii.TabItem( "顶点着色器" ) ) {
                 if( tab ) VertexView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Pixel Shaders" ) ) {
+            using( var tab = ImRaii.TabItem( "像素着色器" ) ) {
                 if( tab ) PixelView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Material Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "材质参数" ) ) {
                 if( tab ) {
                     DrawMaterialTable();
                     ImGui.Separator();
@@ -218,52 +218,52 @@ namespace VfxEditor.Formats.ShpkFormat {
                 }
             }
 
-            using( var tab = ImRaii.TabItem( "Constants" ) ) {
+            using( var tab = ImRaii.TabItem( "常量" ) ) {
                 if( tab ) ConstantView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Samplers" ) ) {
+            using( var tab = ImRaii.TabItem( "采样" ) ) {
                 if( tab ) SamplerView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Resources" ) ) {
+            using( var tab = ImRaii.TabItem( "资源" ) ) {
                 if( tab ) ResourceView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Keys" ) ) {
+            using( var tab = ImRaii.TabItem( "键" ) ) {
                 if( tab ) DrawKeys();
             }
 
-            using( var tab = ImRaii.TabItem( "Nodes" ) ) {
+            using( var tab = ImRaii.TabItem( "节点" ) ) {
                 if( tab ) NodeView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Aliases" ) ) {
+            using( var tab = ImRaii.TabItem( "别称" ) ) {
                 if( tab ) AliasView.Draw();
             }
         }
 
         private void DrawKeys() {
-            using var _ = ImRaii.PushId( "Keys" );
+            using var _ = ImRaii.PushId( "键" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "System" ) ) {
+            using( var tab = ImRaii.TabItem( "系统" ) ) {
                 if( tab ) SystemKeyView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Scene" ) ) {
+            using( var tab = ImRaii.TabItem( "场景" ) ) {
                 if( tab ) SceneKeyView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Material" ) ) {
+            using( var tab = ImRaii.TabItem( "材质" ) ) {
                 if( tab ) MaterialKeyView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Sub-View" ) ) {
+            using( var tab = ImRaii.TabItem( "子视图" ) ) {
                 if( tab ) SubViewKeyView.Draw();
             }
         }
@@ -307,7 +307,7 @@ namespace VfxEditor.Formats.ShpkFormat {
                     using var selected = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, parameter != null && parameter == MaterialParameterView.GetSelected() );
                     using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, parameters.Count > 1 );
 
-                    if( ImGui.Selectable( parameter == null ? "[NONE]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
+                    if( ImGui.Selectable( parameter == null ? "[无]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
                         MaterialParameterView.SetSelected( parameter );
                     }
                 }

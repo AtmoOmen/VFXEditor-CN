@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -64,15 +64,15 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         }
 
         public void Draw() {
-            ImGui.Text( "[WIP]" );
+            ImGui.Text( "[工作中]" );
             EffectParam.Draw();
         }
     }
 
     public class SoundSendInfo {
-        public readonly ParsedByte Target = new( "Target" );
+        public readonly ParsedByte Target = new( "目标" );
         private readonly ParsedReserve Reserve1 = new( 3 );
-        public readonly ParsedFloat Volume = new( "Volume" );
+        public readonly ParsedFloat Volume = new( "音量" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 
         public void Read( BinaryReader reader ) {
@@ -100,7 +100,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         private readonly ParsedReserve Reserve1 = new( 3 );
         // Equalizer Effect
         public readonly List<SoundFilterParam> Filters = new();
-        public readonly ParsedInt NumFilters = new( "Filter Count" );
+        public readonly ParsedInt NumFilters = new( "筛选器数" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 
         public void Read( BinaryReader reader ) {
@@ -135,7 +135,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
 
             for( var idx = 0; idx < Filters.Count; idx++ ) {
                 var filter = Filters[idx];
-                if( ImGui.CollapsingHeader( $"Filter {idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"筛选器 {idx}" ) ) {
                     using var __ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
                     filter.Draw();
@@ -147,7 +147,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
     public class SoundFilterParam {
         public readonly ParsedFloat Frequency = new( "Frequency" );
         public readonly ParsedFloat Invq = new( "Invq" );
-        public readonly ParsedFloat Gain = new( "Gain" );
+        public readonly ParsedFloat Gain = new( "增益" );
         public readonly ParsedEnum<FilterType> Type = new( "Type" );
 
         public void Read( BinaryReader reader ) {

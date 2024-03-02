@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -8,11 +8,11 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTimeline : AvfxNode {
         public const string NAME = "TmLn";
 
-        public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
-        public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
-        public readonly AvfxInt BinderIdx = new( "Binder Index", "BnNo" );
-        public readonly AvfxInt TimelineCount = new( "Item Count", "TICn" );
-        public readonly AvfxInt ClipCount = new( "Clip Count", "CpCn" );
+        public readonly AvfxInt LoopStart = new( "循环开始", "LpSt" );
+        public readonly AvfxInt LoopEnd = new( "循环结束", "LpEd" );
+        public readonly AvfxInt BinderIdx = new( "绑定器索引", "BnNo" );
+        public readonly AvfxInt TimelineCount = new( "物体数", "TICn" );
+        public readonly AvfxInt ClipCount = new( "片段数", "CpCn" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -43,7 +43,7 @@ namespace VfxEditor.AvfxFormat {
                 LoopEnd
             };
 
-            BinderSelect = new( this, "Binder Select", groupSet.Binders, BinderIdx );
+            BinderSelect = new( this, "选择绑定器", groupSet.Binders, BinderIdx );
 
             ClipSplit = new( Clips, this );
             ItemSplit = new( Items, this );
@@ -99,22 +99,22 @@ namespace VfxEditor.AvfxFormat {
             DrawRename();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
 
-            using( var tab = ImRaii.TabItem( "Items" ) ) {
+            using( var tab = ImRaii.TabItem( "物体" ) ) {
                 if( tab ) ItemSplit.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Clips" ) ) {
+            using( var tab = ImRaii.TabItem( "片段" ) ) {
                 if( tab ) ClipSplit.Draw();
             }
         }
 
         private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
+            using var tabItem = ImRaii.TabItem( "参数" );
             if( !tabItem ) return;
 
             using var child = ImRaii.Child( "Child" );
@@ -132,7 +132,7 @@ namespace VfxEditor.AvfxFormat {
             Clips.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
         }
 
-        public override string GetDefaultText() => $"Timeline {GetIdx()}";
+        public override string GetDefaultText() => $"时间线 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Tmln{GetIdx()}";
     }

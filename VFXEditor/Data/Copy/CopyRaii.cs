@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace VfxEditor.Data.Copy {
     public struct CopyRaii : IDisposable {

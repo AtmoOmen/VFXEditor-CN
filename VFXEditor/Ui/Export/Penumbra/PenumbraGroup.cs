@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
         }
 
         public void Draw() {
-            ImGui.InputTextWithHint( "##Name", "Name", ref Name, 255 );
+            ImGui.InputTextWithHint( "##Name", "名称", ref Name, 255 );
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SetNextItemWidth( 100 );
@@ -42,7 +42,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
 
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth( 30 );
-                ImGui.InputInt( "Priority", ref Priority, 0 );
+                ImGui.InputInt( "优先级", ref Priority, 0 );
             }
 
             ImGui.Separator();

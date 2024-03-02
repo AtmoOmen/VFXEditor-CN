@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
@@ -36,16 +36,16 @@ namespace VfxEditor.Library.Node {
 
         protected override void DrawEditing() {
             var preX = ImGui.GetCursorPosX();
-            ImGui.InputText( "Name", ref Name, 255 );
+            ImGui.InputText( "名称", ref Name, 255 );
             var w = ImGui.GetCursorPosX() - preX;
-            ImGui.ColorEdit4( "Color", ref Color, ImGuiColorEditFlags.DisplayHex | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar );
-            ImGui.InputTextMultiline( "Description", ref Description, 1000, new Vector2( w, 100 ) );
+            ImGui.ColorEdit4( "颜色", ref Color, ImGuiColorEditFlags.DisplayHex | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar );
+            ImGui.InputTextMultiline( "描述", ref Description, 1000, new Vector2( w, 100 ) );
         }
 
         protected override void DrawImport() {
             var importDisabled = Plugin.AvfxManager.File == null;
             using var disabled = ImRaii.Disabled( importDisabled );
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "Import" ) && !importDisabled ) Plugin.AvfxManager.Import( Path );
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "导入" ) && !importDisabled ) Plugin.AvfxManager.Import( Path );
         }
 
         protected override void DrawBody() { }

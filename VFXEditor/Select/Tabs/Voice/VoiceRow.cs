@@ -1,4 +1,4 @@
-namespace VfxEditor.Select.Tabs.Voice {
+﻿namespace VfxEditor.Select.Tabs.Voice {
     public class VoiceRow {
         public readonly string Name;
         public readonly string Id;

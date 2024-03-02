@@ -1,4 +1,4 @@
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
+﻿using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Penumbra.String;
 using System;
 using System.Collections.Generic;

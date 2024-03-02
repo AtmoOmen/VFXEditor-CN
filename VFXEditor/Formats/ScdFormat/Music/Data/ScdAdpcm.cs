@@ -1,4 +1,4 @@
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using System.IO;
 
 namespace VfxEditor.ScdFormat.Music.Data {
@@ -29,7 +29,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public static void Import( string path, ScdAudioEntry entry ) {
             var waveFileCheck = new WaveFileReader( path );
             if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
-                Dalamud.Log( "Already Adpcm, skipping conversion" );
+                Dalamud.Log( "已经为 ADPCM 格式，跳过转换" );
                 File.Copy( path, ScdManager.ConvertWav, true );
             }
             else {
@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             waveFileCheck.Close();
 
             if( !File.Exists( ScdManager.ConvertWav ) ) {
-                Dalamud.Error( "Could not conver to ADPCM" );
+                Dalamud.Error( "无法转换为 ADPCM" );
                 return;
             }
 

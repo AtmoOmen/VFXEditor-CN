@@ -1,18 +1,18 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.ScdFormat.Sound.Data {
     public class SoundUnknown {
-        private readonly ParsedShort Unknown1 = new( "Unknown 1" );
-        private readonly ParsedShort Unknown2 = new( "Unknown 2" );
-        private readonly ParsedUInt Unknown3 = new( "Unknown 3" );
-        private readonly ParsedFloat Unknown4 = new( "Unknown 4" );
-        private readonly ParsedUInt Unknown5 = new( "Unknown 5" );
-        private readonly ParsedUInt Unknown6 = new( "Unknown 6" );
-        private readonly ParsedFloat Unknown7 = new( "Unknown 7" );
-        private readonly ParsedUInt Unknown8 = new( "Unknown 8" );
-        private readonly ParsedUInt Unknown9 = new( "Unknown 9" );
+        private readonly ParsedShort Unknown1 = new( "未知 1" );
+        private readonly ParsedShort Unknown2 = new( "未知 2" );
+        private readonly ParsedUInt Unknown3 = new( "未知 3" );
+        private readonly ParsedFloat Unknown4 = new( "未知 4" );
+        private readonly ParsedUInt Unknown5 = new( "未知 5" );
+        private readonly ParsedUInt Unknown6 = new( "未知 6" );
+        private readonly ParsedFloat Unknown7 = new( "未知 7" );
+        private readonly ParsedUInt Unknown8 = new( "未知 8" );
+        private readonly ParsedUInt Unknown9 = new( "未知 9" );
 
         public void Read( BinaryReader reader ) {
             Unknown1.Read( reader );

@@ -1,7 +1,7 @@
-namespace VfxEditor.AvfxFormat {
+﻿namespace VfxEditor.AvfxFormat {
     public class AvfxBinderDataLinear : AvfxData {
-        public readonly AvfxCurve CarryOverFactor = new( "Carry Over Factor", "COF" );
-        public readonly AvfxCurve CarryOverFactorRandom = new( "Carry Over Factor Random", "COFR" );
+        public readonly AvfxCurve CarryOverFactor = new( "传递因子", "COF" );
+        public readonly AvfxCurve CarryOverFactorRandom = new( "随机传递因子", "COFR" );
 
         public AvfxBinderDataLinear() : base() {
             Parsed = new() {

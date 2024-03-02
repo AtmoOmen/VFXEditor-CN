@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
@@ -18,8 +18,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlDyeTableRow : IUiItem {
         public const int Size = 2;
 
-        public readonly ParsedShort Template = new( "Template" );
-        public readonly ParsedFlag<DyeRowFlags> Flags = new( "Flags", 2 );
+        public readonly ParsedShort Template = new( "模板" );
+        public readonly ParsedFlag<DyeRowFlags> Flags = new( "标识", 2 );
 
         public MtrlDyeTableRow() { }
 
@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
 
         public void Draw() {
             ImGui.SetNextItemWidth( 200f );
-            if( UiUtils.EnumComboBox( "Template", Plugin.MtrlManager.Templates, Template.Value, out var value ) ) {
+            if( UiUtils.EnumComboBox( "模板", Plugin.MtrlManager.Templates, Template.Value, out var value ) ) {
                 Template.Update( value );
             }
 

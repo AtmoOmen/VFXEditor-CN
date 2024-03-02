@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -6,12 +6,12 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat.Sound.Data {
     public class SoundAccelerationInfo {
-        public readonly ParsedByte Version = new( "Version" );
+        public readonly ParsedByte Version = new( "版本" );
         private byte Size = 0x10;
         private readonly ParsedReserve Reserve1 = new( 2 );
-        public readonly ParsedFloat Volume = new( "Volume" );
-        public readonly ParsedInt UpTime = new( "Up Time" );
-        public readonly ParsedInt DownTime = new( "Down Time" );
+        public readonly ParsedFloat Volume = new( "音量" );
+        public readonly ParsedInt UpTime = new( "运行时间" );
+        public readonly ParsedInt DownTime = new( "停止时间" );
 
         public void Read( BinaryReader reader ) {
             Version.Read( reader );
@@ -40,9 +40,9 @@ namespace VfxEditor.ScdFormat.Sound.Data {
     }
 
     public class SoundAcceleration {
-        public readonly ParsedByte Version = new( "Version" );
+        public readonly ParsedByte Version = new( "版本" );
         private byte Size = 0x10; // TODO: does this change with the size of acceleration?
-        private readonly ParsedByte NumAcceleration = new( "Acceleration Count" );
+        private readonly ParsedByte NumAcceleration = new( "加速计数" );
         private readonly ParsedReserve Reserve1 = new( 1 + 4 * 3 );
         public List<SoundAccelerationInfo> Acceleration = new();
 
@@ -77,7 +77,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
             for( var idx = 0; idx < Acceleration.Count; idx++ ) {
-                if( ImGui.CollapsingHeader( $"Acceleration #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                if( ImGui.CollapsingHeader( $"加速 #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     using var __ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
                     Acceleration[idx].Draw();

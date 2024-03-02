@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.GeneratedSheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Bgm {
@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Bgm {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Selected.Path, Selected.Name );
+            DrawPath( "路径", Selected.Path, Selected.Name );
         }
 
         protected override string GetName( BgmRow item ) => item.Name;

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -41,7 +41,7 @@ namespace VfxEditor.Select.Tabs.Common {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Path", Selected.Path, Selected.Name );
+            DrawPath( "路径", Selected.Path, Selected.Name );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

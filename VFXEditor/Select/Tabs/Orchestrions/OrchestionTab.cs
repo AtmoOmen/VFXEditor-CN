@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.GeneratedSheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Orchestrions {
@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Loaded.Path, Selected.Name );
+            DrawPath( "路径", Loaded.Path, Selected.Name );
         }
 
         protected override string GetName( OrchestrionRow item ) => item.Name;

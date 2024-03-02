@@ -1,4 +1,4 @@
-using Lumina.Data;
+﻿using Lumina.Data;
 using System.Collections.Generic;
 using System.Numerics;
 

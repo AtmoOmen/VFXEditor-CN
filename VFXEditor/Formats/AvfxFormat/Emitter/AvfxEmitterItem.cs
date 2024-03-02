@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -10,32 +10,32 @@ namespace VfxEditor.AvfxFormat {
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;
 
-        public readonly AvfxBool Enabled = new( "Enabled", "bEnb", value: false );
-        public readonly AvfxInt TargetIdx = new( "Target Index", "TgtB", value: -1 );
-        public readonly AvfxInt LocalDirection = new( "Local Direction", "LoDr", value: 0 );
-        public readonly AvfxInt CreateTime = new( "Create Time", "CrTm", value: 1 );
-        public readonly AvfxInt CreateCount = new( "Create Count", "CrCn", value: 1 );
-        public readonly AvfxInt CreateProbability = new( "Create Probability", "CrPr", value: 100 );
-        public readonly AvfxEnum<ParentInfluenceCoordOptions> ParentInfluenceCoord = new( "Influence on Child", "PICd", value: ParentInfluenceCoordOptions.InitialPosition_WithOptions );
-        public readonly AvfxEnum<ParentInfluenceColorOptions> ParentInfluenceColor = new( "Influence on Child Color", "PICo", value: ParentInfluenceColorOptions.Initial );
-        public readonly AvfxBool InfluenceCoordScale = new( "Influence on Scale", "ICbS", value: false );
-        public readonly AvfxBool InfluenceCoordRot = new( "Influence on Rotation", "ICbR", value: false );
-        public readonly AvfxBool InfluenceCoordPos = new( "Influence on Position", "ICbP", value: true );
-        public readonly AvfxBool InfluenceCoordBinderPosition = new( "Influence on Binder Position", "ICbB", value: false );
-        public readonly AvfxInt InfluenceCoordUnstickiness = new( "Influence Coordinate Unstickiness", "ICSK", value: 0 );
-        public readonly AvfxBool InheritParentVelocity = new( "Inherit Parent Velocity", "IPbV", value: false );
-        public readonly AvfxBool InheritParentLife = new( "Inherit Parent Life", "IPbL", value: false );
-        public readonly AvfxBool OverrideLife = new( "Override Life", "bOvr", value: false );
-        public readonly AvfxInt OverrideLifeValue = new( "Override Life Value", "OvrV", value: 60 );
-        public readonly AvfxInt OverrideLifeRandom = new( "Override Life Random", "OvrR", value: 0 );
-        public readonly AvfxInt ParameterLink = new( "Parameter Link", "PrLk", value: -1 );
-        public readonly AvfxInt StartFrame = new( "Start Frame", "StFr", value: 0 );
-        public readonly AvfxBool StartFrameNullUpdate = new( "Start Frame Null Update", "bStN", value: false );
-        public readonly AvfxFloat ByInjectionAngleX = new( "By Injection Angle X", "BIAX", value: 0 );
-        public readonly AvfxFloat ByInjectionAngleY = new( "By Injection Angle Y", "BIAY", value: 0 );
-        public readonly AvfxFloat ByInjectionAngleZ = new( "By Injection Angle Z", "BIAZ", value: 0 );
-        public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD", 0 );
-        public readonly AvfxBool GenerateDelayByOne = new( "Generate Delay By One", "bGD", value: false );
+        public readonly AvfxBool Enabled = new( "启用", "bEnb", value: false );
+        public readonly AvfxInt TargetIdx = new( "目标索引", "TgtB", value: -1 );
+        public readonly AvfxInt LocalDirection = new( "本地方向", "LoDr", value: 0 );
+        public readonly AvfxInt CreateTime = new( "创建时间", "CrTm", value: 1 );
+        public readonly AvfxInt CreateCount = new( "创建数", "CrCn", value: 1 );
+        public readonly AvfxInt CreateProbability = new( "创建概率", "CrPr", value: 100 );
+        public readonly AvfxEnum<ParentInfluenceCoordOptions> ParentInfluenceCoord = new( "对子级的影响", "PICd", value: ParentInfluenceCoordOptions.InitialPosition_WithOptions );
+        public readonly AvfxEnum<ParentInfluenceColorOptions> ParentInfluenceColor = new( "对子级颜色的影响", "PICo", value: ParentInfluenceColorOptions.Initial );
+        public readonly AvfxBool InfluenceCoordScale = new( "对缩放的影响", "ICbS", value: false );
+        public readonly AvfxBool InfluenceCoordRot = new( "对旋转的影响", "ICbR", value: false );
+        public readonly AvfxBool InfluenceCoordPos = new( "对位置的影响", "ICbP", value: true );
+        public readonly AvfxBool InfluenceCoordBinderPosition = new( "对绑定点位置的影响", "ICbB", value: false );
+        public readonly AvfxInt InfluenceCoordUnstickiness = new( "对坐标不粘性的影响", "ICSK", value: 0 );
+        public readonly AvfxBool InheritParentVelocity = new( "继承父级速度", "IPbV", value: false );
+        public readonly AvfxBool InheritParentLife = new( "继承父级生命周期", "IPbL", value: false );
+        public readonly AvfxBool OverrideLife = new( "覆盖生命周期", "bOvr", value: false );
+        public readonly AvfxInt OverrideLifeValue = new( "覆盖生命周期值", "OvrV", value: 60 );
+        public readonly AvfxInt OverrideLifeRandom = new( "随机覆盖生命周期", "OvrR", value: 0 );
+        public readonly AvfxInt ParameterLink = new( "参数链接", "PrLk", value: -1 );
+        public readonly AvfxInt StartFrame = new( "起始帧", "StFr", value: 0 );
+        public readonly AvfxBool StartFrameNullUpdate = new( "起始帧空更新", "bStN", value: false );
+        public readonly AvfxFloat ByInjectionAngleX = new( "通过 X 轴注射角度", "BIAX", value: 0 );
+        public readonly AvfxFloat ByInjectionAngleY = new( "通过 Y 轴注射角度", "BIAY", value: 0 );
+        public readonly AvfxFloat ByInjectionAngleZ = new( "通过 Z 轴注射角度", "BIAZ", value: 0 );
+        public readonly AvfxInt GenerateDelay = new( "生成延迟", "GenD", 0 );
+        public readonly AvfxBool GenerateDelayByOne = new( "生成 1 单元延迟", "bGD", value: false );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -107,7 +107,7 @@ namespace VfxEditor.AvfxFormat {
                 ParameterLink,
                 StartFrame,
                 StartFrameNullUpdate,
-                new UiFloat3( "By Injection Angle", ByInjectionAngleX, ByInjectionAngleY, ByInjectionAngleZ ),
+                new UiFloat3( "通过注射角度", ByInjectionAngleX, ByInjectionAngleY, ByInjectionAngleZ ),
                 GenerateDelay,
                 GenerateDelayByOne
             };
@@ -116,8 +116,8 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );
 
         public void InitializeNodeSelects() {
-            if( IsParticle ) ParticleSelect = new AvfxNodeSelect<AvfxParticle>( Emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );
-            else EmitterSelect = new AvfxNodeSelect<AvfxEmitter>( Emitter, "Target Emitter", Emitter.NodeGroups.Emitters, TargetIdx );
+            if( IsParticle ) ParticleSelect = new AvfxNodeSelect<AvfxParticle>( Emitter, "目标粒子", Emitter.NodeGroups.Particles, TargetIdx );
+            else EmitterSelect = new AvfxNodeSelect<AvfxEmitter>( Emitter, "目标发射器", Emitter.NodeGroups.Emitters, TargetIdx );
         }
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
@@ -60,17 +60,17 @@ namespace VfxEditor.EidFormat {
             var size = SkeletonView.CalculateSize( SkeletonTabOpen, Plugin.Configuration.EidSkeletonSplit );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using( var child = ImRaii.Child( "Child", size, false ) ) {
-                using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using( var child = ImRaii.Child( "子级", size, false ) ) {
+                using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
                 if( !tabBar ) return;
 
                 SkeletonTabOpen = false;
 
-                using( var tab = ImRaii.TabItem( "Bind Points" ) ) {
+                using( var tab = ImRaii.TabItem( "绑定点" ) ) {
                     if( tab ) Dropdown.Draw();
                 }
 
-                using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                using( var tab = ImRaii.TabItem( "3D 视图" ) ) {
                     if( tab ) {
                         Skeleton.Draw();
                         SkeletonTabOpen = true;

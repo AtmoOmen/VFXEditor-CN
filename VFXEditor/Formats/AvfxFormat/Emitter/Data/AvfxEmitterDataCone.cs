@@ -1,15 +1,15 @@
-using static VfxEditor.AvfxFormat.Enums;
+﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEmitterDataCone : AvfxData {
-        public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
-        public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
-        public readonly AvfxCurve AY = new( "Angle Y", "AnY", CurveType.Angle );
-        public readonly AvfxCurve InnerSize = new( "Inner Size", "InS" );
-        public readonly AvfxCurve OuterSize = new( "Outer Size", "OuS" );
-        public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
-        public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
-        public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA", CurveType.Angle );
+        public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "旋转顺序", "ROT" );
+        public readonly AvfxCurve AX = new( "X 轴角度", "AnX", CurveType.Angle );
+        public readonly AvfxCurve AY = new( "Y 轴角度", "AnY", CurveType.Angle );
+        public readonly AvfxCurve InnerSize = new( "内尺寸", "InS" );
+        public readonly AvfxCurve OuterSize = new( "外尺寸", "OuS" );
+        public readonly AvfxCurve InjectionSpeed = new( "注入速度", "IjS" );
+        public readonly AvfxCurve InjectionSpeedRandom = new( "随机注入速度", "IjSR" );
+        public readonly AvfxCurve InjectionAngle = new( "注入角度", "IjA", CurveType.Angle );
 
         public readonly UiDisplayList Display;
 
@@ -25,7 +25,7 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngle
             };
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
             Display.Add( RotationOrderType );
             DisplayTabs.Add( AX );
             DisplayTabs.Add( AY );

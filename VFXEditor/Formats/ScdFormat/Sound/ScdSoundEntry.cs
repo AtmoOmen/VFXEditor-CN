@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.IO;
@@ -49,14 +49,14 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class ScdSoundEntry : ScdEntry, IUiItem {
-        public readonly ParsedByte BusNumber = new( "Bus Number" );
-        public readonly ParsedByte Priority = new( "Priority" );
+        public readonly ParsedByte BusNumber = new( "总线编号" );
+        public readonly ParsedByte Priority = new( "优先级" );
         public readonly ParsedEnum<SoundType> Type = new( "Type", size: 1 );
-        public readonly ParsedFlag<SoundAttribute> Attributes = new( "Attributes" );
-        public readonly ParsedFloat Volume = new( "Volume" );
-        public readonly ParsedShort LocalNumber = new( "Local Number" ); // TODO: ushort
-        public readonly ParsedByte UserId = new( "User Id" );
-        public readonly ParsedByte PlayHistory = new( "Play History" ); // TODO: sbyte
+        public readonly ParsedFlag<SoundAttribute> Attributes = new( "属性" );
+        public readonly ParsedFloat Volume = new( "音量" );
+        public readonly ParsedShort LocalNumber = new( "本地编号" ); // TODO: ushort
+        public readonly ParsedByte UserId = new( "用户 ID" );
+        public readonly ParsedByte PlayHistory = new( "播放历史" ); // TODO: sbyte
 
         public readonly SoundRoutingInfo RoutingInfo = new(); // include sendInfos, soundEffectParam
         public SoundBusDucking BusDucking = new();
@@ -132,7 +132,7 @@ namespace VfxEditor.ScdFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Entries" ) ) {
@@ -140,7 +140,7 @@ namespace VfxEditor.ScdFormat {
                 else Tracks.Draw();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Parameters" ) ) {
+            if( ImGui.BeginTabItem( "参数" ) ) {
                 using var child = ImRaii.Child( "Child" );
                 Attributes.Draw();
                 BusNumber.Draw();
@@ -157,15 +157,15 @@ namespace VfxEditor.ScdFormat {
                 Layout.Draw();
                 ImGui.EndTabItem();
             }
-            if( RoutingEnabled && ImGui.BeginTabItem( "Routing" ) ) {
+            if( RoutingEnabled && ImGui.BeginTabItem( "路由" ) ) {
                 RoutingInfo.Draw();
                 ImGui.EndTabItem();
             }
-            if( BusDuckingEnabled && ImGui.BeginTabItem( "Bus Ducking" ) ) {
+            if( BusDuckingEnabled && ImGui.BeginTabItem( "总线下降" ) ) {
                 BusDucking.Draw();
                 ImGui.EndTabItem();
             }
-            if( AccelerationEnabled && ImGui.BeginTabItem( "Acceleration" ) ) {
+            if( AccelerationEnabled && ImGui.BeginTabItem( "加速" ) ) {
                 Acceleration.Draw();
                 ImGui.EndTabItem();
             }
@@ -173,11 +173,11 @@ namespace VfxEditor.ScdFormat {
                 Atomos.Draw();
                 ImGui.EndTabItem();
             }
-            if( ExtraEnabled && ImGui.BeginTabItem( "Extra" ) ) {
+            if( ExtraEnabled && ImGui.BeginTabItem( "额外" ) ) {
                 Extra.Draw();
                 ImGui.EndTabItem();
             }
-            if( UnknownEnabled && ImGui.BeginTabItem( "Unknown" ) ) {
+            if( UnknownEnabled && ImGui.BeginTabItem( "未知" ) ) {
                 Unknown.Draw();
                 ImGui.EndTabItem();
             }

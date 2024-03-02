@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat {
         public void ShowExportDialog( AvfxNode node ) => File.ShowExportDialog( node );
 
         public void OpenTemplate( string path ) =>
-            SetSource( new SelectResult( SelectResultType.Local, "", "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
+            SetSource( new SelectResult( SelectResultType.Local, "", "[模板]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
 
         public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,
@@ -71,11 +71,11 @@ namespace VfxEditor.AvfxFormat {
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
                 if( VfxSpawn.Active ) {
-                    if( ImGui.Button( "Remove", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
+                    if( ImGui.Button( "移除", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
                 }
                 else {
                     using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled );
-                    if( ImGui.Button( "Spawn", new Vector2( 60, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
+                    if( ImGui.Button( "生成", new Vector2( 60, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
                 }
 
                 using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) ) ) {
@@ -86,7 +86,7 @@ namespace VfxEditor.AvfxFormat {
                     if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString(), new Vector2( 28, ImGui.GetFrameHeight() ) ) ) ImGui.OpenPopup( "SettingsPopup" );
                 }
 
-                if( ImGui.Button( "Library", new Vector2( 90, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
+                if( ImGui.Button( "库", new Vector2( 90, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
             }
 
             var height = ImGui.GetItemRectSize().Y;
@@ -101,9 +101,9 @@ namespace VfxEditor.AvfxFormat {
             VfxSpawn.DrawPopup( SpawnPath, true );
 
             if( ImGui.BeginPopup( "SettingsPopup" ) ) {
-                if( ImGui.Checkbox( "Loop", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "循环", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();
                 ImGui.SetNextItemWidth( 150 );
-                if( ImGui.InputFloat( "Delay", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
+                if( ImGui.InputFloat( "延迟", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
                 ImGui.EndPopup();
             }
         }
@@ -111,7 +111,7 @@ namespace VfxEditor.AvfxFormat {
         protected override string GetWarningText() {
             var invalidTimeline = File.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
             if( invalidTimeline == null ) return "";
-            return $"Timeline [{invalidTimeline.GetText()}] is Missing a Value";
+            return $"时间线 [{invalidTimeline.GetText()}] 缺少数值";
         }
 
         protected override void DisplayFileControls() {

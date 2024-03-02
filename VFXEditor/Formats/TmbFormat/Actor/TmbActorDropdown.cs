@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.TmbFormat.Entries;
@@ -12,7 +12,7 @@ namespace VfxEditor.TmbFormat.Actor {
             File = file;
         }
 
-        protected override string GetText( Tmac item, int idx ) => $"Actor {idx}";
+        protected override string GetText( Tmac item, int idx ) => $"角色 {idx}";
 
         protected override bool DoColor( Tmac item, out Vector4 color ) => TmbEntry.DoColor( item.MaxDanger, out color );
 

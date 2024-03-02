@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using VfxEditor.Structs.Vfx;
@@ -26,12 +26,12 @@ namespace VfxEditor.Spawn {
             using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.DARK_GRAY );
 
             if( Active ) {
-                if( ImGui.Button( "Remove" ) ) Remove();
+                if( ImGui.Button( "移除" ) ) Remove();
                 return;
             }
 
             if( !Plugin.Configuration.VfxSpawnSplit ) {
-                if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
+                if( ImGui.Button( "生成" ) ) ImGui.OpenPopup( "SpawnPopup" );
                 if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
 
                 DrawPopup( path, false );
@@ -57,7 +57,7 @@ namespace VfxEditor.Spawn {
 
             if( ImGui.Selectable( "Self" ) ) OnSelf( path, loop );
             if( ImGui.Selectable( "Ground" ) ) OnGround( path, loop );
-            if( ImGui.Selectable( "Target" ) ) OnTarget( path, loop );
+            if( ImGui.Selectable( "目标" ) ) OnTarget( path, loop );
         }
 
         public static void OnGround( string path, bool canLoop ) {

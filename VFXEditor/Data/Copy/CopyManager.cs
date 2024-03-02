@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
@@ -76,8 +76,8 @@ namespace VfxEditor.Data.Copy {
         }
 
         protected void DrawInternal() {
-            if( ImGui.MenuItem( "Copy" ) ) CopyInternal();
-            if( ImGui.MenuItem( "Paste" ) ) PasteInternal();
+            if( ImGui.MenuItem( "复制" ) ) CopyInternal();
+            if( ImGui.MenuItem( "粘贴" ) ) PasteInternal();
         }
 
         private void CopyInternal() {

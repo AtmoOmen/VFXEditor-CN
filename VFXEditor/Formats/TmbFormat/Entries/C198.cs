@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
@@ -12,14 +12,14 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration" );
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
-        private readonly ParsedShort ModelId = new( "Model Id" );
-        private readonly ParsedShort BodyId = new( "Body Id" );
-        private readonly ParsedInt Variant = new( "Variant" );
+        private readonly ParsedInt Duration = new( "持续时间" );
+        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
+        private readonly ParsedInt Unk3 = new( "未知 3" );
+        private readonly ParsedInt Unk4 = new( "未知 4" );
+        private readonly ParsedShort ModelId = new( "模型 ID" );
+        private readonly ParsedShort BodyId = new( "身体 ID" );
+        private readonly ParsedInt Variant = new( "分支" );
 
         public C198( TmbFile file ) : base( file ) { }
 

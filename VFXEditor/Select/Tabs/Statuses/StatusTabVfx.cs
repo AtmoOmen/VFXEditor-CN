@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.GeneratedSheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Statuses {
@@ -19,10 +19,10 @@ namespace VfxEditor.Select.Tabs.Statuses {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit" );
-            DrawPath( "Loop 1", Selected.LoopPath1, $"{Selected.Name} Loop 1" );
-            DrawPath( "Loop 2", Selected.LoopPath2, $"{Selected.Name} Loop 2" );
-            DrawPath( "Loop 3", Selected.LoopPath3, $"{Selected.Name} Loop 3" );
+            DrawPath( "命中", Selected.HitPath, $"{Selected.Name} Hit" );
+            DrawPath( "循环 1", Selected.LoopPath1, $"{Selected.Name} Loop 1" );
+            DrawPath( "循环 2", Selected.LoopPath2, $"{Selected.Name} Loop 2" );
+            DrawPath( "循环 3", Selected.LoopPath3, $"{Selected.Name} Loop 3" );
         }
 
         protected override string GetName( StatusRow item ) => item.Name;

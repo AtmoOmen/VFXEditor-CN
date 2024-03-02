@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,21 +46,21 @@ namespace VfxEditor.Select.Tabs.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Body", Loaded.BodyPath, Selected.Name );
+            DrawPath( "身体", Loaded.BodyPath, Selected.Name );
 
             if( !HairFace ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Hair" ) ) {
+            if( ImGui.BeginTabItem( "发型" ) ) {
                 DrawPaths( Loaded.HairPaths, Selected.Name );
                 ImGui.EndTabItem();
             }
 
-            if( ImGui.BeginTabItem( "Face" ) ) {
+            if( ImGui.BeginTabItem( "脸型" ) ) {
                 DrawPaths( Loaded.FacePaths, Selected.Name );
                 ImGui.EndTabItem();
             }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Items {
@@ -40,7 +40,7 @@ namespace VfxEditor.Select.Tabs.Items {
             DrawIcon( Selected.Icon );
 
             if( Loaded.IsWeapon ) {
-                DrawPath( "Model", Loaded.WeaponPath, Selected.Name );
+                DrawPath( "模型", Loaded.WeaponPath, Selected.Name );
             }
             else {
                 DrawPaths( Loaded.ArmorPaths, Selected.Name );

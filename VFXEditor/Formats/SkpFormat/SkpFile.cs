@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace VfxEditor.Formats.SkpFormat {
 
         private readonly int Version;
         private bool NewVersion => Version > 1000;
-        private readonly ParsedFlag<SkpFlags> Activated = new( "Activated" );
+        private readonly ParsedFlag<SkpFlags> Activated = new( "已激活" );
 
         private readonly SklbLayers Animation = new( null );
         private readonly SkpLookAt LookAt = new();
@@ -46,7 +46,7 @@ namespace VfxEditor.Formats.SkpFormat {
 
             if( Activated.HasFlag( SkpFlags.Animation ) ) Animation.Read( reader );
             if( Activated.HasFlag( SkpFlags.Look_At ) ) LookAt.Read( reader );
-            if( Activated.HasFlag( SkpFlags.Feet ) ) Dalamud.Error( "FootIK found, please report this" );
+            if( Activated.HasFlag( SkpFlags.Feet ) ) Dalamud.Error( "发现 FootIK, 请上报此情况" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
             VerifyIgnore = new();
@@ -93,12 +93,12 @@ namespace VfxEditor.Formats.SkpFormat {
         public override void Draw() {
             ImGui.Separator();
 
-            ImGui.TextDisabled( $"Version: {Version}" );
+            ImGui.TextDisabled( $"版本: {Version}" );
             Activated.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawAnimation();
@@ -109,7 +109,7 @@ namespace VfxEditor.Formats.SkpFormat {
         private void DrawAnimation() {
             if( !Activated.HasFlag( SkpFlags.Animation ) ) return;
 
-            using var tabItem = ImRaii.TabItem( "Animation" );
+            using var tabItem = ImRaii.TabItem( "动画" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Animation" );
@@ -120,7 +120,7 @@ namespace VfxEditor.Formats.SkpFormat {
         private void DrawLookAt() {
             if( !Activated.HasFlag( SkpFlags.Look_At ) ) return;
 
-            using var tabItem = ImRaii.TabItem( "Look At" );
+            using var tabItem = ImRaii.TabItem( "望向" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Look At" );
@@ -131,7 +131,7 @@ namespace VfxEditor.Formats.SkpFormat {
         private void DrawSlope() {
             if( !NewVersion || !Activated.HasFlag( SkpFlags.Slope ) ) return;
 
-            using var tabItem = ImRaii.TabItem( "Slope" );
+            using var tabItem = ImRaii.TabItem( "坡度" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Slope" );

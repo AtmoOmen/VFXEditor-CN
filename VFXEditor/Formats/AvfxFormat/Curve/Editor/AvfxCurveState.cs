@@ -1,4 +1,4 @@
-using static VfxEditor.AvfxFormat.Enums;
+﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.Formats.AvfxFormat.Curve.Editor {
     public struct AvfxCurveState {

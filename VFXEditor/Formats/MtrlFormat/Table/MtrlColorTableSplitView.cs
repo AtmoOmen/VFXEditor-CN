@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
                 ImGui.SameLine();
             }
 
-            if( ImGui.Selectable( $"Row {idx}", item == Selected ) ) Selected = item;
+            if( ImGui.Selectable( $"行 {idx}", item == Selected ) ) Selected = item;
 
             if( item.DyeData != null ) {
                 ImGui.SameLine();

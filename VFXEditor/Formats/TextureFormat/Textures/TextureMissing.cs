@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
@@ -15,7 +15,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected override void DrawControls() {
             ImGui.TextColored( UiUtils.RED_COLOR, "Texture is missing" );
-            if( ImGui.Button( "Import" ) ) ImportDialog();
+            if( ImGui.Button( "导入" ) ) ImportDialog();
             DrawSettingsCog();
             DrawSettingsPopup();
         }

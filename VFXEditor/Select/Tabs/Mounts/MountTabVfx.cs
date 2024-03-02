@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Lumina.Data.Files;
 using System;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
                 };
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error loading IMC file " + imcPath );
+                Dalamud.Error( e, "加载 IMC 文件 时发生错误" + imcPath );
             }
         }
 
@@ -40,12 +40,12 @@ namespace VfxEditor.Select.Tabs.Mounts {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            ImGui.Text( "Variant: " + Selected.Variant );
+            ImGui.Text( "分支: " + Selected.Variant );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "VFX", Loaded.Path, Selected.Name );
+            DrawPath( "视效", Loaded.Path, Selected.Name );
         }
     }
 }

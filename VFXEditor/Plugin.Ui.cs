@@ -1,4 +1,4 @@
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
@@ -47,9 +47,9 @@ namespace VfxEditor {
         public static void DrawFileMenu() {
             using var _ = ImRaii.PushId( "Menu" );
 
-            if( ImGui.BeginMenu( "File" ) ) {
-                if( ImGui.MenuItem( "New" ) ) NewWorkspace();
-                if( ImGui.MenuItem( "Open" ) ) OpenWorkspace( true );
+            if( ImGui.BeginMenu( "文件" ) ) {
+                if( ImGui.MenuItem( "新建" ) ) NewWorkspace();
+                if( ImGui.MenuItem( "打开" ) ) OpenWorkspace( true );
                 if( ImGui.BeginMenu( "Open Recent" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
                         if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
@@ -65,15 +65,15 @@ namespace VfxEditor {
                     ImGui.EndMenu();
                 }
                 if( ImGui.MenuItem( "Append" ) ) OpenWorkspace( false );
-                if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();
-                if( ImGui.MenuItem( "Save As" ) ) SaveAsWorkspace();
+                if( ImGui.MenuItem( "保存" ) ) SaveWorkspace();
+                if( ImGui.MenuItem( "另存为" ) ) SaveAsWorkspace();
 
                 ImGui.Separator();
-                if( ImGui.MenuItem( "Settings" ) ) Configuration.Show();
-                if( ImGui.MenuItem( "Tools" ) ) ToolsDialog.Show();
-                if( ImGui.BeginMenu( "Help" ) ) {
-                    if( ImGui.MenuItem( "Github" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
-                    if( ImGui.MenuItem( "Report an Issue" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
+                if( ImGui.MenuItem( "设置" ) ) Configuration.Show();
+                if( ImGui.MenuItem( "工具" ) ) ToolsDialog.Show();
+                if( ImGui.BeginMenu( "帮助" ) ) {
+                    if( ImGui.MenuItem( "GitHub" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
+                    if( ImGui.MenuItem( "提交 Issue" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
                     if( ImGui.MenuItem( "Wiki" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
                     ImGui.EndMenu();
                 }
@@ -81,7 +81,7 @@ namespace VfxEditor {
                 ImGui.EndMenu();
             }
 
-            if( ImGui.BeginMenu( "Export" ) ) {
+            if( ImGui.BeginMenu( "导出" ) ) {
                 if( ImGui.MenuItem( "Penumbra" ) ) PenumbraDialog.Show();
                 if( ImGui.MenuItem( "TexTools" ) ) TexToolsDialog.Show();
                 ImGui.EndMenu();
@@ -91,7 +91,7 @@ namespace VfxEditor {
         public static void DrawManagersMenu( IFileManager currentManager ) {
             using var _ = ImRaii.PushId( "Menu" );
 
-            if( ImGui.MenuItem( "Textures" ) ) TextureManager.Show();
+            if( ImGui.MenuItem( "材质" ) ) TextureManager.Show();
             ImGui.Separator();
 
             // Manually specify the order since it's different than the load order

@@ -1,4 +1,4 @@
-using Dalamud.Game.Command;
+﻿using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -91,7 +91,7 @@ namespace VfxEditor {
         public Plugin( DalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
-            Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
+            Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "打开主界面" } );
 
             RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
 

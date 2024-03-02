@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -13,11 +13,11 @@ namespace VfxEditor.Formats.MtrlFormat.Texture {
     };
 
     public class MtrlTexture : IUiItem {
-        public readonly ParsedString Path = new( "Path" );
-        public readonly ParsedFlag<TextureFlags> Options = new( "Options", 2 );
-        public readonly ParsedUIntHex Flags = new( "Flags" );
+        public readonly ParsedString Path = new( "路径" );
+        public readonly ParsedFlag<TextureFlags> Options = new( "选项", 2 );
+        public readonly ParsedUIntHex Flags = new( "标识" );
 
-        public string Text => string.IsNullOrEmpty( Path.Value ) ? "[NONE]" : Path.Value.Split( "/" )[^1];
+        public string Text => string.IsNullOrEmpty( Path.Value ) ? "[无]" : Path.Value.Split( "/" )[^1];
 
         private readonly ushort TempOffset;
 

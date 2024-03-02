@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
@@ -127,23 +127,23 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public void Draw() {
             using var _ = ImRaii.PushId( "Shader" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Code" ) ) {
+            using( var tab = ImRaii.TabItem( "编码" ) ) {
                 if( tab ) DrawCode();
             }
 
-            using( var tab = ImRaii.TabItem( "Constants" ) ) {
+            using( var tab = ImRaii.TabItem( "常量" ) ) {
                 if( tab ) ConstantView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Samplers" ) ) {
+            using( var tab = ImRaii.TabItem( "采样" ) ) {
                 if( tab ) SamplerView.Draw();
             }
 
             if( HasResources ) {
-                using var tab = ImRaii.TabItem( "Resources" );
+                using var tab = ImRaii.TabItem( "资源" );
                 if( tab ) ResourceView.Draw();
             }
         }
@@ -151,16 +151,16 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private void DrawCode() {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
-            if( ImGui.Button( "Export" ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
+            if( ImGui.Button( "导出" ) ) {
+                FileBrowserManager.SaveFileDialog( "选择保存位置", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
                     if( !ok ) return;
                     File.WriteAllBytes( res, Data );
                 } );
             }
 
             ImGui.SameLine();
-            if( ImGui.Button( "Replace" ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
+            if( ImGui.Button( "替换" ) ) {
+                FileBrowserManager.OpenFileDialog( "选择文件", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
                     if( !ok ) return;
 
                     if( Path.GetExtension( res ) == ".hlsl" ) {
@@ -185,7 +185,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             using var font = ImRaii.PushFont( UiBuilder.MonoFont );
             using var childColor = ImRaii.PushColor( ImGuiCol.ChildBg, 0x8A202020 );
-            using var child = ImRaii.Child( "Child", new( -1, -1 ), true );
+            using var child = ImRaii.Child( "子级", new( -1, -1 ), true );
             using var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
 
             if( string.IsNullOrEmpty( BinDump ) ) return;

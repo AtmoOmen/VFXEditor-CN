@@ -1,4 +1,4 @@
-namespace VfxEditor.Select.Tabs.Npc {
+﻿namespace VfxEditor.Select.Tabs.Npc {
     public enum NpcType {
         Demihuman = 2,
         Monster = 3

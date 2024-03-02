@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -48,14 +48,14 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly List<MtrlAttributeSet> ColorSets = new();
 
         public readonly ParsedString Shader;
-        private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
+        private readonly ParsedFlag<TableFlags> Flags = new( "标识", 1 );
 
         public readonly MtrlColorTable ColorTable;
         public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Dyeable );
         public readonly MtrlDyeTable DyeTable;
 
-        private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
-        private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
+        private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "着色器选项" );
+        private readonly ParsedUIntHex ShaderFlags = new( "着色器标志" );
 
         private readonly List<MtrlKey> Keys = new();
         private readonly List<MtrlMaterialParameter> MaterialParameters = new();
@@ -146,7 +146,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // ======== VIEWS =========
 
-            TextureView = new( "Texture", Textures, false, ( MtrlTexture item, int idx ) => item.Text, () => new() );
+            TextureView = new( "材质", Textures, false, ( MtrlTexture item, int idx ) => item.Text, () => new() );
             UvSetView = new( "UV Set", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             ColorSetView = new( "Color Set", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             KeyView = new( "Key", Keys, false, ( MtrlKey item, int idx ) => item.GetText( idx ), () => new() );
@@ -248,27 +248,27 @@ namespace VfxEditor.Formats.MtrlFormat {
         public override void Draw() {
             if( ShaderFileState == ShpkFileState.Unloaded ) UpdateShaderFile();
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) DrawParameters();
             }
 
-            using( var tab = ImRaii.TabItem( "Textures" ) ) {
+            using( var tab = ImRaii.TabItem( "材质" ) ) {
                 if( tab ) TextureView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "UV Sets" ) ) {
+            using( var tab = ImRaii.TabItem( "平面坐标集" ) ) {
                 if( tab ) UvSetView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Color Sets" ) ) {
+            using( var tab = ImRaii.TabItem( "颜色集" ) ) {
                 if( tab ) ColorSetView.Draw();
             }
 
             if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) {
-                using var tab = ImRaii.TabItem( "Color Table" );
+                using var tab = ImRaii.TabItem( "颜色表" );
                 if( tab ) ColorTable.Draw();
             }
         }
@@ -291,18 +291,18 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Keys" ) ) {
+            using( var tab = ImRaii.TabItem( "键" ) ) {
                 if( tab ) KeyView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Material Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "材质参数" ) ) {
                 if( tab ) MaterialParameterView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Samplers" ) ) {
+            using( var tab = ImRaii.TabItem( "采样" ) ) {
                 if( tab ) SamplerView.Draw();
             }
         }
@@ -340,7 +340,7 @@ namespace VfxEditor.Formats.MtrlFormat {
                 ShaderFilePath = path;
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Error reading shader {newPath}" );
+                Dalamud.Error( e, $"读取着色器 { newPath } 时发生错误" );
             }
         }
 

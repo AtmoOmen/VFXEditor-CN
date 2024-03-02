@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -12,8 +12,8 @@ namespace VfxEditor.ScdFormat {
 
         public SoundTracks() {
             EntryTable = new( "Entries", true, false, Entries, new() {
-                ( "Track Index", ImGuiTableColumnFlags.None, -1 ),
-                ( "Audio Index", ImGuiTableColumnFlags.None, -1 ),
+                ( "轨道序列", ImGuiTableColumnFlags.None, -1 ),
+                ( "音频序列", ImGuiTableColumnFlags.None, -1 ),
             },
             () => new() );
         }

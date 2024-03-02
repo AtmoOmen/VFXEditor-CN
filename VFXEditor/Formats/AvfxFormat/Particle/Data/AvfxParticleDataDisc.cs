@@ -1,20 +1,20 @@
-namespace VfxEditor.AvfxFormat {
+﻿namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataDisc : AvfxData {
-        public readonly AvfxInt PartsCount = new( "Parts Count", "PrtC" );
-        public readonly AvfxInt PartsCountU = new( "Parts Count U", "PCnU" );
-        public readonly AvfxInt PartsCountV = new( "Parts Count V", "PCnV" );
-        public readonly AvfxFloat PointIntervalFactoryV = new( "Point Interval Factor V", "PIFU" );
-        public readonly AvfxCurve Angle = new( "Angle", "Ang", CurveType.Angle );
-        public readonly AvfxCurve HeightBeginInner = new( "Height Begin Inner", "HBI" );
-        public readonly AvfxCurve HeightEndInner = new( "Height End Inner", "HEI" );
-        public readonly AvfxCurve HeightBeginOuter = new( "Height Begin Outer", "HBO" );
-        public readonly AvfxCurve HeightEndOuter = new( "Height End Outer", "HEO" );
-        public readonly AvfxCurve WidthBegin = new( "Width Begin", "WB" );
-        public readonly AvfxCurve WidthEnd = new( "Width End", "WE" );
-        public readonly AvfxCurve RadiusBegin = new( "Radius Begin", "RB" );
-        public readonly AvfxCurve RadiusEnd = new( "Radius End", "RE" );
-        public readonly AvfxCurveColor ColorEdgeInner = new( name: "Color Edge Inner", "CEI" );
-        public readonly AvfxCurveColor ColorEdgeOuter = new( name: "Color Edge Outer", "CEO" );
+        public readonly AvfxInt PartsCount = new( "组件数量", "PrtC" );
+        public readonly AvfxInt PartsCountU = new( "水平组件数量", "PCnU" );
+        public readonly AvfxInt PartsCountV = new( "垂直组件数量", "PCnV" );
+        public readonly AvfxFloat PointIntervalFactoryV = new( "垂直点间隔因子", "PIFU" );
+        public readonly AvfxCurve Angle = new( "角度", "Ang", CurveType.Angle );
+        public readonly AvfxCurve HeightBeginInner = new( "内部起始高度", "HBI" );
+        public readonly AvfxCurve HeightEndInner = new( "内部结束高度", "HEI" );
+        public readonly AvfxCurve HeightBeginOuter = new( "外部开始高度", "HBO" );
+        public readonly AvfxCurve HeightEndOuter = new( "外部结束高度", "HEO" );
+        public readonly AvfxCurve WidthBegin = new( "起始宽度", "WB" );
+        public readonly AvfxCurve WidthEnd = new( "结束宽度", "WE" );
+        public readonly AvfxCurve RadiusBegin = new( "半径起始点", "RB" );
+        public readonly AvfxCurve RadiusEnd = new( "半径结束点", "RE" );
+        public readonly AvfxCurveColor ColorEdgeInner = new( name: "内部边缘颜色", "CEI" );
+        public readonly AvfxCurveColor ColorEdgeOuter = new( name: "外部边缘颜色", "CEO" );
 
         public readonly UiDisplayList Display;
 
@@ -37,7 +37,7 @@ namespace VfxEditor.AvfxFormat {
                 ColorEdgeOuter
             };
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
+            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
             Display.Add( PartsCount );
             Display.Add( PartsCountU );
             Display.Add( PartsCountV );

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 
@@ -30,9 +30,9 @@ namespace VfxEditor.Select.Tabs.Character {
             var idlePath = item.GetPap( "resident/idle" );
             var movePathA = item.GetPap( "resident/move_a" );
             var movePathB = item.GetPap( "resident/move_b" );
-            if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
-            if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
-            if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
+            if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "闲置动作", idlePath );
+            if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "移动动作 A", movePathA );
+            if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "移动动作 B", movePathB );
 
             // ===== STAND =======
 
@@ -41,9 +41,9 @@ namespace VfxEditor.Select.Tabs.Character {
                 var start = item.GetStartPap( i, "" );
                 var loop = item.GetLoopPap( i, "" );
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    poses.Add( $"Pose {i}", new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
+                    poses.Add( $"姿势 {i}", new Dictionary<string, string>() {
+                        { "开始", start },
+                        { "循环", loop }
                     } );
                 }
             }
@@ -56,8 +56,8 @@ namespace VfxEditor.Select.Tabs.Character {
                 var loop = item.GetLoopPap( i, "j_" );
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
                     sitPoses.Add( $"Sit Pose {i}", new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
+                        { "开始", start },
+                        { "循环", loop }
                     } );
                 }
             }
@@ -69,7 +69,7 @@ namespace VfxEditor.Select.Tabs.Character {
 
             var facePaths = new Dictionary<string, string>();
             foreach( var face in item.Data.FaceOptions ) {
-                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
+                facePaths[$"面部 {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
             }
 
             loaded = new SelectedPap {
@@ -85,14 +85,14 @@ namespace VfxEditor.Select.Tabs.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "General" ) ) {
+            if( ImGui.BeginTabItem( "一般" ) ) {
                 DrawPaths( Loaded.General, Selected.Name );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Poses" ) ) {
+            if( ImGui.BeginTabItem( "姿势" ) ) {
                 DrawPaths( Loaded.Poses, Selected.Name );
                 ImGui.EndTabItem();
             }

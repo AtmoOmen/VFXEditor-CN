@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
@@ -56,17 +56,17 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                 ImGui.SameLine();
             }
 
-            if( UiUtils.IconButton( FontAwesomeIcon.Download, "Extract" ) ) ImGui.OpenPopup( "ExtractTex" );
+            if( UiUtils.IconButton( FontAwesomeIcon.Download, "解压" ) ) ImGui.OpenPopup( "ExtractTex" );
 
             ImGui.SameLine();
-            ImGui.InputTextWithHint( "##Search", "Search", ref SearchText, 255 );
+            ImGui.InputTextWithHint( "##Search", "搜索", ref SearchText, 255 );
 
             // ==== IMPORT ==========
 
             using( var border = ImRaii.PushStyle( ImGuiStyleVar.PopupBorderSize, 1 ) )
             using( var popup = ImRaii.Popup( "ImportTex" ) ) {
                 if( popup ) {
-                    using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
+                    using var child = ImRaii.Child( "子级", new Vector2( 500, 500 ) );
 
                     DrawPngSettings();
 
@@ -82,7 +82,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             using( var border = ImRaii.PushStyle( ImGuiStyleVar.PopupBorderSize, 1 ) )
             using( var popup = ImRaii.Popup( "ExtractTex" ) ) {
                 if( popup ) {
-                    using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
+                    using var child = ImRaii.Child( "子级", new Vector2( 500, 500 ) );
 
                     ImGui.SetNextItemWidth( 150 );
                     if( UiUtils.EnumComboBox( "Format", ExtractTypes, ExtractType, out var newExtractType ) ) {
@@ -111,7 +111,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
         protected override void DrawLeftColumn() {
             if( Textures.Count == 0 ) {
-                ImGui.TextDisabled( "No textures have been replaced..." );
+                ImGui.TextDisabled( "无已替换的材质" );
                 return;
             }
 

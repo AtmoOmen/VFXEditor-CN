@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -18,8 +18,8 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public override int Size => 0x20;
         public override int ExtraSize => Data.Count == 0 ? 0 : Data.Select( x => x.Size ).Sum();
 
-        private readonly ParsedInt Unk1 = new( "Unknown 2" );
-        private readonly ParsedInt Unk2 = new( "Unknown 3" );
+        private readonly ParsedInt Unk1 = new( "未知 2" );
+        private readonly ParsedInt Unk2 = new( "未知 3" );
 
         public readonly List<TmfcData> Data = new();
         private readonly UiSplitView<TmfcData> DataSplitView;

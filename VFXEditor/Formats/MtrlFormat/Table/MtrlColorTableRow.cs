@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
 using System.Numerics;
@@ -20,15 +20,15 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
 
         public const int Size = 32; // 16 ushorts
 
-        public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
-        public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
-        public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
-        public readonly ParsedHalf GlossStrength = new( "Gloss Strength", 20f );
-        public readonly ParsedHalf3Color Emissive = new( "Emissive" );
+        public readonly ParsedHalf3Color Diffuse = new( "漫射", Vector3.One );
+        public readonly ParsedHalf SpecularStrength = new( "镜面反射强度", 1f );
+        public readonly ParsedHalf3Color Specular = new( "镜面", Vector3.One );
+        public readonly ParsedHalf GlossStrength = new( "光泽强度", 20f );
+        public readonly ParsedHalf3Color Emissive = new( "自发光" );
         public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
-        public readonly ParsedHalf MaterialRepeatX = new( "Material Repeat X", 16f );
-        public readonly ParsedHalf2 MaterialSkew = new( "Material Skew" );
-        public readonly ParsedHalf MaterialRepeatY = new( "Material Repeat Y", 16f );
+        public readonly ParsedHalf MaterialRepeatX = new( "横轴材质重复", 16f );
+        public readonly ParsedHalf2 MaterialSkew = new( "材质倾斜" );
+        public readonly ParsedHalf MaterialRepeatY = new( "纵轴材质重复", 16f );
 
         public MtrlColorTableRow( MtrlFile file ) {
             File = file;
@@ -84,24 +84,24 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public void Draw() {
             using var editing = new Edited();
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Color" ) ) {
+            using( var tab = ImRaii.TabItem( "颜色" ) ) {
                 if( tab ) DrawColor();
             }
 
             using( var disabled = ImRaii.Disabled( !File.DyeTableEnabled ) )
-            using( var tab = ImRaii.TabItem( "Dye" ) ) {
+            using( var tab = ImRaii.TabItem( "染色" ) ) {
                 if( tab ) DyeRow.Draw();
             }
 
             if( PreviewDye != null ) {
-                using var child = ImRaii.Child( "Child", new( -1, ImGui.GetFrameHeight() + ImGui.GetStyle().WindowPadding.Y * 2 ), true );
+                using var child = ImRaii.Child( "子级", new( -1, ImGui.GetFrameHeight() + ImGui.GetStyle().WindowPadding.Y * 2 ), true );
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
                 if( DyeData == null ) {
-                    ImGui.TextDisabled( "[NO DYE VALUE]" );
+                    ImGui.TextDisabled( "[无染色值]" );
                 }
                 else {
                     var d = DyeData.Diffuse;
@@ -118,10 +118,10 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
                     using var disabled = ImRaii.Disabled();
                     ImGui.SameLine();
                     ImGui.SetNextItemWidth( 75 );
-                    ImGui.InputFloat( "##Gloss", ref DyeData.Gloss, 0, 0, $"Gloss: %.1f", ImGuiInputTextFlags.ReadOnly );
+                    ImGui.InputFloat( "##Gloss", ref DyeData.Gloss, 0, 0, $"光泽: %.1f", ImGuiInputTextFlags.ReadOnly );
                     ImGui.SameLine();
                     ImGui.SetNextItemWidth( 75 );
-                    ImGui.InputFloat( "##Power", ref DyeData.Gloss, 0, 0, $"Power: %.1f", ImGuiInputTextFlags.ReadOnly );
+                    ImGui.InputFloat( "##Power", ref DyeData.Gloss, 0, 0, $"强度: %.1f", ImGuiInputTextFlags.ReadOnly );
                 }
             }
 

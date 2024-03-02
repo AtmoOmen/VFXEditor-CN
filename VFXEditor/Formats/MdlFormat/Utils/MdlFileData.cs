@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;

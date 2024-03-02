@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Lumina.Extensions;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
@@ -156,7 +156,7 @@ namespace VfxEditor.UldFormat {
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawTextures();
@@ -167,7 +167,7 @@ namespace VfxEditor.UldFormat {
         }
 
         private void DrawTextures() {
-            using var tabItem = ImRaii.TabItem( "Textures" );
+            using var tabItem = ImRaii.TabItem( "材质" );
             if( !tabItem ) return;
 
             TextureList.Draw();
@@ -175,7 +175,7 @@ namespace VfxEditor.UldFormat {
         }
 
         private void DrawParts() {
-            using var tabItem = ImRaii.TabItem( "Part Lists" );
+            using var tabItem = ImRaii.TabItem( "分部列表" );
             if( !tabItem ) return;
 
             PartList.Draw();
@@ -183,7 +183,7 @@ namespace VfxEditor.UldFormat {
         }
 
         private void DrawComponents() {
-            using var tabItem = ImRaii.TabItem( "Components" );
+            using var tabItem = ImRaii.TabItem( "组件" );
             if( !tabItem ) return;
 
             ComponentList.Draw();
@@ -191,7 +191,7 @@ namespace VfxEditor.UldFormat {
         }
 
         private void DrawTimelines() {
-            using var tabItem = ImRaii.TabItem( "Timelines" );
+            using var tabItem = ImRaii.TabItem( "时间线" );
             if( !tabItem ) return;
 
             TimelineList.Draw();
@@ -199,7 +199,7 @@ namespace VfxEditor.UldFormat {
         }
 
         private void DrawWidgets() {
-            using var tabItem = ImRaii.TabItem( "Widgets" );
+            using var tabItem = ImRaii.TabItem( "控件" );
             if( !tabItem ) return;
 
             WidgetList.Draw();

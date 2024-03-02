@@ -1,4 +1,4 @@
-using HelixToolkit.SharpDX.Core.Animations;
+﻿using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -14,8 +14,8 @@ namespace VfxEditor.PhybFormat.Simulator.CollisionData {
     public class PhybCollisionData : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 
-        public readonly ParsedPaddedString CollisionName = new( "Collision Name", "replace_me", 32, 0xFE );
-        public readonly ParsedEnum<CollisionType> Type = new( "Collision Type" );
+        public readonly ParsedPaddedString CollisionName = new( "碰撞名称", "replace_me", 32, 0xFE );
+        public readonly ParsedEnum<CollisionType> Type = new( "碰撞类型" );
 
         public PhybCollisionData( PhybFile file, PhybSimulator simulator ) : base( file ) {
             Simulator = simulator;

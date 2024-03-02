@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -49,7 +49,7 @@ namespace VfxEditor.Ui.Components {
                 }
             }
 
-            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
+            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "新建" ) ) {
                 CommandManager.Add( new ListAddCommand<T>( Items, NewAction.Invoke() ) );
             }
         }

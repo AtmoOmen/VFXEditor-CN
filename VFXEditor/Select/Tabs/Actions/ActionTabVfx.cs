@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using System.Linq;
@@ -40,15 +40,15 @@ namespace VfxEditor.Select.Tabs.Actions {
                 }
 
                 ImGui.SameLine();
-                ImGui.Text( "TMB:" );
+                ImGui.Text( "时间线:" );
                 ImGui.SameLine();
                 SelectUiUtils.DisplayPath( Loaded.OriginalPath );
             }
 
-            DrawPath( "Cast", Selected.CastVfxPath, $"{Selected.Name} Cast" );
-            DrawPath( "Start", Selected.StartVfxPath, $"{Selected.Name} Start" );
+            DrawPath( "咏唱", Selected.CastVfxPath, $"{Selected.Name} Cast" );
+            DrawPath( "开始", Selected.StartVfxPath, $"{Selected.Name} Start" );
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+                DrawPaths( "视效", Loaded.Paths, Selected.Name );
             }
         }
 

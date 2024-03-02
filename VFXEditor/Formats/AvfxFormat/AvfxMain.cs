@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -19,59 +19,59 @@ namespace VfxEditor.AvfxFormat {
 
         // ============
 
-        public readonly AvfxInt Version = new( "Version", "Ver", value: 0x20110913 );
-        public readonly AvfxBool IsDelayFastParticle = new( "Delay Fast Particle", "bDFP" );
-        public readonly AvfxBool IsFitGround = new( "Fit Ground", "bFG" );
-        public readonly AvfxBool IsTranformSkip = new( "Transform Skip", "bTS" );
-        public readonly AvfxBool IsAllStopOnHide = new( "All Stop on Hide", "bASH" );
-        public readonly AvfxBool CanBeClippedOut = new( "Can be Clipped Out", "bCBC" );
-        public readonly AvfxBool ClipBoxenabled = new( "Clip Box Enabled", "bCul" );
-        public readonly AvfxFloat ClipBoxX = new( "Clip Box X", "CBPx" );
-        public readonly AvfxFloat ClipBoxY = new( "Clip Box Y", "CBPy" );
-        public readonly AvfxFloat ClipBoxZ = new( "Clip Box Z", "CBPz" );
-        public readonly AvfxFloat ClipBoxSizeX = new( "Clip Box Size X", "CBSx" );
-        public readonly AvfxFloat ClipBoxSizeY = new( "Clip Box Size Y", "CBSy" );
-        public readonly AvfxFloat ClipBoxSizeZ = new( "Clip Box Size Z", "CBSz" );
-        public readonly AvfxFloat BiasZmaxScale = new( "Bias Z Max Scale", "ZBMs" );
-        public readonly AvfxFloat BiasZmaxDistance = new( "Bias Z Max Distance", "ZBMd" );
-        public readonly AvfxBool IsCameraSpace = new( "Camera Space", "bCmS" );
-        public readonly AvfxBool IsFullEnvLight = new( "Full Env Light", "bFEL" );
-        public readonly AvfxBool IsClipOwnSetting = new( "Clip Own Setting", "bOSt" );
-        public readonly AvfxFloat NearClipBegin = new( "Near Clip Begin", "NCB" );
-        public readonly AvfxFloat NearClipEnd = new( "Near Clip End", "NCE" );
-        public readonly AvfxFloat FarClipBegin = new( "Far Clip Begin", "FCB" );
-        public readonly AvfxFloat FarClipEnd = new( "Far Clip End", "FCE" );
-        public readonly AvfxFloat SoftParticleFadeRange = new( "Soft Particle Fade Range", "SPFR" );
-        public readonly AvfxFloat SoftKeyOffset = new( "Sort Key Offset", "SKO" );
-        public readonly AvfxEnum<DrawLayer> DrawLayerType = new( "Draw Layer", "DwLy" );
-        public readonly AvfxEnum<DrawOrder> DrawOrderType = new( "Draw Order", "DwOT" );
-        public readonly AvfxEnum<DirectionalLightSource> DirectionalLightSourceType = new( "Directional Light Source", "DLST" );
-        public readonly AvfxEnum<PointLightSouce> PointLightsType1 = new( "Point Light 1", "PL1S" );
-        public readonly AvfxEnum<PointLightSouce> PointLightsType2 = new( "Point Light 2", "PL2S" );
-        public readonly AvfxFloat RevisedValuesPosX = new( "Revised Pos X", "RvPx" );
-        public readonly AvfxFloat RevisedValuesPosY = new( "Revised Pos Y", "RvPy" );
-        public readonly AvfxFloat RevisedValuesPosZ = new( "Revised Pos Z", "RvPz" );
-        public readonly AvfxFloat RevisedValuesRotX = new( "Revised Rot X", "RvRx" );
-        public readonly AvfxFloat RevisedValuesRotY = new( "Revised Rot Y", "RvRy" );
-        public readonly AvfxFloat RevisedValuesRotZ = new( "Revised Rot Z", "RvRz" );
-        public readonly AvfxFloat RevisedValuesScaleX = new( "Revised Scale X", "RvSx" );
-        public readonly AvfxFloat RevisedValuesScaleY = new( "Revised Scale Y", "RvSy" );
-        public readonly AvfxFloat RevisedValuesScaleZ = new( "Revised Scale Z", "RvSz" );
-        public readonly AvfxFloat RevisedValuesR = new( "Revised R", "RvR" );
-        public readonly AvfxFloat RevisedValuesG = new( "Revised G", "RvG" );
-        public readonly AvfxFloat RevisedValuesB = new( "Revised B", "RvB" );
-        public readonly AvfxBool FadeEnabledX = new( "Fade Enabled X", "AFXe" );
-        public readonly AvfxFloat FadeInnerX = new( "Fade Inner X", "AFXi" );
-        public readonly AvfxFloat FadeOuterX = new( "Fade Outer X", "AFXo" );
-        public readonly AvfxBool FadeEnabledY = new( "Fade Enabled Y", "AFYe" );
-        public readonly AvfxFloat FadeInnerY = new( "Fade Inner Y", "AFYi" );
-        public readonly AvfxFloat FadeOuterY = new( "Fade Outer Y", "AFYo" );
-        public readonly AvfxBool FadeEnabledZ = new( "Fade Enabled Z", "AFZe" );
-        public readonly AvfxFloat FadeInnerZ = new( "Fade Inner Z", "AFZi" );
-        public readonly AvfxFloat FadeOuterZ = new( "Fade Outer Z", "AFZo" );
-        public readonly AvfxBool GlobalFogEnabled = new( "Global Fog", "bGFE" );
-        public readonly AvfxFloat GlobalFogInfluence = new( "Global Fog Influence", "GFIM" );
-        public readonly AvfxBool LTSEnabled = new( "LTS Enabled", "bLTS" );
+        public readonly AvfxInt Version = new( "版本", "Ver", value: 0x20110913 );
+        public readonly AvfxBool IsDelayFastParticle = new( "延迟快速粒子", "bDFP" );
+        public readonly AvfxBool IsFitGround = new( "适应地面", "bFG" );
+        public readonly AvfxBool IsTranformSkip = new( "跳过变换", "bTS" );
+        public readonly AvfxBool IsAllStopOnHide = new( "隐藏时全部停止", "bASH" );
+        public readonly AvfxBool CanBeClippedOut = new( "可被裁剪", "bCBC" );
+        public readonly AvfxBool ClipBoxenabled = new( "启用裁剪框", "bCul" );
+        public readonly AvfxFloat ClipBoxX = new( "裁剪框 X 坐标", "CBPx" );
+        public readonly AvfxFloat ClipBoxY = new( "裁剪框 Y 坐标", "CBPy" );
+        public readonly AvfxFloat ClipBoxZ = new( "裁剪框 Z 坐标", "CBPz" );
+        public readonly AvfxFloat ClipBoxSizeX = new( "裁剪框 X 轴尺寸", "CBSx" );
+        public readonly AvfxFloat ClipBoxSizeY = new( "裁剪框 Y 轴尺寸", "CBSy" );
+        public readonly AvfxFloat ClipBoxSizeZ = new( "裁剪框 Z 轴尺寸", "CBSz" );
+        public readonly AvfxFloat BiasZmaxScale = new( "Z 轴最大缩放值偏移", "ZBMs" );
+        public readonly AvfxFloat BiasZmaxDistance = new( "Z 轴最大距离偏移", "ZBMd" );
+        public readonly AvfxBool IsCameraSpace = new( "摄像机空间", "bCmS" );
+        public readonly AvfxBool IsFullEnvLight = new( "全局环境光", "bFEL" );
+        public readonly AvfxBool IsClipOwnSetting = new( "裁剪自身", "bOSt" );
+        public readonly AvfxFloat NearClipBegin = new( "近裁剪起始位置", "NCB" );
+        public readonly AvfxFloat NearClipEnd = new( "近裁剪结束位置", "NCE" );
+        public readonly AvfxFloat FarClipBegin = new( "远裁剪起始位置", "FCB" );
+        public readonly AvfxFloat FarClipEnd = new( "远裁剪结束位置", "FCE" );
+        public readonly AvfxFloat SoftParticleFadeRange = new( "柔性粒子淡化范围", "SPFR" );
+        public readonly AvfxFloat SoftKeyOffset = new( "排序键偏移值", "SKO" );
+        public readonly AvfxEnum<DrawLayer> DrawLayerType = new( "绘制层级", "DwLy" );
+        public readonly AvfxEnum<DrawOrder> DrawOrderType = new( "绘制顺序", "DwOT" );
+        public readonly AvfxEnum<DirectionalLightSource> DirectionalLightSourceType = new( "定向光源", "DLST" );
+        public readonly AvfxEnum<PointLightSouce> PointLightsType1 = new( "点光源 1", "PL1S" );
+        public readonly AvfxEnum<PointLightSouce> PointLightsType2 = new( "点光源 2", "PL2S" );
+        public readonly AvfxFloat RevisedValuesPosX = new( "修改后 X 轴坐标", "RvPx" );
+        public readonly AvfxFloat RevisedValuesPosY = new( "修改后 Y 轴坐标", "RvPy" );
+        public readonly AvfxFloat RevisedValuesPosZ = new( "修改后 Z 轴坐标", "RvPz" );
+        public readonly AvfxFloat RevisedValuesRotX = new( "修改后 X 轴旋转", "RvRx" );
+        public readonly AvfxFloat RevisedValuesRotY = new( "修改后 Y 轴旋转", "RvRy" );
+        public readonly AvfxFloat RevisedValuesRotZ = new( "修改后 Z 轴旋转", "RvRz" );
+        public readonly AvfxFloat RevisedValuesScaleX = new( "修改后 X 轴缩放", "RvSx" );
+        public readonly AvfxFloat RevisedValuesScaleY = new( "修改后 Y 轴缩放", "RvSy" );
+        public readonly AvfxFloat RevisedValuesScaleZ = new( "修改后 Z 轴缩放", "RvSz" );
+        public readonly AvfxFloat RevisedValuesR = new( "修改后红色", "RvR" );
+        public readonly AvfxFloat RevisedValuesG = new( "修改后绿色", "RvG" );
+        public readonly AvfxFloat RevisedValuesB = new( "修改后蓝色", "RvB" );
+        public readonly AvfxBool FadeEnabledX = new( "启用 X 轴上淡化效果", "AFXe" );
+        public readonly AvfxFloat FadeInnerX = new( "X 轴内部淡化", "AFXi" );
+        public readonly AvfxFloat FadeOuterX = new( "X 轴外部淡化", "AFXo" );
+        public readonly AvfxBool FadeEnabledY = new( "启用 Y 轴上淡化效果", "AFYe" );
+        public readonly AvfxFloat FadeInnerY = new( "Y 轴内部淡化", "AFYi" );
+        public readonly AvfxFloat FadeOuterY = new( "Y 轴外部淡化", "AFYo" );
+        public readonly AvfxBool FadeEnabledZ = new( "启用 Z 轴上淡化效果", "AFZe" );
+        public readonly AvfxFloat FadeInnerZ = new( "Z 轴内部淡化", "AFZi" );
+        public readonly AvfxFloat FadeOuterZ = new( "Z 轴外部淡化", "AFZo" );
+        public readonly AvfxBool GlobalFogEnabled = new( "全局烟雾效果", "bGFE" );
+        public readonly AvfxFloat GlobalFogInfluence = new( "全局雾效影响", "GFIM" );
+        public readonly AvfxBool LTSEnabled = new( "启用 LTS", "bLTS" );
         public readonly AvfxBool AGSEnabled = new( "AGS Enabled", "bAGS" );
 
         public readonly AvfxNodeGroupSet NodeGroupSet;
@@ -152,18 +152,18 @@ namespace VfxEditor.AvfxFormat {
             NodeGroupSet = new( this );
 
             Display = new() {
-                new UiFloat3( "Revised Scale", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
-                new UiFloat3( "Revised Position", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
-                new UiFloat3( "Revised Rotation", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
-                new UiFloat3( "Revised Color", RevisedValuesR, RevisedValuesG, RevisedValuesB ),
+                new UiFloat3( "修改后缩放", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
+                new UiFloat3( "修改后位置", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
+                new UiFloat3( "修改后旋转", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
+                new UiFloat3( "修改后颜色", RevisedValuesR, RevisedValuesG, RevisedValuesB ),
                 IsDelayFastParticle,
                 IsFitGround,
                 IsTranformSkip,
                 IsAllStopOnHide,
                 CanBeClippedOut,
                 ClipBoxenabled,
-                new UiFloat3( "Clip Box Position", ClipBoxX, ClipBoxY, ClipBoxZ ),
-                new UiFloat3( "Clip Box Size", ClipBoxSizeX, ClipBoxSizeY, ClipBoxSizeZ ),
+                new UiFloat3( "裁剪框位置", ClipBoxX, ClipBoxY, ClipBoxZ ),
+                new UiFloat3( "裁剪框大小", ClipBoxSizeX, ClipBoxSizeY, ClipBoxSizeZ ),
                 BiasZmaxScale,
                 BiasZmaxDistance,
                 IsCameraSpace,
@@ -183,8 +183,8 @@ namespace VfxEditor.AvfxFormat {
                 FadeEnabledX,
                 FadeEnabledY,
                 FadeEnabledZ,
-                new UiFloat3( "Fade Inner", FadeInnerX, FadeInnerY, FadeInnerZ ),
-                new UiFloat3( "Fade Outer", FadeOuterX, FadeOuterY, FadeOuterZ ),
+                new UiFloat3( "内部淡化", FadeInnerX, FadeInnerY, FadeInnerZ ),
+                new UiFloat3( "外部淡化", FadeOuterX, FadeOuterY, FadeOuterZ ),
                 GlobalFogEnabled,
                 GlobalFogEnabled,
                 LTSEnabled,
@@ -275,16 +275,16 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "Avfx" );
             using var child = ImRaii.Child( "Child" );
 
-            ImGui.TextDisabled( $"Version {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
+            ImGui.TextDisabled( $"版本 {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
 
-            if( ImGui.InputFloat( "Revised Scale (Combined)", ref ScaleCombined ) ) {
+            if( ImGui.InputFloat( "修改后缩放(整体)", ref ScaleCombined ) ) {
                 RevisedValuesScaleX.Value = ScaleCombined;
                 RevisedValuesScaleY.Value = ScaleCombined;
                 RevisedValuesScaleZ.Value = ScaleCombined;
             };
 
             ImGui.SameLine();
-            UiUtils.HelpMarker( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );
+            UiUtils.HelpMarker( "修改后的位置、缩放和旋转仅会作用于未链接绑定器的效果。获取更多信息请查看\"绑定器\"一栏" );
 
             DrawItems( Display );
         }

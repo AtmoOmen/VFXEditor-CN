@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -9,14 +9,14 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTimelineItem : GenericWorkspaceItem {
         public readonly AvfxTimeline Timeline;
 
-        public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
-        public readonly AvfxInt StartTime = new( "Start Time", "StTm" );
-        public readonly AvfxInt EndTime = new( "End Time", "EdTm" );
-        public readonly AvfxInt BinderIdx = new( "Binder Index", "BdNo", value: -1 );
-        public readonly AvfxInt EffectorIdx = new( "Effector Index", "EfNo", value: -1 );
-        public readonly AvfxInt EmitterIdx = new( "Emitter Index", "EmNo", value: -1 );
-        public readonly AvfxInt Platform = new( "Platform", "Plfm" );
-        public readonly AvfxInt ClipIdx = new( "Clip Index", "ClNo" );
+        public readonly AvfxBool Enabled = new( "启用", "bEna" );
+        public readonly AvfxInt StartTime = new( "开始时间", "StTm" );
+        public readonly AvfxInt EndTime = new( "结束时间", "EdTm" );
+        public readonly AvfxInt BinderIdx = new( "绑定器索引", "BdNo", value: -1 );
+        public readonly AvfxInt EffectorIdx = new( "效果器索引", "EfNo", value: -1 );
+        public readonly AvfxInt EmitterIdx = new( "发射器索引", "EmNo", value: -1 );
+        public readonly AvfxInt Platform = new( "平台", "Plfm" );
+        public readonly AvfxInt ClipIdx = new( "片段索引", "ClNo" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -58,9 +58,9 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void InitializeNodeSelects() {
-            BinderSelect = new AvfxNodeSelect<AvfxBinder>( Timeline, "Target Binder", Timeline.NodeGroups.Binders, BinderIdx );
-            EmitterSelect = new AvfxNodeSelect<AvfxEmitter>( Timeline, "Target Emitter", Timeline.NodeGroups.Emitters, EmitterIdx );
-            EffectorSelect = new AvfxNodeSelect<AvfxEffector>( Timeline, "Target Effector", Timeline.NodeGroups.Effectors, EffectorIdx );
+            BinderSelect = new AvfxNodeSelect<AvfxBinder>( Timeline, "目标绑定器", Timeline.NodeGroups.Binders, BinderIdx );
+            EmitterSelect = new AvfxNodeSelect<AvfxEmitter>( Timeline, "目标发射器", Timeline.NodeGroups.Emitters, EmitterIdx );
+            EffectorSelect = new AvfxNodeSelect<AvfxEffector>( Timeline, "目标效果器", Timeline.NodeGroups.Effectors, EffectorIdx );
         }
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
@@ -75,7 +75,7 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.DrawItems( Display );
 
             var assigned = ClipIdx.IsAssigned();
-            if( ImGui.Checkbox( "Clip Enabled", ref assigned ) ) {
+            if( ImGui.Checkbox( "启用片段", ref assigned ) ) {
                 CommandManager.Add( new AvfxAssignCommand( ClipIdx, assigned, false, false ) );
             }
             ClipIdx.Draw();
@@ -89,7 +89,7 @@ namespace VfxEditor.AvfxFormat {
                 return $"Clip {ClipIdx.Value}";
             }
 
-            return "[NONE]";
+            return "[无]";
         }
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Item{GetIdx()}";

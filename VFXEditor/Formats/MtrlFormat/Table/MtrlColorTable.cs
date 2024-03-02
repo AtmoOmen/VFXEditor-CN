@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +36,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             }
 
             ImGui.SetNextItemWidth( 300f );
-            using var combo = ImRaii.Combo( "Preview Dye", PreviewDye == null ? "[NONE]" : PreviewDye.Name );
+            using var combo = ImRaii.Combo( "Preview Dye", PreviewDye == null ? "[无]" : PreviewDye.Name );
             if( !combo ) return;
 
             DrawDyeComboRow( null, 0 );
@@ -51,7 +51,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();
-            if( ImGui.Selectable( dye == null ? "[NONE]" : dye.Name, PreviewDye == dye ) ) {
+            if( ImGui.Selectable( dye == null ? "[无]" : dye.Name, PreviewDye == dye ) ) {
                 PreviewDye = dye;
                 foreach( var item in Rows ) item.SetPreviewDye( dye );
                 Plugin.DirectXManager.MaterialPreview.LoadColorRow( RowView.GetSelected() );

@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using System.Linq;
 
@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Tabs.Cutscenes {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.Path );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( "视效", Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( CutsceneRow item ) => item.Name;

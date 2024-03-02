@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -20,8 +20,8 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTimelineClip : AvfxWorkspaceItem {
         public readonly AvfxTimeline Timeline;
         public readonly ParsedEnum<ClipType> Type = new( "Type", ClipType.Kill );
-        public readonly ParsedInt4 RawInts = new( "Raw Integers" );
-        public readonly ParsedFloat4 RawFloats = new( "Raw Floats" );
+        public readonly ParsedInt4 RawInts = new( "原始整数" );
+        public readonly ParsedFloat4 RawFloats = new( "原始浮点数" );
 
         public AvfxTimelineClip( AvfxTimeline timeline ) : base( "Clip" ) {
             Timeline = timeline;
@@ -58,34 +58,34 @@ namespace VfxEditor.AvfxFormat {
             RawFloats.Draw();
         }
 
-        public override string GetDefaultText() => $"Clip {GetIdx()} ({Type.Value})";
+        public override string GetDefaultText() => $"片段 {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"{Timeline.GetWorkspaceId()}/Clip{GetIdx()}";
 
         private void DrawKill() {
             var duration = RawInts.Value.X;
-            if( ImGui.InputInt( "Fade Out Duration", ref duration ) ) {
+            if( ImGui.InputInt( "淡出持续时间", ref duration ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<Int4>( RawInts, RawInts.Value with {
                     X = duration
                 } ) );
             }
 
             var hide = RawInts.Value.W == 1;
-            if( ImGui.Checkbox( "Hide", ref hide ) ) {
+            if( ImGui.Checkbox( "隐藏", ref hide ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<Int4>( RawInts, RawInts.Value with {
                     W = hide ? 1 : 0
                 } ) );
             }
 
             var allowShow = RawFloats.Value.X != -1f;
-            if( ImGui.Checkbox( "Allow Show", ref allowShow ) ) {
+            if( ImGui.Checkbox( "允许显示", ref allowShow ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<Vector4>( RawFloats, RawFloats.Value with {
                     X = allowShow ? 0 : -1f
                 } ) );
             }
 
             var startHidden = RawFloats.Value.Y != -1f;
-            if( ImGui.Checkbox( "Start Hidden", ref startHidden ) ) {
+            if( ImGui.Checkbox( "初始隐藏", ref startHidden ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<Vector4>( RawFloats, RawFloats.Value with {
                     Y = startHidden ? 0 : -1f
                 } ) );
@@ -94,14 +94,14 @@ namespace VfxEditor.AvfxFormat {
 
         private void DrawRandomTrigger() {
             var min = RawInts.Value.X;
-            if( ImGui.InputInt( "Minimum Trigger", ref min ) ) {
+            if( ImGui.InputInt( "最小触发", ref min ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<Int4>( RawInts, RawInts.Value with {
                     X = min
                 } ) );
             }
 
             var max = RawInts.Value.Y;
-            if( ImGui.InputInt( "Maximum Trigger", ref max ) ) {
+            if( ImGui.InputInt( "最大触发", ref max ) ) {
                 CommandManager.Add( new ParsedSimpleCommand<Int4>( RawInts, RawInts.Value with {
                     Y = max
                 } ) );

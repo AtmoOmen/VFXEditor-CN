@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
@@ -137,7 +137,7 @@ namespace VfxEditor.SklbFormat.Bones {
             var searchSet = GetSearchSet();
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "ExportPopup" );
+                if( ImGui.Button( "导出" ) ) ImGui.OpenPopup( "ExportPopup" );
 
                 using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
                     if( popup ) {
@@ -147,14 +147,14 @@ namespace VfxEditor.SklbFormat.Bones {
                 }
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" ) ) ImportDialog();
+                if( ImGui.Button( "替换" ) ) ImportDialog();
 
                 ImGui.SameLine();
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
             }
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Bone Names", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "显示骨骼名称", ref Plugin.Configuration.ShowBoneNames ) ) Plugin.Configuration.Save();
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 200f );
@@ -167,7 +167,7 @@ namespace VfxEditor.SklbFormat.Bones {
             ImGui.Separator();
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
-                ImGui.Columns( 2, "Columns", true );
+                ImGui.Columns( 2, "列", true );
 
                 using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                     // New bone
@@ -179,7 +179,7 @@ namespace VfxEditor.SklbFormat.Bones {
                             CommandManager.Add( new ListAddCommand<SklbBone>( Bones, newBone ) );
                         }
                     }
-                    UiUtils.Tooltip( "Create new bone at root" );
+                    UiUtils.Tooltip( "在根部创建新骨骼" );
 
                     // Expand
                     ImGui.SameLine();
@@ -188,11 +188,11 @@ namespace VfxEditor.SklbFormat.Bones {
                             expandAll = true;
                         }
                     }
-                    UiUtils.Tooltip( "Expand all tree nodes" );
+                    UiUtils.Tooltip( "展开所有树状节点" );
 
                     // Search
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint( "##Search", "Search", ref SearchText, 255 );
+                    ImGui.InputTextWithHint( "##Search", "搜索", ref SearchText, 255 );
                 }
 
                 using var left = ImRaii.Child( "Left" );
@@ -235,7 +235,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     Selected.DrawBody( Bones.IndexOf( Selected ) );
 
                     using var color = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                    if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) DeleteBone( Selected );
+                    if( UiUtils.IconButton( FontAwesomeIcon.Trash, "删除" ) ) DeleteBone( Selected );
                 }
 
                 SklbPreview.DrawInline();
@@ -245,10 +245,10 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void DrawParentCombo( SklbBone bone ) {
-            using var combo = ImRaii.Combo( "Parent", bone.Parent == null ? "[NONE]" : bone.Parent.Name.Value );
+            using var combo = ImRaii.Combo( "父级", bone.Parent == null ? "[NONE]" : bone.Parent.Name.Value );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", bone.Parent == null ) ) {
+            if( ImGui.Selectable( "[无]", bone.Parent == null ) ) {
                 CommandManager.Add( new SklbBoneParentCommand( bone, null ) );
             }
 
@@ -289,7 +289,7 @@ namespace VfxEditor.SklbFormat.Bones {
             DragDrop( bone );
 
             if( ImGui.BeginPopupContextItem() ) {
-                if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "Create sub-bone" ) ) {
+                if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "创建子骨骼" ) ) {
                     var newId = BONE_ID++;
                     var newBone = new SklbBone( newId );
                     newBone.Name.Value = $"bone_{newId}";
@@ -300,7 +300,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     CommandManager.Add( new CompoundCommand( commands ) );
                 }
 
-                if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) ) {
                     DeleteBone( bone );
                     ImGui.CloseCurrentPopup();
                 }
@@ -380,19 +380,19 @@ namespace VfxEditor.SklbFormat.Bones {
         // ======= IMPORT EXPORT ==========
 
         private void ExportHavok() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".hkx", "", "hkx", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.Copy( Path, res, true );
             } );
         }
 
         private void ExportGltf() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "Skeleton{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     var importHavok = new HavokBones( res, true );
@@ -406,7 +406,7 @@ namespace VfxEditor.SklbFormat.Bones {
                         CommandManager.Add( new SklbBonesImportCommand( this, newBones ) );
                     }
                     catch( Exception e ) {
-                        Dalamud.Error( e, "Could not import data" );
+                        Dalamud.Error( e, "无法导入数据" );
                     }
                 }
             } );

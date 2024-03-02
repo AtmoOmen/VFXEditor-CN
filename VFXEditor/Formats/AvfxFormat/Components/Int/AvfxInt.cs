@@ -1,4 +1,4 @@
-using VfxEditor.Formats.AvfxFormat.Components;
+﻿using VfxEditor.Formats.AvfxFormat.Components;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat {

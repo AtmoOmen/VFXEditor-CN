@@ -1,4 +1,4 @@
-using SharpDX.Direct3D11;
+﻿using SharpDX.Direct3D11;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.MdlFormat.Utils;

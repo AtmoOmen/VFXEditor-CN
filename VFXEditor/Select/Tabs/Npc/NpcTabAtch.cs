@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +38,7 @@ namespace VfxEditor.Select.Tabs.Npc {
         }
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Selected.AtchPath, Selected.Name );
+            DrawPath( "路径", Selected.AtchPath, Selected.Name );
         }
 
         protected override string GetName( NpcRow item ) => item.Name;

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Internal;
+﻿using Dalamud.Interface.Internal;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Numerics;

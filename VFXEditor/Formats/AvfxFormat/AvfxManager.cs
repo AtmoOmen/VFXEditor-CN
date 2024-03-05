@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +12,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxExportDialog ExportDialog;
 
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
-            SourceSelect = new VfxSelectDialog( "选择文件 [加载]", this, true );
-            ReplaceSelect = new VfxSelectDialog( "选择文件 [替换]", this, false );
+            SourceSelect = new VfxSelectDialog( "选择文件 [加载]###AVFX", this, true );
+            ReplaceSelect = new VfxSelectDialog( "选择文件 [替换]###AVFX", this, false );
             ExportDialog = new( WindowSystem );
         }
 

@@ -1,12 +1,12 @@
-﻿using VfxEditor.FileManager;
+using VfxEditor.FileManager;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ShpkFormat {
     public unsafe class ShpkManager : FileManager<ShpkDocument, ShpkFile, WorkspaceMetaBasic> {
         public ShpkManager() : base( "Shpk Editor", "Shpk" ) {
-            SourceSelect = new ShpkSelectDialog( "着色器选择 [加载]", this, true );
-            ReplaceSelect = new ShpkSelectDialog( "着色器选择 [替换]", this, false );
+            SourceSelect = new ShpkSelectDialog( "选择文件 [加载]###SHPK", this, true );
+            ReplaceSelect = new ShpkSelectDialog( "选择文件 [替换]###SHPK", this, false );
         }
 
         protected override ShpkDocument GetNewDocument() => new( this, NewWriteLocation );

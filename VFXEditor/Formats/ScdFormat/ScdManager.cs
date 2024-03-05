@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select.Formats;
@@ -10,8 +10,8 @@ namespace VfxEditor.ScdFormat {
         public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_out.ogg" ).Replace( '\\', '/' );
 
         public ScdManager() : base( "Scd Editor", "Scd" ) {
-            SourceSelect = new ScdSelectDialog( "选择音频文件 [加载]", this, true );
-            ReplaceSelect = new ScdSelectDialog( "选择音频文件 [替换]", this, false );
+            SourceSelect = new ScdSelectDialog( "选择文件 [加载]###SCD", this, true );
+            ReplaceSelect = new ScdSelectDialog( "选择文件 [替换]###SCD", this, false );
         }
 
         protected override ScdDocument GetNewDocument() => new( this, NewWriteLocation );

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -83,7 +83,7 @@ namespace VfxEditor {
 #if BETA
         private const string CommandName = "/vfxbeta";
 #else
-        private const string CommandName = "/vfxedit";
+        private const string CommandName = "/vfxeditcn";
 #endif
 
         private static bool ClearKeyState = false;

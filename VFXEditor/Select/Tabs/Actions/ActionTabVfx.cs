@@ -48,8 +48,8 @@ namespace VfxEditor.Select.Tabs.Actions {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             Dialog.DrawPaths( new Dictionary<string, string>() {
-                { "咏唱", Selected.CastVfxPath },
-                { "开始", Selected.StartVfxPath }
+                { "Cast", Selected.CastVfxPath },
+                { "Start", Selected.StartVfxPath }
             }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name, SelectResultType.GameAction );
         }
     }

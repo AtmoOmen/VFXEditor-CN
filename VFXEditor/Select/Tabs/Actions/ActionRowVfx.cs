@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Tabs.Actions {
 
             var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();
             if( string.IsNullOrEmpty( hitKey ) || hitKey.Contains( "normal_hit" ) ) return;
-            HitAction = new ActionRowVfx( $"{Name} (Target)", RowId, Icon, action.ActionTimelineHit );
+            HitAction = new ActionRowVfx( $"{Name} (目标)", RowId, Icon, action.ActionTimelineHit );
         }
 
         public string GetName() => Name;

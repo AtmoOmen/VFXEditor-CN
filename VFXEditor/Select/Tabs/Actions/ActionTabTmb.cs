@@ -20,10 +20,10 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             Dialog.DrawPaths( new Dictionary<string, string>() {
-                { "开始",  Selected.StartTmbPath },
-                { "结束",  Selected.EndTmbPath },
-                { "命中",  Selected.HitTmbPath },
-                { "武器",  Selected.WeaponTmbPath },
+                { "Start",  Selected.StartTmbPath },
+                { "End",  Selected.EndTmbPath },
+                { "Hit",  Selected.HitTmbPath },
+                { "Weapon",  Selected.WeaponTmbPath },
 
             }, Selected.Name, SelectResultType.GameAction );
         }

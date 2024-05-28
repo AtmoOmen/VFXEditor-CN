@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using Dalamud.Interface;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.Utils;
 using Buffer = SharpDX.Direct3D11.Buffer;

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using VfxEditor.Select.Data;
 
-namespace VfxEditor.Select {
+namespace VfxEditor.Select; 
     public partial class SelectDataUtils {
         public static string BnpcPath => Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
         public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
@@ -46,7 +46,7 @@ namespace VfxEditor.Select {
             new RacialData( "维埃拉族女性", "c1801", 1701 )
         ];
 
-        public static readonly Dictionary<string, string> JobAnimationIds = [
+        public static readonly Dictionary<string, string> JobAnimationIds = new() {
             { "战士", "bt_2ax_emp" },
             { "骑士", "bt_swd_sld" },
             { "绝枪战士", "bt_2gb_emp" },
@@ -67,20 +67,20 @@ namespace VfxEditor.Select {
             { "黑魔法师", "bt_jst_sld" },
             { "召唤师", "bt_2bk_emp" },
             { "青魔法师", "bt_rod_emp" },
-        ];
+        };
 
-        public static readonly Dictionary<string, string> JobMovementOverride = [
+        public static readonly Dictionary<string, string> JobMovementOverride = new() {
             { "黑魔法师", "bt_stf_sld" },
             { "忍者", "bt_nin_nin" },
-        ];
+        };
 
-        public static readonly Dictionary<string, string> JobDrawOverride = [
+        public static readonly Dictionary<string, string> JobDrawOverride = new() {
             { "黑魔法师", "bt_stf_sld" }
-        ];
+        };
 
-        public static readonly Dictionary<string, string> JobAutoOverride = [
+        public static readonly Dictionary<string, string> JobAutoOverride = new() {
             { "黑魔法师", "bt_stf_sld" }
-        ];
+        };
 
         public static readonly int MaxChangePoses = 6;
 
@@ -93,4 +93,4 @@ namespace VfxEditor.Select {
             return CharacterRaces.ToDictionary( x => x.Name, x => GetSkeletonPath( x.Id, path ) );
         }
     }
-}
+

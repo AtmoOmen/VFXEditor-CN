@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
@@ -192,7 +192,7 @@ namespace VfxEditor.AvfxFormat {
                 if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected );
             }
 
-            UiUtils.Tooltip( "Navigate to selected node" );
+            UiUtils.Tooltip( "导航至选中的节点" );
 
             if( !Name.StartsWith( "##" ) ) {
                 ImGui.SameLine();
@@ -204,7 +204,7 @@ namespace VfxEditor.AvfxFormat {
             using var combo = ImRaii.Combo( "##MainCombo", GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Add( new AvfxNodeSelectCommand<T>( this, null ) ); // "None" selector
+            if( ImGui.Selectable( "[无]", Selected == null ) ) CommandManager.Add( new AvfxNodeSelectCommand<T>( this, null ) ); // "None" selector
             foreach( var item in Group.Items ) {
                 var cycle = Node.IsChildOf( item );
                 using var disabled = ImRaii.Disabled( cycle );
@@ -214,6 +214,6 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public string GetText() => Selected == null ? "[NONE]" : Selected.GetText();
+        public string GetText() => Selected == null ? "[无]" : Selected.GetText();
     }
 }

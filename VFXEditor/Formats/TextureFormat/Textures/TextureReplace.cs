@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -125,10 +125,10 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             var width = ImGui.GetContentRegionAvail().X - 50;
 
             ImGui.SetNextItemWidth( width );
-            ImGui.InputTextWithHint( "Name", TrimPath( GamePath ), ref Name, 255 );
+            ImGui.InputTextWithHint( "名称", TrimPath( GamePath ), ref Name, 255 );
 
             ImGui.SetNextItemWidth( width );
-            ImGui.InputText( "Path", ref GamePath, 255 );
+            ImGui.InputText( "路径", ref GamePath, 255 );
 
             DrawImage();
             DrawControls();
@@ -154,7 +154,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
             ImGui.SameLine();
-            if( UiUtils.RemoveButton( "Reset" ) ) Plugin.TextureManager.RemoveReplace( this );
+            if( UiUtils.RemoveButton( "重置" ) ) Plugin.TextureManager.RemoveReplace( this );
         }
 
         protected override TextureDataFile GetRawData() => TextureDataFile.LoadFromLocal( WriteLocation );

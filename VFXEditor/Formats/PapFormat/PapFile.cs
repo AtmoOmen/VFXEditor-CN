@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +23,9 @@ namespace VfxEditor.PapFormat {
         public readonly string SourcePath;
         public bool IsMaterial => SourcePath?.Contains( "material.pap" ) == true || Animations.Any( x => x.GetPapType() == 22 );
 
-        public readonly ParsedShort ModelId = new( "Model Id" );
-        public readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", size: 1 );
-        public readonly ParsedInt Variant = new( "Variant", size: 1 );
+        public readonly ParsedShort ModelId = new( "模型 ID" );
+        public readonly ParsedEnum<SkeletonType> ModelType = new( "骨架类型", size: 1 );
+        public readonly ParsedInt Variant = new( "分支", size: 1 );
 
         public readonly List<PapAnimation> Animations = [];
         public readonly PapAnimationDropdown AnimationsDropdown;
@@ -137,7 +137,7 @@ namespace VfxEditor.PapFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Main" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
@@ -145,15 +145,15 @@ namespace VfxEditor.PapFormat {
         }
 
         private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
+            using var tabItem = ImRaii.TabItem( "参数" );
             if( !tabItem ) return;
 
             ModelId.Draw();
             ModelType.Draw();
             Variant.Draw();
 
-            if( ImGui.Button( $"Export Havok" ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+            if( ImGui.Button( $"导出 Havok" ) ) {
+                FileBrowserManager.SaveFileDialog( "选择保存位置", ".hkx", "", "hkx", ( bool ok, string res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
             }
@@ -164,11 +164,11 @@ namespace VfxEditor.PapFormat {
         }
 
         private void DrawAnimations() {
-            using var tabItem = ImRaii.TabItem( "Animations" );
+            using var tabItem = ImRaii.TabItem( "动画" );
             if( !tabItem ) return;
 
             if( EmptyHavok ) {
-                ImGui.TextDisabled( "No Havok data" );
+                ImGui.TextDisabled( "无 Havok 数据" );
                 return;
             }
 

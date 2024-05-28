@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Sound.Data;
 
@@ -7,7 +7,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedEnum<FilterType> Type = new( "Type" );
         public readonly ParsedFloat Frequency = new( "Frequency" );
         public readonly ParsedFloat InvQ = new( "InvQ" );
-        public readonly ParsedFloat Gain = new( "Gain" );
+        public readonly ParsedFloat Gain = new( "增益" );
 
         public override void Read( BinaryReader reader ) {
             Type.Read( reader );

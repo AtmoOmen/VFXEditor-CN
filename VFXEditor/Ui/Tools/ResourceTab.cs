@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility;
+﻿using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Client.System.Resource;
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using FFXIVClientStructs.Interop;
@@ -25,7 +25,7 @@ namespace VfxEditor.Ui.Tools {
 
             if( resourceHandler == null ) return;
 
-            ImGui.InputTextWithHint( "##ResourceManager/Search", "Search", ref Search, 256 );
+            ImGui.InputTextWithHint( "##ResourceManager/Search", "搜索", ref Search, 256 );
 
             if( !ImGui.BeginChild( "##ResourceManager", -Vector2.One, true ) ) return;
 
@@ -92,11 +92,11 @@ namespace VfxEditor.Ui.Tools {
                 return;
             }
 
-            ImGui.TableSetupColumn( "Hash", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
-            ImGui.TableSetupColumn( "Ptr", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
-            ImGui.TableSetupColumn( "Path", ImGuiTableColumnFlags.WidthFixed,
+            ImGui.TableSetupColumn( "哈希值", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
+            ImGui.TableSetupColumn( "指针", ImGuiTableColumnFlags.WidthFixed, 100 * ImGuiHelpers.GlobalScale );
+            ImGui.TableSetupColumn( "路径", ImGuiTableColumnFlags.WidthFixed,
                 ( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X ) - 300 * ImGuiHelpers.GlobalScale );
-            ImGui.TableSetupColumn( "Refs", ImGuiTableColumnFlags.WidthFixed, 30 * ImGuiHelpers.GlobalScale );
+            ImGui.TableSetupColumn( "引用", ImGuiTableColumnFlags.WidthFixed, 30 * ImGuiHelpers.GlobalScale );
             ImGui.TableHeadersRow();
 
             foreach( var item in itemList ) {

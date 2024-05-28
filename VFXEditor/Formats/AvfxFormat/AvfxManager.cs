@@ -12,8 +12,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxExportDialog ExportDialog;
 
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
-            SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );
-            ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", this, false );
+            SourceSelect = new VfxSelectDialog( "选择文件 [加载]###AVFX", this, true );
+            ReplaceSelect = new VfxSelectDialog( "选择文件 [替换]###AVFX", this, false );
             ExportDialog = new( WindowSystem );
         }
 
@@ -22,9 +22,9 @@ namespace VfxEditor.AvfxFormat {
         protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => new( this, NewWriteLocation, localPath, data );
 
         protected override void DrawEditMenuItems() {
-            if( ImGui.BeginMenu( "Templates" ) ) {
-                if( ImGui.MenuItem( "Blank" ) ) ActiveDocument?.OpenTemplate( "default_vfx.avfx" );
-                if( ImGui.MenuItem( "Weapon" ) ) ActiveDocument?.OpenTemplate( "default_weapon.avfx" );
+            if( ImGui.BeginMenu( "模板" ) ) {
+                if( ImGui.MenuItem( "空白" ) ) ActiveDocument?.OpenTemplate( "default_vfx.avfx" );
+                if( ImGui.MenuItem( "武器" ) ) ActiveDocument?.OpenTemplate( "default_weapon.avfx" );
                 ImGui.EndMenu();
             }
 

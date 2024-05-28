@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
@@ -109,7 +109,7 @@ namespace VfxEditor.FileBrowser {
             }
             else {
                 ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X );
-                if( ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 ) ) UpdateSearchedFiles();
+                if( ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 ) ) UpdateSearchedFiles();
             }
         }
 

@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Numerics;
@@ -28,7 +28,7 @@ namespace VfxEditor.Parsing.Color {
 
         private void DrawCombo() {
             using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
-            var text = SheetData.UiColors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
+            var text = SheetData.UiColors.ContainsKey( Value ) ? $"----{Value}----" : "[无]";
 
             using var combo = ImRaii.Combo( $"##Combo{Name}", text );
             if( !combo ) return;

@@ -1,4 +1,4 @@
-using VfxEditor.FileManager;
+﻿using VfxEditor.FileManager;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 

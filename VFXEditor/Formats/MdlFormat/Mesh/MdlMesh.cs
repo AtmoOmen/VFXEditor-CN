@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -31,8 +31,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private readonly ushort _SubmeshCount;
         private readonly uint[] _VertexBufferOffsets;
 
-        private readonly ParsedString Material = new( "Material" );
-        private readonly ParsedInt BoneTableIndex = new( "Bone Table Index" );
+        private readonly ParsedString Material = new( "材质" );
+        private readonly ParsedInt BoneTableIndex = new( "骨骼表索引" );
 
         private readonly ushort VertexCount; // Maxes out at ushort.MaxValue
 
@@ -67,14 +67,14 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount, Strides );
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Mesh" ) ) {
+            using( var tab = ImRaii.TabItem( "网格" ) ) {
                 if( tab ) DrawMesh();
             }
 
-            using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
+            using( var tab = ImRaii.TabItem( "子网格" ) ) {
                 if( tab ) SubmeshView.Draw();
             }
         }

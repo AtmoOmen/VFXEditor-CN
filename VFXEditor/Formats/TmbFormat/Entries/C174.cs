@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
@@ -30,20 +30,20 @@ namespace VfxEditor.TmbFormat.Entries {
 
     public class C174 : TmbEntry {
         public const string MAGIC = "C174";
-        public const string DISPLAY_NAME = "Object Control";
+        public const string DISPLAY_NAME = "物体控制";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedEnum<ObjectControlPosition> ObjectPosition = new( "Object Position" );
-        private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
-        private readonly ParsedEnum<ObjectControlFinal> FinalPosition = new( "Final Position" );
-        private readonly ParsedInt PositionDelay = new( "Position Delay" );
-        private readonly ParsedInt Unk6 = new( "Unknown 6" );
+        private readonly ParsedInt Duration = new( "持续时间" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
+        private readonly ParsedEnum<ObjectControlPosition> ObjectPosition = new( "物体位置" );
+        private readonly ParsedEnum<ObjectControl> ObjectControl = new( "物体控制" );
+        private readonly ParsedEnum<ObjectControlFinal> FinalPosition = new( "最终位置" );
+        private readonly ParsedInt PositionDelay = new( "位置延迟" );
+        private readonly ParsedInt Unk6 = new( "未知 6" );
 
         public C174( TmbFile file ) : base( file ) { }
 

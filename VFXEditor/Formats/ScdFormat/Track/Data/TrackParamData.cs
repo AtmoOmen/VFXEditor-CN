@@ -1,10 +1,10 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackParamData : ScdTrackData {
-        public readonly ParsedFloat Value = new( "Value" );
-        public readonly ParsedInt Time = new( "Time" );
+        public readonly ParsedFloat Value = new( "值" );
+        public readonly ParsedInt Time = new( "时间" );
 
         public override void Read( BinaryReader reader ) {
             Value.Read( reader );

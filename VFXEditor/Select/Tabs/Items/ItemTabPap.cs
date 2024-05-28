@@ -30,7 +30,7 @@ namespace VfxEditor.Select.Tabs.Items {
                 }
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error loading IMC file " + imcPath );
+                Dalamud.Error( e, "加载 IMC 文件失败 " + imcPath );
             }
         }
 

@@ -1,24 +1,24 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C175 : TmbEntry {
         public const string MAGIC = "C175";
-        public const string DISPLAY_NAME = "Object Scaling";
+        public const string DISPLAY_NAME = "物体缩放";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3", value: 4 );
-        private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
-        private readonly ParsedInt Unk5 = new( "Unknown 5", value: 1 );
-        private readonly ParsedInt Unk6 = new( "Unknown 6", value: 1 );
-        private readonly ParsedInt Unk7 = new( "Unknown 7" );
+        private readonly ParsedInt Duration = new( "持续时间" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
+        private readonly ParsedInt Unk3 = new( "未知 3", value: 4 );
+        private readonly ParsedEnum<ObjectControl> ObjectControl = new( "物体控制" );
+        private readonly ParsedInt Unk5 = new( "未知 5", value: 1 );
+        private readonly ParsedInt Unk6 = new( "未知 6", value: 1 );
+        private readonly ParsedInt Unk7 = new( "未知 7" );
 
         public C175( TmbFile file ) : base( file ) { }
 

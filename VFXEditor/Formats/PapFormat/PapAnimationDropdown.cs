@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop.Havok;
@@ -17,7 +17,7 @@ namespace VfxEditor.PapFormat {
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 
         private void OnNew() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Animation{.hkx,.pap}", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "动画{.hkx,.pap}", ( bool ok, string res ) => {
                 if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
             } );
         }
@@ -41,7 +41,7 @@ namespace VfxEditor.PapFormat {
             ] );
             CommandManager.Add( command );
 
-            Dalamud.OkNotification( "Havok data removed" );
+            Dalamud.OkNotification( "已移除 Havok 数据" );
         }
 
         protected override void DrawSelected() => Selected.Draw();

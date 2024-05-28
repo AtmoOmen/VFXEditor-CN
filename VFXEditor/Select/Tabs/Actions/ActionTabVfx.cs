@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace VfxEditor.Select.Tabs.Actions {
                 }
 
                 ImGui.SameLine();
-                ImGui.Text( "TMB:" );
+                ImGui.Text( "时间线:" );
                 ImGui.SameLine();
                 SelectUiUtils.DisplayPath( Loaded.OriginalPath );
             }
@@ -48,8 +48,8 @@ namespace VfxEditor.Select.Tabs.Actions {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             Dialog.DrawPaths( new Dictionary<string, string>() {
-                { "Cast", Selected.CastVfxPath },
-                { "Start", Selected.StartVfxPath }
+                { "咏唱", Selected.CastVfxPath },
+                { "开始", Selected.StartVfxPath }
             }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name, SelectResultType.GameAction );
         }
     }

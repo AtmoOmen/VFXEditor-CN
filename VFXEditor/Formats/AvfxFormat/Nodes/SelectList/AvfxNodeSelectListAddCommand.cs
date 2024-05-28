@@ -1,4 +1,4 @@
-namespace VfxEditor.AvfxFormat {
+﻿namespace VfxEditor.AvfxFormat {
     public class AvfxNodeSelectListAddCommand<T> : ICommand where T : AvfxNode {
         private readonly AvfxNodeSelectList<T> Item;
 

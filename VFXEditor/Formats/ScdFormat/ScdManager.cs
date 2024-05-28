@@ -11,8 +11,8 @@ namespace VfxEditor.ScdFormat {
         public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, "temp_out.ogg" ).Replace( '\\', '/' );
 
         public ScdManager() : base( "Scd Editor", "Scd" ) {
-            SourceSelect = new ScdSelectDialog( "Scd Select [LOADED]", this, true );
-            ReplaceSelect = new ScdSelectDialog( "Scd Select [REPLACED]", this, false );
+            SourceSelect = new ScdSelectDialog( "选择文件 [加载]###SCD", this, true );
+            ReplaceSelect = new ScdSelectDialog( "选择文件 [替换]###SCD", this, false );
         }
 
         protected override ScdDocument GetNewDocument() => new( this, NewWriteLocation );

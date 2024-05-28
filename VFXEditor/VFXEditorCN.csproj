@@ -2,9 +2,9 @@
     <PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
-        <AssemblyTitle>VFXEditor</AssemblyTitle>
+        <AssemblyTitle>VFXEditorCN</AssemblyTitle>
         <Company></Company>
-        <Product>VFXEditor</Product>
+        <Product>VFXEditorCN</Product>
         <Copyright>Copyright © 2020</Copyright>
         <FileVersion>1.8.3.7</FileVersion>
         <AssemblyVersion>1.8.3.7</AssemblyVersion>
@@ -222,7 +222,7 @@
         <None Update="Shaders\Model.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="VFXEditor.json">
+        <None Update="VFXEditorCN.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

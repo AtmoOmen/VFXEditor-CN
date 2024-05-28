@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace VfxEditor.Parsing.Data {
     public class ParsedDataEnum<T, S> : ParsedEnum<T> where T : Enum where S : class, IData {

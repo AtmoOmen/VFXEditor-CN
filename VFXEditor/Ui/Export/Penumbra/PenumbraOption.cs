@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Export.Categories;
@@ -23,13 +23,13 @@ namespace VfxEditor.Ui.Export.Penumbra {
         }
 
         public void Draw() {
-            ImGui.InputTextWithHint( "##Name", "Name", ref Name, 255 );
+            ImGui.InputTextWithHint( "##Name", "名称", ref Name, 255 );
 
-            ImGui.Checkbox( "Default", ref Default );
+            ImGui.Checkbox( "默认", ref Default );
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 30 );
-            ImGui.InputInt( "Priority", ref Priority, 0 );
+            ImGui.InputInt( "优先级", ref Priority, 0 );
 
             ImGui.Separator();
 

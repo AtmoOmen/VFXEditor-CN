@@ -1,4 +1,4 @@
-using Lumina.Misc;
+﻿using Lumina.Misc;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -12,10 +12,10 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public uint DataSize => ( uint )Size.Value;
 
         private readonly uint TempId;
-        private readonly ParsedString Value = new( "Value" );
+        private readonly ParsedString Value = new( "值" );
         private readonly int TempStringOffset;
 
-        public readonly ParsedShort Slot = new( "Slot" );
+        public readonly ParsedShort Slot = new( "栏" );
         public readonly ParsedShort Size = new( "Registers" );
 
         public ShpkParameterInfo( ShaderFileType type ) {
@@ -34,7 +34,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             reader.BaseStream.Position = parameterOffset + TempStringOffset;
             Value.Read( reader );
 
-            if( TempId != Id ) Dalamud.Error( "Ids do not match" );
+            if( TempId != Id ) Dalamud.Error( "ID 不符" );
         }
 
         public void Write( BinaryWriter writer, List<(long, string)> stringPositions ) {

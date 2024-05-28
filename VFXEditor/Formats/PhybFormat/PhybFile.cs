@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
@@ -24,8 +24,8 @@ namespace VfxEditor.PhybFormat {
     }
 
     public class PhybFile : FileManagerFile, IPhysicsObject {
-        public readonly ParsedIntByte4 Version = new( "Version" );
-        public readonly ParsedUInt DataType = new( "Data Type" );
+        public readonly ParsedIntByte4 Version = new( "版本" );
+        public readonly ParsedUInt DataType = new( "数据类型" );
 
         public readonly PhybCollision Collision;
         public readonly PhybSimulation Simulation;
@@ -101,7 +101,7 @@ namespace VfxEditor.PhybFormat {
             var size = SkeletonView.CalculateSize( SkeletonTabOpen, Plugin.Configuration.PhybSkeletonSplit );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using( var child = ImRaii.Child( "Child", size, false ) ) {
+            using( var child = ImRaii.Child( "子级", size, false ) ) {
                 Version.Draw();
                 DataType.Draw();
                 var extended = Extended != null;
@@ -109,20 +109,20 @@ namespace VfxEditor.PhybFormat {
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-                using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+                using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
                 if( !tabBar ) return;
 
                 SkeletonTabOpen = false;
 
-                using( var tab = ImRaii.TabItem( "Collision" ) ) {
+                using( var tab = ImRaii.TabItem( "碰撞" ) ) {
                     if( tab ) Collision.Draw();
                 }
 
-                using( var tab = ImRaii.TabItem( "Simulation" ) ) {
+                using( var tab = ImRaii.TabItem( "模拟" ) ) {
                     if( tab ) Simulation.Draw();
                 }
 
-                using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                using( var tab = ImRaii.TabItem( "3D 视图" ) ) {
                     if( tab ) {
                         Skeleton.Draw();
                         SkeletonTabOpen = true;

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using VfxEditor.Parsing;
 
@@ -7,8 +7,8 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         private byte Size = 0x10;
         public readonly ParsedByte Number = new( "Number" );
         private readonly ParsedReserve Reserve1 = new( 2 );
-        public readonly ParsedInt FadeTime = new( "Fade Time" );
-        public readonly ParsedFloat Volume = new( "Volume" );
+        public readonly ParsedInt FadeTime = new( "淡化时间" );
+        public readonly ParsedFloat Volume = new( "音量" );
         private uint Reserve2;
 
         public void Read( BinaryReader reader ) {

@@ -1,4 +1,4 @@
-using SharpDX.D3DCompiler;
+﻿using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;

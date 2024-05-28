@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Select.Tabs.Npc;
 
 namespace VfxEditor.Select.Tabs.Skeleton {

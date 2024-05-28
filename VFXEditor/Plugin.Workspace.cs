@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -93,7 +93,7 @@ namespace VfxEditor {
         }
 
         private static void OpenWorkspace( bool reset ) {
-            FileBrowserManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择一个工作区文件", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     var extension = new FileInfo( res ).Extension;
@@ -106,7 +106,7 @@ namespace VfxEditor {
                     }
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, "Could not load workspace" );
+                    Dalamud.Error( e, "工作区加载失败" );
                 }
             } );
         }
@@ -139,7 +139,7 @@ namespace VfxEditor {
 
             var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
-                Dalamud.Error( "vfx_workspace.json does not exist" );
+                Dalamud.Error( "vfx_workspace.json 不存在" );
                 return false;
             }
 
@@ -189,7 +189,7 @@ namespace VfxEditor {
         }
 
         private static void SaveAsWorkspace() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
                 if( !ok ) return;
                 ExportWorkspace( res );
                 Configuration.AddRecentWorkspace( res );

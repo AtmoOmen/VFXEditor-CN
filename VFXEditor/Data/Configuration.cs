@@ -172,7 +172,7 @@ namespace VfxEditor {
             try { Directory.CreateDirectory( WriteLocation ); }
             catch( Exception ) { WriteLocationError = true; }
 
-            Dalamud.Log( "Write location: " + WriteLocation );
+            Dalamud.Log( "写入路径: " + WriteLocation );
 
             if( CurveEditorPalette.Count == 0 ) {
                 CurveEditorPalette.AddRange( ImGuiHelpers.DefaultColorPalette( 56 ) );
@@ -254,14 +254,14 @@ namespace VfxEditor {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "Settings" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Configuration" ) ) {
+            if( ImGui.BeginTabItem( "设置" ) ) {
                 DrawConfiguration();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Keybinds" ) ) {
+            if( ImGui.BeginTabItem( "按键绑定" ) ) {
                 DrawKeybinds();
                 ImGui.EndTabItem();
             }
@@ -269,7 +269,7 @@ namespace VfxEditor {
                 DrawFileBrowser();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "3D Preview" ) ) {
+            if( ImGui.BeginTabItem( "3D 预览" ) ) {
                 Draw3DView();
                 ImGui.EndTabItem();
             }
@@ -281,7 +281,7 @@ namespace VfxEditor {
                 DrawTmb();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "File Editors" ) ) {
+            if( ImGui.BeginTabItem( "文件编辑器" ) ) {
                 DrawEditorSpecific();
                 ImGui.EndTabItem();
             }
@@ -292,7 +292,7 @@ namespace VfxEditor {
 
             if( ImGui.CollapsingHeader( "Saving", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
-                ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
+                ImGui.TextDisabled( "对缓存文件位置的修改可能需要通过重启游戏来生效" );
                 if( ImGui.InputText( "Write Location", ref WriteLocation, 255 ) ) Save();
 
                 if( ImGui.Checkbox( "Autosave Workspace", ref AutosaveEnabled ) ) Save();
@@ -338,16 +338,16 @@ namespace VfxEditor {
         private void DrawKeybinds() {
             if( ImGui.Checkbox( "Block Game Inputs When VFXEditor is Focused", ref BlockGameInputsWhenFocused ) ) Save();
 
-            using var child = ImRaii.Child( "Keybinds", new Vector2( -1 ), false );
+            using var child = ImRaii.Child( "按键绑定", new Vector2( -1 ), false );
 
-            if( SaveKeybind.Draw( "Save" ) ) Save();
-            if( SaveAsKeybind.Draw( "Save As" ) ) Save();
-            if( OpenKeybind.Draw( "Open" ) ) Save();
-            if( CopyKeybind.Draw( "Copy" ) ) Save();
-            if( PasteKeybind.Draw( "Paste" ) ) Save();
-            if( UndoKeybind.Draw( "Undo" ) ) Save();
-            if( RedoKeybind.Draw( "Redo " ) ) Save();
-            if( UpdateKeybind.Draw( "Update" ) ) Save();
+            if( SaveKeybind.Draw( "保存" ) ) Save();
+            if( SaveAsKeybind.Draw( "另存为" ) ) Save();
+            if( OpenKeybind.Draw( "打开" ) ) Save();
+            if( CopyKeybind.Draw( "复制" ) ) Save();
+            if( PasteKeybind.Draw( "粘贴" ) ) Save();
+            if( UndoKeybind.Draw( "撤销" ) ) Save();
+            if( RedoKeybind.Draw( "重做" ) ) Save();
+            if( UpdateKeybind.Draw( "刷新" ) ) Save();
             if( SpawnOnSelfKeybind.Draw( "Spawn on Self (Vfx only)" ) ) Save();
             if( SpawnOnGroundKeybind.Draw( "Spawn on Ground (Vfx only)" ) ) Save();
             if( SpawnOnTargetKeybind.Draw( "Spawn on Target (Vfx only)" ) ) Save();
@@ -356,7 +356,7 @@ namespace VfxEditor {
         private void DrawVfx() {
             using var child = ImRaii.Child( "Vfx" );
 
-            if( ImGui.CollapsingHeader( "Curve Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+            if( ImGui.CollapsingHeader( "曲线编辑器", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
                 if( ImGui.ColorEdit4( "Line Color", ref CurveEditorLineColor ) ) Save();
@@ -372,7 +372,7 @@ namespace VfxEditor {
                 if( ImGui.InputInt( "Grab Distance", ref CurveEditorGrabbingDistance ) ) Save();
             }
 
-            if( ImGui.CollapsingHeader( "Timeline Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+            if( ImGui.CollapsingHeader( "时间线编辑器", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
                 if( ImGui.ColorEdit4( "Selected Color", ref TimelineSelectedColor ) ) Save();
@@ -396,7 +396,7 @@ namespace VfxEditor {
         private void DrawFileBrowser() {
             using var child = ImRaii.Child( "FileBrowser" );
 
-            if( ImGui.Checkbox( "Preview Images", ref FileBrowserImagePreview ) ) Save();
+            if( ImGui.Checkbox( "预览图像", ref FileBrowserImagePreview ) ) Save();
             if( ImGui.Checkbox( "Skip File Overwriting Confirmation", ref FileBrowserOverwriteDontAsk ) ) Save();
 
             if( ImGui.ColorEdit4( "Selected Color", ref FileBrowserSelectedColor ) ) Save();
@@ -418,7 +418,7 @@ namespace VfxEditor {
                 DrawDirectXSkeleton();
             }
 
-            if( ImGui.CollapsingHeader( "Material" ) ) {
+            if( ImGui.CollapsingHeader( "材质" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
                 DrawDirectXMaterials();
             }
@@ -482,9 +482,9 @@ namespace VfxEditor {
 
                     ImGui.Checkbox( "Use Custom Window Color", ref config.Value.UseCustomWindowColor );
                     if( config.Value.UseCustomWindowColor ) {
-                        if( ImGui.ColorEdit4( "Background", ref config.Value.TitleBg ) ) Save();
-                        if( ImGui.ColorEdit4( "Active", ref config.Value.TitleBgActive ) ) Save();
-                        if( ImGui.ColorEdit4( "Collapsed", ref config.Value.TitleBgCollapsed ) ) Save();
+                        if( ImGui.ColorEdit4( "背景色", ref config.Value.TitleBg ) ) Save();
+                        if( ImGui.ColorEdit4( "激活时的颜色", ref config.Value.TitleBgActive ) ) Save();
+                        if( ImGui.ColorEdit4( "折叠时的颜色", ref config.Value.TitleBgCollapsed ) ) Save();
                     }
                 }
             }

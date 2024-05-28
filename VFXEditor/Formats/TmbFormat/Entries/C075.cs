@@ -1,26 +1,26 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C075 : TmbEntry {
         public const string MAGIC = "C075";
-        public const string DISPLAY_NAME = "Terrain VFX";
+        public const string DISPLAY_NAME = "地形视效";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x40;
         public override int ExtraSize => 4 * ( 3 + 3 + 3 + 4 );
 
-        private readonly ParsedBool Enabled = new( "Enabled" );
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Shape = new( "Shape" );
-        private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
-        private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
-        private readonly TmbOffsetFloat3 Position = new( "Position" );
+        private readonly ParsedBool Enabled = new( "启用" );
+        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedInt Shape = new( "形状" );
+        private readonly TmbOffsetFloat3 Scale = new( "缩放", defaultValue: new( 1 ) );
+        private readonly TmbOffsetAngle3 Rotation = new( "旋转" );
+        private readonly TmbOffsetFloat3 Position = new( "位置" );
         private readonly TmbOffsetFloat4 RGBA = new( "RGBA", defaultValue: new( 1 ) );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Unk3 = new( "未知 3" );
+        private readonly ParsedInt Unk4 = new( "未知 4" );
 
         public C075( TmbFile file ) : base( file ) { }
 

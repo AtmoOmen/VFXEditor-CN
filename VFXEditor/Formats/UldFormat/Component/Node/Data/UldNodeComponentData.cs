@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
@@ -16,16 +16,16 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
     public class UldNodeComponentData : UldGenericData {
         public UldNodeComponentData() {
             Parsed.AddRange( [
-                new ParsedInt( "Index", size: 1 ),
-                new ParsedInt( "Up", size: 1 ),
-                new ParsedInt( "Down", size: 1 ),
-                new ParsedInt( "Left", size: 1 ),
-                new ParsedInt( "Right", size: 1 ),
-                new ParsedInt( "Cursor", size: 1 ),
-                new ParsedFlag<NodeComponentFlags>( "Flags", size: 1 ),
-                new ParsedInt( "Unknown", size: 1 ),
-                new ParsedShort( "Offset X" ),
-                new ParsedShort( "Offset Y" )
+                new ParsedInt( "索引", size: 1 ),
+                new ParsedInt( "上", size: 1 ),
+                new ParsedInt( "下", size: 1 ),
+                new ParsedInt( "左", size: 1 ),
+                new ParsedInt( "右", size: 1 ),
+                new ParsedInt( "指针", size: 1 ),
+                new ParsedFlag<NodeComponentFlags>( "标识", size: 1 ),
+                new ParsedInt( "未知", size: 1 ),
+                new ParsedShort( "X 轴偏移" ),
+                new ParsedShort( "Y 轴偏移" )
             ] );
         }
     }

@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace VfxEditor.Library {
             if( !IsRoot ) {
                 // So that you can drag an item BEFORE a folder, rather than only inside of it
 
-                if( DrawDragDrop( library, true, "Child" ) ) listModified = true;
+                if( DrawDragDrop( library, true, "子级" ) ) listModified = true;
 
                 // Main folder item
 
@@ -112,14 +112,14 @@ namespace VfxEditor.Library {
             using var popup = ImRaii.Popup( "Popup" );
             if( !popup ) return false;
 
-            if( UiUtils.IconSelectable( FontAwesomeIcon.FolderPlus, "New Sub-Folder" ) ) {
-                var newFolder = new LibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), [] );
+            if( UiUtils.IconSelectable( FontAwesomeIcon.FolderPlus, "新建子文件夹" ) ) {
+                var newFolder = new LibraryFolder( this, "新建文件夹", UiUtils.RandomString( 12 ), [] );
                 Add( newFolder );
                 library.Save();
                 return true;
             }
 
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) ) {
                 Cleanup();
                 Parent.Remove( this );
                 library.Save();

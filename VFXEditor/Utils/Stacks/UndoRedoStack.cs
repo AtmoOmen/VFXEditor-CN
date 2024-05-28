@@ -1,4 +1,4 @@
-namespace VfxEditor.Utils.Stacks {
+﻿namespace VfxEditor.Utils.Stacks {
     public class UndoRedoStack<T> {
         private readonly FixedSizeStack<T> UndoStack;
         private readonly FixedSizeStack<T> RedoStack;

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public class EmoteTabTmb : EmoteTab<List<string>> {

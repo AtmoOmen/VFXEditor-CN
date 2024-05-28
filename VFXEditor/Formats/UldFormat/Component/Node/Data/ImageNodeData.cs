@@ -15,13 +15,13 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedInt DrawMode = new( "Draw Mode", size: 1 );
 
         public ImageNodeData() {
-            PartListId = new( "Part List", 0,
+            PartListId = new( "组件列表", 0,
                 () => Plugin.UldManager.File.PartsSplitView,
                 ( UldPartList item ) => ( int )item.Id.Value,
                 ( UldPartList item, int _ ) => item.GetText(),
                 size: 2
             );
-            PartId = new( "Part",
+            PartId = new( "组件",
                 () => PartListId.Selected?.Parts,
                 ( UldPartItem item, int idx ) => item.GetText( idx ),
                 null

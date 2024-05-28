@@ -1,4 +1,4 @@
-using NAudio.Vorbis;
+﻿using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
 using System;
@@ -108,7 +108,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
                 if( SeekTable.Count == 1 && maxTime > SeekStep ) {
                     SeekStep = maxTime;
-                    Dalamud.Log( $"SeekStep is now: {SeekStep} seconds" );
+                    Dalamud.Log( $"SeekStep 现在位于: 第 {SeekStep} 秒" );
                 }
 
                 if( ( ( SeekStep * SeekTable.Count ) - maxTime ) < 0.02f ) SeekTable.Add( pos );

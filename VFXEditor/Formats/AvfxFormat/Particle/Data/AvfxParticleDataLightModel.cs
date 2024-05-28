@@ -1,6 +1,6 @@
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataLightModel : AvfxDataWithParameters {
-        public readonly AvfxInt ModelIdx = new( "Model Index", "MNO", size: 1 );
+        public readonly AvfxInt ModelIdx = new( "模型索引", "MNO", size: 1 );
         public readonly AvfxNodeSelect<AvfxModel> ModelSelect;
 
         public AvfxParticleDataLightModel( AvfxParticle particle ) : base() {
@@ -8,7 +8,7 @@ namespace VfxEditor.AvfxFormat {
                 ModelIdx
             ];
 
-            ParameterTab.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( particle, "模型", particle.NodeGroups.Models, ModelIdx ) );
         }
 
         public override void Enable() => ModelSelect.Enable();

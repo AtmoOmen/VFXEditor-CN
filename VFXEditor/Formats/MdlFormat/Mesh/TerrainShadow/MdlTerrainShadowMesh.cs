@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +32,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             var stride = reader.ReadByte();
             reader.ReadByte(); // padding
 
-            if( stride != 8 ) Dalamud.Log( $"Terrain Shadow: stride={stride}" );
+            if( stride != 8 ) Dalamud.Log( $"地形阴影: 步幅={stride}" );
 
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
         }
@@ -66,14 +66,14 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Mesh" ) ) {
+            using( var tab = ImRaii.TabItem( "网格" ) ) {
                 if( tab ) DrawPreview();
             }
 
-            using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
+            using( var tab = ImRaii.TabItem( "子网格" ) ) {
                 if( tab ) SubmeshView.Draw();
             }
         }

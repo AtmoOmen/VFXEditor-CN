@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -12,15 +12,15 @@ namespace VfxEditor.ScdFormat {
         public readonly List<RandomTrackInfo> Entries = [];
         private readonly CommandTable<RandomTrackInfo> EntryTable;
 
-        public readonly ParsedInt CycleInterval = new( "Cycle Interval" );
-        public readonly ParsedShort CycleNumPlayTrack = new( "Cycle Play Track" );
-        public readonly ParsedShort CycleRange = new( "Cycle Range" );
+        public readonly ParsedInt CycleInterval = new( "循环间隔" );
+        public readonly ParsedShort CycleNumPlayTrack = new( "循环播放音轨" );
+        public readonly ParsedShort CycleRange = new( "循环范围" );
 
         public SoundRandomTracks() {
-            EntryTable = new( "Entries", true, false, Entries, [
-                ( "Track Index", ImGuiTableColumnFlags.None, -1 ),
-                ( "Audio Index", ImGuiTableColumnFlags.None, -1 ),
-                ( "Limit", ImGuiTableColumnFlags.None, -1 ),
+            EntryTable = new( "条目", true, false, Entries, [
+                ( "轨道索引", ImGuiTableColumnFlags.None, -1 ),
+                ( "音频索引", ImGuiTableColumnFlags.None, -1 ),
+                ( "限制", ImGuiTableColumnFlags.None, -1 ),
             ],
             () => new() );
         }

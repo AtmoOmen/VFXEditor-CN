@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -50,20 +50,20 @@ namespace VfxEditor.Formats.MdlFormat {
 
         private readonly uint Version;
 
-        private readonly ParsedByteBool IndexBufferStreaming = new( "Index Buffer Streaming" );
-        private readonly ParsedByteBool EdgeGeometry = new( "Edge Geometry" );
-        private readonly ParsedFloat Radius = new( "Radius" );
-        private readonly ParsedFlag<ModelFlags1> Flags1 = new( "Flags 1", size: 1 );
-        private readonly ParsedFlag<ModelFlags2> Flags2 = new( "Flags 2", size: 1 );
-        private readonly ParsedFloat ModelClipOutDistance = new( "Model Clip Out Distance" );
-        private readonly ParsedFloat ShadowClipOutDistance = new( "Shadow Clip Out Distance" );
-        private readonly ParsedByte Unknown5 = new( "Unknown 5" );
-        private readonly ParsedByte BgChangeMaterialIndex = new( "Background Change Material Index" );
-        private readonly ParsedByte BgCrestChangeMaterialIndex = new( "Background Crest Change Material Index" );
-        private readonly ParsedByte Unknown6 = new( "Unknown 6" );
-        private readonly ParsedShort Unknown7 = new( "Unknown 7" );
-        private readonly ParsedShort Unknown8 = new( "Unknown 8" );
-        private readonly ParsedShort Unknown9 = new( "Unknown 9" );
+        private readonly ParsedByteBool IndexBufferStreaming = new( "索引缓冲流" );
+        private readonly ParsedByteBool EdgeGeometry = new( "边缘几何" );
+        private readonly ParsedFloat Radius = new( "半径" );
+        private readonly ParsedFlag<ModelFlags1> Flags1 = new( "标志 1", size: 1 );
+        private readonly ParsedFlag<ModelFlags2> Flags2 = new( "标志 2", size: 1 );
+        private readonly ParsedFloat ModelClipOutDistance = new( "模型裁剪距离" );
+        private readonly ParsedFloat ShadowClipOutDistance = new( "阴影裁剪距离" );
+        private readonly ParsedByte Unknown5 = new( "未知 5" );
+        private readonly ParsedByte BgChangeMaterialIndex = new( "背景更换材质索引" );
+        private readonly ParsedByte BgCrestChangeMaterialIndex = new( "背景纹路更换材质索引" );
+        private readonly ParsedByte Unknown6 = new( "未知 6" );
+        private readonly ParsedShort Unknown7 = new( "未知 7" );
+        private readonly ParsedShort Unknown8 = new( "未知 8" );
+        private readonly ParsedShort Unknown9 = new( "未知 9" );
 
         public readonly List<MdlEid> Eids = [];
         private readonly CommandSplitView<MdlEid> EidView;
@@ -169,7 +169,7 @@ namespace VfxEditor.Formats.MdlFormat {
             reader.ReadBytes( 6 ); // padding
 
             if( meshCount != vertexDeclarationCount || materialCount != _materialCount || _lodCount != lodCount ) {
-                Dalamud.Error( $"Mesh:{meshCount}/{vertexDeclarationCount} Material:{materialCount}/{_materialCount} LoD:{lodCount}/{_lodCount}" );
+                Dalamud.Error( $"网格:{meshCount}/{vertexDeclarationCount} 材质:{materialCount}/{_materialCount} LoD:{lodCount}/{_lodCount}" );
             }
 
             // ====== DATA ========
@@ -185,7 +185,7 @@ namespace VfxEditor.Formats.MdlFormat {
             }
 
             if( ExtraLodEnabled ) {
-                Dalamud.Error( "Extra LoD" );
+                Dalamud.Error( "额外 LoD" );
                 for( var i = 0; i < 3; i++ ) ExtraLods.Add( new( this, reader ) );
             }
 
@@ -244,31 +244,31 @@ namespace VfxEditor.Formats.MdlFormat {
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) DrawParameters();
             }
 
-            using( var tab = ImRaii.TabItem( "Bind Points" ) ) {
+            using( var tab = ImRaii.TabItem( "绑定点" ) ) {
                 if( tab ) EidView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Levels of Detail" ) ) {
+            using( var tab = ImRaii.TabItem( "细节层次" ) ) {
                 if( tab ) LodView.Draw();
             }
 
             if( ExtraLodEnabled ) {
-                using var tab = ImRaii.TabItem( "Extra LoD" );
+                using var tab = ImRaii.TabItem( "额外 LoD" );
                 if( tab ) ExtraLodView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Bone Tables" ) ) {
+            using( var tab = ImRaii.TabItem( "骨骼表" ) ) {
                 if( tab ) BoneTables.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Bounding Boxes" ) ) {
+            using( var tab = ImRaii.TabItem( "包围盒" ) ) {
                 if( tab ) DrawBoxes();
             }
         }
@@ -296,26 +296,26 @@ namespace VfxEditor.Formats.MdlFormat {
             using var id = ImRaii.PushId( "Boxes" );
             using var child = ImRaii.Child( "Child" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Bones" ) ) {
+            using( var tab = ImRaii.TabItem( "骨骼" ) ) {
                 if( tab ) BoneBoxView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Unknown" ) ) {
+            using( var tab = ImRaii.TabItem( "未知" ) ) {
                 if( tab ) UnknownBoundingBox.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Model" ) ) {
+            using( var tab = ImRaii.TabItem( "模型" ) ) {
                 if( tab ) ModelBoundingBox.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Vertical Fog" ) ) {
+            using( var tab = ImRaii.TabItem( "垂直雾" ) ) {
                 if( tab ) VerticalFogBoundingBox.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Unknown Boxes" ) ) {
+            using( var tab = ImRaii.TabItem( "未知盒" ) ) {
                 if( tab ) UnknownBoxView.Draw();
             }
         }

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
@@ -21,7 +21,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
             using var _ = ImRaii.PushId( Id );
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 4 ) ) ) {
-                ImGui.Columns( 2, "Columns", true );
+                ImGui.Columns( 2, "列", true );
                 DrawPreLeft();
 
                 using var left = ImRaii.Child( "Left" );

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Formats.AvfxFormat.Components.Enums;
 using VfxEditor.Parsing.Data;

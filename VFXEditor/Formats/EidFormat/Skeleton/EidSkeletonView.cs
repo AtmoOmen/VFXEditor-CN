@@ -1,4 +1,4 @@
-using HelixToolkit.SharpDX.Core;
+﻿using HelixToolkit.SharpDX.Core;
 using VfxEditor.EidFormat;
 using VfxEditor.Interop.Havok.Ui;
 

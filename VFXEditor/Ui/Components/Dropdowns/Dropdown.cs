@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -55,7 +55,7 @@ namespace VfxEditor.Ui.Components {
             using var __ = ImRaii.PushId( Items.IndexOf( Selected ) );
 
             if( Selected != null ) DrawSelected();
-            else ImGui.Text( "Select an item..." );
+            else ImGui.Text( "请选择..." );
         }
 
         private void DrawLeftRight() {
@@ -76,7 +76,7 @@ namespace VfxEditor.Ui.Components {
             Vector4 col = new( 1 );
             var isColored = Selected != null && DoColor( Selected, out col );
             using var color = ImRaii.PushColor( ImGuiCol.Text, col, isColored );
-            using var combo = ImRaii.Combo( "##Combo", Selected == null ? "[NONE]" : GetText( Selected, Items.IndexOf( Selected ) ) );
+            using var combo = ImRaii.Combo( "##Combo", Selected == null ? "[无]" : GetText( Selected, Items.IndexOf( Selected ) ) );
             if( !combo ) return;
             if( isColored ) color.Pop();
 

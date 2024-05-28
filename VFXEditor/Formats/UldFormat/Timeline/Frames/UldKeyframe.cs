@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -7,109 +7,109 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldKeyframe : IUiItem {
-        public readonly ParsedUInt Time = new( "Time" );
-        public readonly ParsedInt Interpolation = new( "Interpolation", size: 1 );
-        public readonly ParsedInt Unk1 = new( "Unknown", size: 1 );
-        public readonly ParsedFloat Acceleration = new( "Acceleration" );
-        public readonly ParsedFloat Deceleration = new( "Deceleration" );
+        public readonly ParsedUInt Time = new( "时间" );
+        public readonly ParsedInt Interpolation = new( "插值", size: 1 );
+        public readonly ParsedInt Unk1 = new( "未知", size: 1 );
+        public readonly ParsedFloat Acceleration = new( "加速" );
+        public readonly ParsedFloat Deceleration = new( "减速" );
 
         public readonly List<ParsedBase> Data = [];
 
         public UldKeyframe( KeyGroupType groupType ) {
             Data.AddRange( groupType switch {
                 KeyGroupType.Float1 => [
-                    new ParsedFloat( "Value" )
+                    new ParsedFloat( "值" )
                 ],
                 KeyGroupType.Float2 => [
-                    new ParsedFloat2( "Value" )
+                    new ParsedFloat2( "值" )
                 ],
                 KeyGroupType.Float3 => [
-                    new ParsedFloat3( "Value" )
+                    new ParsedFloat3( "值" )
                 ],
                 KeyGroupType.SByte1 => [
-                    new ParsedSByte( "Value" ),
+                    new ParsedSByte( "值" ),
                     new ParsedReserve( 3 )
                 ],
                 KeyGroupType.SByte2 => [
-                    new ParsedSByte( "Value 1" ), new ParsedSByte( "Value 2" ),
+                    new ParsedSByte( "值 1" ), new ParsedSByte( "值 2" ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.SByte3 => [
-                    new ParsedSByte( "Value 1" ), new ParsedSByte( "Value 2" ), new ParsedSByte( "Value 3" ),
+                    new ParsedSByte( "值 1" ), new ParsedSByte( "值 2" ), new ParsedSByte( "值 3" ),
                     new ParsedReserve( 1 )
                 ],
                 KeyGroupType.Byte1 => [
-                    new ParsedInt( "Value", size: 1 ),
+                    new ParsedInt( "值", size: 1 ),
                     new ParsedReserve( 3 )
                 ],
                 KeyGroupType.Byte2 => [
-                    new ParsedInt( "Value 1", size: 1 ), new ParsedInt( "Value 2", size: 1 ),
+                    new ParsedInt( "值 1", size: 1 ), new ParsedInt( "值 2", size: 1 ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.Byte3 => [
-                    new ParsedInt( "Value 1", size: 1 ), new ParsedInt( "Value 2", size: 1 ), new ParsedInt( "Value 3", size: 1 ),
+                    new ParsedInt( "值 1", size: 1 ), new ParsedInt( "值 2", size: 1 ), new ParsedInt( "值 3", size: 1 ),
                     new ParsedReserve( 1 )
                 ],
                 KeyGroupType.Short1 => [
-                    new ParsedShort( "Value" ),
+                    new ParsedShort( "值" ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.Short2 => [
-                    new ParsedShort2( "Value" ),
+                    new ParsedShort2( "值" ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.Short3 => [
-                    new ParsedShort3( "Value" ),
+                    new ParsedShort3( "值" ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.UShort1 => [
-                    new ParsedUInt( "Value", size: 2 ),
+                    new ParsedUInt( "值", size: 2 ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.UShort2 => [
-                    new ParsedUInt( "Value 1", size: 2 ), new ParsedUInt( "Value 2", size: 2 ),
+                    new ParsedUInt( "值 1", size: 2 ), new ParsedUInt( "值 2", size: 2 ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.UShort3 => [
-                    new ParsedUInt( "Value 1", size: 2 ), new ParsedUInt( "Value 2", size: 2 ), new ParsedUInt( "Value 3", size: 2 ),
+                    new ParsedUInt( "值 1", size: 2 ), new ParsedUInt( "值 2", size: 2 ), new ParsedUInt( "值 3", size: 2 ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.Int1 => [
-                    new ParsedInt( "Value 1" )
+                    new ParsedInt( "值 1" )
                 ],
                 KeyGroupType.Int2 => [
-                    new ParsedInt( "Value 1" ), new ParsedInt( "Value 2" )
+                    new ParsedInt( "值 1" ), new ParsedInt( "值 2" )
                 ],
                 KeyGroupType.Int3 => [
-                    new ParsedInt( "Value 1" ), new ParsedInt( "Value 2" ), new ParsedInt( "Value 3" )
+                    new ParsedInt( "值 1" ), new ParsedInt( "值 2" ), new ParsedInt( "值 3" )
                 ],
                 KeyGroupType.UInt1 => [
-                    new ParsedUInt( "Value" )
+                    new ParsedUInt( "值" )
                 ],
                 KeyGroupType.UInt2 => [
-                    new ParsedUInt( "Value 1" ), new ParsedUInt( "Value 2" )
+                    new ParsedUInt( "值 1" ), new ParsedUInt( "值 2" )
                 ],
                 KeyGroupType.UInt3 => [
-                    new ParsedUInt( "Value 1" ), new ParsedUInt( "Value 2" ), new ParsedUInt( "Value 3" )
+                    new ParsedUInt( "值 1" ), new ParsedUInt( "值 2" ), new ParsedUInt( "值 3" )
                 ],
                 KeyGroupType.Bool1 => [
-                    new ParsedByteBool( "Value" ),
+                    new ParsedByteBool( "值" ),
                     new ParsedReserve( 3 )
                 ],
                 KeyGroupType.Bool2 => [
-                    new ParsedByteBool( "Value 1" ), new ParsedByteBool( "Value 2" ),
+                    new ParsedByteBool( "值 1" ), new ParsedByteBool( "值 2" ),
                     new ParsedReserve( 2 )
                 ],
                 KeyGroupType.Bool3 => [
-                    new ParsedByteBool( "Value 1" ), new ParsedByteBool( "Value 2" ), new ParsedByteBool( "Value 3" ),
+                    new ParsedByteBool( "值 1" ), new ParsedByteBool( "值 2" ), new ParsedByteBool( "值 3" ),
                     new ParsedReserve( 1 )
                 ],
                 KeyGroupType.Color => [
-                    new ParsedShort3( "Multiply Color" ),
-                    new ParsedShort3( "Add Color" )
+                    new ParsedShort3( "颜色乘算" ),
+                    new ParsedShort3( "颜色加算" )
                 ],
                 KeyGroupType.Label => [
-                    new ParsedUInt( "Label Id", size: 2 ), new ParsedInt( "Label Command", size: 1 ), new ParsedInt( "Jump Id", size: 1 )
+                    new ParsedUInt( "标签 ID", size: 2 ), new ParsedInt( "标签命令", size: 1 ), new ParsedInt( "跳跃 ID", size: 1 )
                 ],
                 _ => Array.Empty<ParsedBase>()
             } );
@@ -162,6 +162,6 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
             Data.ForEach( x => x.Draw() );
         }
 
-        public string GetText() => $"Frame {Time.Value}";
+        public string GetText() => $"帧 {Time.Value}";
     }
 }

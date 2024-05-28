@@ -1,17 +1,17 @@
-using VfxEditor.Parsing;
+﻿using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class LayoutPolylineObstructionData : ScdLayoutData {
-        public readonly ParsedFloat2 Height = new( "Height" );
-        public readonly ParsedFloat ObstacleFac = new( "Obstacle FAC" );
-        public readonly ParsedFloat HiCutFac = new( "Hi-Cut FAC" );
-        public readonly ParsedFlag<ObstructionFlags> Flags = new( "Flags", size: 1 );
-        public readonly ParsedByte VertexCount = new( "Vertex Count" );
+        public readonly ParsedFloat2 Height = new( "高度" );
+        public readonly ParsedFloat ObstacleFac = new( "障碍强度系数" );
+        public readonly ParsedFloat HiCutFac = new( "高频截止强度系数" );
+        public readonly ParsedFlag<ObstructionFlags> Flags = new( "标识", size: 1 );
+        public readonly ParsedByte VertexCount = new( "顶点数量" );
         public readonly ParsedReserve Reserved1 = new( 2 );
-        public readonly ParsedFloat Width = new( "Width" );
-        public readonly ParsedFloat FadeRange = new( "Fade Range" );
-        public readonly ParsedShort OpenTime = new( "Open Time" );
-        public readonly ParsedShort CloseTime = new( "Close Time" );
+        public readonly ParsedFloat Width = new( "宽度" );
+        public readonly ParsedFloat FadeRange = new( "淡化范围" );
+        public readonly ParsedShort OpenTime = new( "开启时间" );
+        public readonly ParsedShort CloseTime = new( "结束时间" );
 
         public LayoutPolylineObstructionData() {
             Parsed = [

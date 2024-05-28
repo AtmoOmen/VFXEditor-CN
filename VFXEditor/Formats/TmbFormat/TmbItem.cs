@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
@@ -47,7 +47,7 @@ namespace VfxEditor.TmbFormat {
     }
 
     public abstract class TmbItemWithTime : TmbItemWithId {
-        public ParsedShort Time = new( "Time" );
+        public ParsedShort Time = new( "时间" );
 
         public TmbItemWithTime( TmbFile file ) : base( file ) { }
 

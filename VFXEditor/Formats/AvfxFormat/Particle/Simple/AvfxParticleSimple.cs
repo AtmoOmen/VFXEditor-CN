@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -6,68 +6,68 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleSimple : AvfxParticleAttribute {
-        public readonly AvfxInt InjectionPositionType = new( "Injection Position Type", "SIPT" );
-        public readonly AvfxInt InjectionDirectionType = new( "Injection Direction Type", "SIDT" );
-        public readonly AvfxInt BaseDirectionType = new( "Base Direction Type", "SBDT" );
-        public readonly AvfxInt CreateCount = new( "Create Count", "CCnt" );
-        public readonly AvfxFloat CreateAreaX = new( "Create Area X", "CrAX" );
-        public readonly AvfxFloat CreateAreaY = new( "Create Area Y", "CrAY" );
-        public readonly AvfxFloat CreateAreaZ = new( "Create Area Z", "CrAZ" );
-        public readonly AvfxFloat CoordAccuracyX = new( "Coord Accuracy X", "CAX" );
-        public readonly AvfxFloat CoordAccuracyY = new( "Coord Accuracy Y", "CAY" );
-        public readonly AvfxFloat CoordAccuracyZ = new( "Coord Accuracy Z", "CAZ" );
-        public readonly AvfxFloat CoordGraX = new( "Coord Gra X", "CGX" );
-        public readonly AvfxFloat CoordGraY = new( "Coord Gra Y", "CGY" );
-        public readonly AvfxFloat CoordGraZ = new( "Coord Gra Z", "CGZ" );
-        public readonly AvfxFloat ScaleXStart = new( "Scale Start X", "SBX" );
-        public readonly AvfxFloat ScaleYStart = new( "Scale Start Y", "SBY" );
-        public readonly AvfxFloat ScaleXEnd = new( "Scale End X", "SEX" );
-        public readonly AvfxFloat ScaleYEnd = new( "Scale End Y", "SEY" );
-        public readonly AvfxFloat ScaleCurve = new( "Scale Curve", "SC" );
-        public readonly AvfxFloat ScaleRandX0 = new( "Scale Random X 0", "SRX0" );
-        public readonly AvfxFloat ScaleRandX1 = new( "Scale Random X 1", "SRX1" );
+        public readonly AvfxInt InjectionPositionType = new( "注入位置类型", "SIPT" );
+        public readonly AvfxInt InjectionDirectionType = new( "注入方向类型", "SIDT" );
+        public readonly AvfxInt BaseDirectionType = new( "基准方向类型", "SBDT" );
+        public readonly AvfxInt CreateCount = new( "创建数", "CCnt" );
+        public readonly AvfxFloat CreateAreaX = new( "创建 X 轴区域", "CrAX" );
+        public readonly AvfxFloat CreateAreaY = new( "创建 Y 轴区域", "CrAY" );
+        public readonly AvfxFloat CreateAreaZ = new( "创建 Z 轴区域", "CrAZ" );
+        public readonly AvfxFloat CoordAccuracyX = new( "X 轴坐标精度", "CAX" );
+        public readonly AvfxFloat CoordAccuracyY = new( "Y 轴坐标精度", "CAY" );
+        public readonly AvfxFloat CoordAccuracyZ = new( "Z 轴坐标精度", "CAZ" );
+        public readonly AvfxFloat CoordGraX = new( "X 轴坐标梯度", "CGX" );
+        public readonly AvfxFloat CoordGraY = new( "Y 轴坐标梯度", "CGY" );
+        public readonly AvfxFloat CoordGraZ = new( "Z 轴坐标梯度", "CGZ" );
+        public readonly AvfxFloat ScaleXStart = new( "缩放起始 X 轴分量", "SBX" );
+        public readonly AvfxFloat ScaleYStart = new( "缩放起始 Y 轴分量", "SBY" );
+        public readonly AvfxFloat ScaleXEnd = new( "缩放结束 X 轴分量", "SEX" );
+        public readonly AvfxFloat ScaleYEnd = new( "缩放结束 Y 轴分量", "SEY" );
+        public readonly AvfxFloat ScaleCurve = new( "缩放曲线", "SC" );
+        public readonly AvfxFloat ScaleRandX0 = new( "X 轴随机缩放 - 0", "SRX0" );
+        public readonly AvfxFloat ScaleRandX1 = new( "X 轴随机缩放 - 1", "SRX1" );
         public readonly AvfxFloat ScaleRandY0 = new( "Scale Random Y 0 ", "SRY0" );
-        public readonly AvfxFloat ScaleRandY1 = new( "Scale Random Y 1", "SRY1" );
-        public readonly AvfxFloat RotXStart = new( "Rotation Start X", "RIX" );
-        public readonly AvfxFloat RotYStart = new( "Rotation Start Y", "RIY" );
-        public readonly AvfxFloat RotZStart = new( "Rotation Start Z", "RIZ" );
-        public readonly AvfxFloat RotXAdd = new( "Rotation Add X", "RAX" );
-        public readonly AvfxFloat RotYAdd = new( "Rotation Add Y", "RAY" );
-        public readonly AvfxFloat RotZAdd = new( "Rotation Add Z", "RAZ" );
-        public readonly AvfxFloat RotXBase = new( "Rotation Base X", "RBX" );
-        public readonly AvfxFloat RotYBase = new( "Rotation Base Y", "RBY" );
-        public readonly AvfxFloat RotZBase = new( "Rotation Base Z", "RBZ" );
-        public readonly AvfxFloat RotXVel = new( "Rotation Velocity X", "RVX" );
-        public readonly AvfxFloat RotYVel = new( "Rotation Velocity Y", "RVY" );
-        public readonly AvfxFloat RotZVel = new( "Rotation Velocity Z", "RVZ" );
-        public readonly AvfxFloat VelMin = new( "Velocity Min", "VMin" );
-        public readonly AvfxFloat VelMax = new( "Velocity Max", "VMax" );
-        public readonly AvfxFloat VelFlatteryRate = new( "Velocity Flattery Rate", "FltR" );
-        public readonly AvfxFloat VelFlatterySpeed = new( "Velocity Flattery Speed", "FltS" );
-        public readonly AvfxInt UvCellU = new( "UV Cell U", "UvCU" );
-        public readonly AvfxInt UvCellV = new( "UV Cell V", "UvCV" );
-        public readonly AvfxInt UvInterval = new( "UV Interval", "UvIv" );
-        public readonly AvfxInt UvNoRandom = new( "UV Random", "UvNR" );
-        public readonly AvfxInt UvNoLoopCount = new( "UV Loop Count", "UvLC" );
-        public readonly AvfxInt InjectionModelIdx = new( "Injection Model Index", "IJMN", value: -1 );
-        public readonly AvfxInt InjectionVertexBindModelIdx = new( "Injection Model Bind Index", "VBMN", value: -1 );
-        public readonly AvfxFloat InjectionRadialDir0 = new( "Injection Radial Direction 0", "IRD0" );
-        public readonly AvfxFloat InjectionRadialDir1 = new( "Injection Radial Direction 1", "IRD1" );
-        public readonly AvfxFloat PivotX = new( "Pivot X", "PvtX" );
-        public readonly AvfxFloat PivotY = new( "Pivot Y", "PvtY" );
-        public readonly AvfxInt BlockNum = new( "Block Number", "BlkN" );
-        public readonly AvfxFloat LineLengthMin = new( "Line Length Min", "LLin" );
-        public readonly AvfxFloat LineLengthMax = new( "Line Length Max", "LLax" );
-        public readonly AvfxInt CreateIntervalVal = new( "Create Interval", "CrI" );
-        public readonly AvfxInt CreateIntervalRandom = new( "Create Interval Random", "CrIR" );
-        public readonly AvfxInt CreateIntervalCount = new( "Create Interval Count", "CrIC" );
-        public readonly AvfxInt CreateIntervalLife = new( "Create Interval Life", "CrIL" );
-        public readonly AvfxInt CreateNewAfterDelete = new( "Create New After Death", "bCrN", size: 1 );
-        public readonly AvfxInt UvReverse = new( "UV Reverse", "bRUV", size: 1 );
-        public readonly AvfxInt ScaleRandomLink = new( "Scale Random Link", "bSRL", size: 1 );
-        public readonly AvfxInt BindParent = new( "Bind Parent", "bBnP", size: 1 );
-        public readonly AvfxInt ScaleByParent = new( "Scale by Parent", "bSnP", size: 1 );
-        public readonly AvfxInt PolyLineTag = new( "Polyline Tag", "PolT" );
+        public readonly AvfxFloat ScaleRandY1 = new( "Y 轴随机缩放 - 1", "SRY1" );
+        public readonly AvfxFloat RotXStart = new( "旋转起始 X 轴分量", "RIX" );
+        public readonly AvfxFloat RotYStart = new( "旋转起始 Y 轴分量", "RIY" );
+        public readonly AvfxFloat RotZStart = new( "旋转起始 Z 轴分量", "RIZ" );
+        public readonly AvfxFloat RotXAdd = new( "X 轴旋转增量", "RAX" );
+        public readonly AvfxFloat RotYAdd = new( "Y 轴旋转增量", "RAY" );
+        public readonly AvfxFloat RotZAdd = new( "Z 轴旋转增量", "RAZ" );
+        public readonly AvfxFloat RotXBase = new( "X 轴旋转基值", "RBX" );
+        public readonly AvfxFloat RotYBase = new( "Y 轴旋转基值", "RBY" );
+        public readonly AvfxFloat RotZBase = new( "Z 轴旋转基值", "RBZ" );
+        public readonly AvfxFloat RotXVel = new( "X 轴旋转速度", "RVX" );
+        public readonly AvfxFloat RotYVel = new( "Y 轴旋转速度", "RVY" );
+        public readonly AvfxFloat RotZVel = new( "Z 轴旋转速度", "RVZ" );
+        public readonly AvfxFloat VelMin = new( "速度最小值", "VMin" );
+        public readonly AvfxFloat VelMax = new( "速度最大值", "VMax" );
+        public readonly AvfxFloat VelFlatteryRate = new( "速度平缓率", "FltR" );
+        public readonly AvfxFloat VelFlatterySpeed = new( "速度平缓速", "FltS" );
+        public readonly AvfxInt UvCellU = new( "平面坐标系水平分量", "UvCU" );
+        public readonly AvfxInt UvCellV = new( "平面坐标系垂直分量", "UvCV" );
+        public readonly AvfxInt UvInterval = new( "平面坐标区间", "UvIv" );
+        public readonly AvfxInt UvNoRandom = new( "随机平面坐标", "UvNR" );
+        public readonly AvfxInt UvNoLoopCount = new( "平面坐标循环数", "UvLC" );
+        public readonly AvfxInt InjectionModelIdx = new( "注入模型索引", "IJMN", value: -1 );
+        public readonly AvfxInt InjectionVertexBindModelIdx = new( "注入模型绑定索引", "VBMN", value: -1 );
+        public readonly AvfxFloat InjectionRadialDir0 = new( "辐射方向注入 - 0", "IRD0" );
+        public readonly AvfxFloat InjectionRadialDir1 = new( "辐射方向注入 - 1", "IRD1" );
+        public readonly AvfxFloat PivotX = new( "中心点 X", "PvtX" );
+        public readonly AvfxFloat PivotY = new( "中心点 Y", "PvtY" );
+        public readonly AvfxInt BlockNum = new( "区块编号", "BlkN" );
+        public readonly AvfxFloat LineLengthMin = new( "最短线长", "LLin" );
+        public readonly AvfxFloat LineLengthMax = new( "最长线长", "LLax" );
+        public readonly AvfxInt CreateIntervalVal = new( "创建间隔", "CrI" );
+        public readonly AvfxInt CreateIntervalRandom = new( "随机创建间隔", "CrIR" );
+        public readonly AvfxInt CreateIntervalCount = new( "创建间隔数", "CrIC" );
+        public readonly AvfxInt CreateIntervalLife = new( "创建间隔生命周期", "CrIL" );
+        public readonly AvfxInt CreateNewAfterDelete = new( "死亡后创建新对象", "bCrN", size: 1 );
+        public readonly AvfxInt UvReverse = new( "平面坐标反转", "bRUV", size: 1 );
+        public readonly AvfxInt ScaleRandomLink = new( "随机缩放关联", "bSRL", size: 1 );
+        public readonly AvfxInt BindParent = new( "绑定父级", "bBnP", size: 1 );
+        public readonly AvfxInt ScaleByParent = new( "根据父级缩放", "bSnP", size: 1 );
+        public readonly AvfxInt PolyLineTag = new( "折线标签", "PolT" );
 
         public readonly AvfxSimpleColors Colors = new();
         public readonly AvfxSimpleFrames Frames = new();
@@ -152,9 +152,9 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( InjectionDirectionType );
             Display.Add( BaseDirectionType );
             Display.Add( CreateCount );
-            Display.Add( new UiFloat3( "Create Area", CreateAreaX, CreateAreaY, CreateAreaZ ) );
-            Display.Add( new UiFloat3( "Coord Accuracy", CoordAccuracyX, CoordAccuracyY, CoordAccuracyZ ) );
-            Display.Add( new UiFloat3( "Coord Gra", CoordGraX, CoordGraY, CoordGraZ ) );
+            Display.Add( new UiFloat3( "创建区域", CreateAreaX, CreateAreaY, CreateAreaZ ) );
+            Display.Add( new UiFloat3( "坐标精确度", CoordAccuracyX, CoordAccuracyY, CoordAccuracyZ ) );
+            Display.Add( new UiFloat3( "坐标梯度", CoordGraX, CoordGraY, CoordGraZ ) );
             Display.Add( InjectionRadialDir0 );
             Display.Add( InjectionRadialDir1 );
             Display.Add( BlockNum );
@@ -166,15 +166,15 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( CreateIntervalLife );
             Display.Add( CreateNewAfterDelete );
 
-            DisplayTabs.Add( AnimationDisplay = new UiDisplayList( "Animation" ) );
-            AnimationDisplay.Add( new UiFloat2( "Scale Start", ScaleXStart, ScaleYStart ) );
-            AnimationDisplay.Add( new UiFloat2( "Scale End", ScaleXEnd, ScaleYEnd ) );
+            DisplayTabs.Add( AnimationDisplay = new UiDisplayList( "动画" ) );
+            AnimationDisplay.Add( new UiFloat2( "起始缩放", ScaleXStart, ScaleYStart ) );
+            AnimationDisplay.Add( new UiFloat2( "结束缩放", ScaleXEnd, ScaleYEnd ) );
             AnimationDisplay.Add( ScaleCurve );
-            AnimationDisplay.Add( new UiFloat2( "Scale X Random", ScaleRandX0, ScaleRandX1 ) );
-            AnimationDisplay.Add( new UiFloat2( "Scale Y Random", ScaleRandY0, ScaleRandY1 ) );
-            AnimationDisplay.Add( new UiFloat3( "Rotation Add", RotXAdd, RotYAdd, RotZAdd ) );
-            AnimationDisplay.Add( new UiFloat3( "Rotation Base", RotXBase, RotYBase, RotZBase ) );
-            AnimationDisplay.Add( new UiFloat3( "Rotation Velocity", RotXVel, RotYVel, RotZVel ) );
+            AnimationDisplay.Add( new UiFloat2( "随机 X 轴缩放", ScaleRandX0, ScaleRandX1 ) );
+            AnimationDisplay.Add( new UiFloat2( "随机 Y 轴缩放", ScaleRandY0, ScaleRandY1 ) );
+            AnimationDisplay.Add( new UiFloat3( "旋转增量", RotXAdd, RotYAdd, RotZAdd ) );
+            AnimationDisplay.Add( new UiFloat3( "旋转基数", RotXBase, RotYBase, RotZBase ) );
+            AnimationDisplay.Add( new UiFloat3( "旋转速度", RotXVel, RotYVel, RotZVel ) );
             AnimationDisplay.Add( VelMin );
             AnimationDisplay.Add( VelMax );
             AnimationDisplay.Add( VelFlatteryRate );
@@ -184,7 +184,7 @@ namespace VfxEditor.AvfxFormat {
             AnimationDisplay.Add( ScaleByParent );
             AnimationDisplay.Add( PolyLineTag );
 
-            DisplayTabs.Add( TextureDisplay = new UiDisplayList( "Texture" ) );
+            DisplayTabs.Add( TextureDisplay = new UiDisplayList( "材质" ) );
             TextureDisplay.Add( UvCellU );
             TextureDisplay.Add( UvCellV );
             TextureDisplay.Add( UvInterval );
@@ -192,7 +192,7 @@ namespace VfxEditor.AvfxFormat {
             TextureDisplay.Add( UvNoLoopCount );
             TextureDisplay.Add( UvReverse );
 
-            DisplayTabs.Add( ColorDisplay = new UiDisplayList( "Color" ) );
+            DisplayTabs.Add( ColorDisplay = new UiDisplayList( "颜色" ) );
             ColorDisplay.Add( new UiSimpleColor( Frames.Frame1, Colors.Color1 ) );
             ColorDisplay.Add( new UiSimpleColor( Frames.Frame2, Colors.Color2 ) );
             ColorDisplay.Add( new UiSimpleColor( Frames.Frame3, Colors.Color3 ) );
@@ -214,14 +214,14 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "Simple" );
 
             AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Simple Animation" ) ) Assign();
+            if( ImGui.SmallButton( "+ 简易动画" ) ) Assign();
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( "Simple" );
 
             AssignedCopyPaste( GetDefaultText() );
-            if( UiUtils.RemoveButton( "Delete", small: true ) ) {
+            if( UiUtils.RemoveButton( "删除", small: true ) ) {
                 Unassign();
                 return;
             }
@@ -229,11 +229,11 @@ namespace VfxEditor.AvfxFormat {
             DrawNamedItems( DisplayTabs );
         }
 
-        public override string GetDefaultText() => "Simple Animation";
+        public override string GetDefaultText() => "简易动画";
 
         public override List<AvfxNodeSelect> GetNodeSelects() => [
-            new AvfxNodeSelect<AvfxModel>( Particle, "Injection Model", Particle.NodeGroups.Models, InjectionModelIdx ),
-            new AvfxNodeSelect<AvfxModel>( Particle, "Injection Vertex Bind Model", Particle.NodeGroups.Models, InjectionVertexBindModelIdx )
+            new AvfxNodeSelect<AvfxModel>( Particle, "注入模型", Particle.NodeGroups.Models, InjectionModelIdx ),
+            new AvfxNodeSelect<AvfxModel>( Particle, "注入顶点绑定模型", Particle.NodeGroups.Models, InjectionVertexBindModelIdx )
         ];
     }
 }

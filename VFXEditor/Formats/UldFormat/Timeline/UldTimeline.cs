@@ -14,8 +14,8 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly CommandSplitView<UldFrame> FramesView2;
 
         public UldTimeline( uint id ) : base( id ) {
-            FramesView1 = new( "Group", Frames1, true, null, () => new UldFrame() );
-            FramesView2 = new( "Group", Frames2, true, null, () => new UldFrame() );
+            FramesView1 = new( "组", Frames1, true, null, () => new UldFrame() );
+            FramesView2 = new( "组", Frames2, true, null, () => new UldFrame() );
         }
 
         public UldTimeline( BinaryReader reader ) : this( 0 ) {
@@ -56,11 +56,11 @@ namespace VfxEditor.UldFormat.Timeline {
             Id.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawFrames( "Frames 1", FramesView1 );
-            DrawFrames( "Frames 2", FramesView2 );
+            DrawFrames( "帧 1", FramesView1 );
+            DrawFrames( "帧 2", FramesView2 );
         }
 
         private static void DrawFrames( string name, CommandSplitView<UldFrame> view ) {
@@ -72,7 +72,7 @@ namespace VfxEditor.UldFormat.Timeline {
             view.Draw();
         }
 
-        public override string GetDefaultText() => $"Timeline {GetIdx()}";
+        public override string GetDefaultText() => $"时间线 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Timeline{GetIdx()}";
     }

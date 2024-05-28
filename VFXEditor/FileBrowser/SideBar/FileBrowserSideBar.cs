@@ -53,43 +53,43 @@ namespace VfxEditor.FileBrowser.SideBar {
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Desktop,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
-                    Text = "Desktop"
+                    Text = "桌面"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.File,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
-                    Text = "Documents"
+                    Text = "文档"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Download,
                     Location = Path.Combine( personal, "Downloads" ),
-                    Text = "Downloads"
+                    Text = "下载"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Star,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
-                    Text = "Favorites"
+                    Text = "收藏"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Music,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
-                    Text = "Music"
+                    Text = "音乐"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Image,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
-                    Text = "Pictures"
+                    Text = "图片"
                 } );
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Video,
                     Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
-                    Text = "Videos"
+                    Text = "视频"
                 } );
             } );
         }
@@ -120,11 +120,11 @@ namespace VfxEditor.FileBrowser.SideBar {
 
             var idx = 0;
 
-            DrawCategory( Drives, "Drives", FontAwesomeIcon.Display, ref idx );
-            DrawCategory( QuickAccess, "Quick Access", FontAwesomeIcon.Home, ref idx );
-            DrawCategory( Pinned, "Pinned", FontAwesomeIcon.Thumbtack, ref idx );
-            DrawCategory( Plugin.Configuration.FileBrowserFavorites, "Favorites", FontAwesomeIcon.Star, ref idx );
-            DrawCategory( Plugin.Configuration.FileBrowserRecent, "Recent", FontAwesomeIcon.History, ref idx );
+            DrawCategory( Drives, "设备和驱动器", FontAwesomeIcon.Display, ref idx );
+            DrawCategory( QuickAccess, "快速访问", FontAwesomeIcon.Home, ref idx );
+            DrawCategory( Pinned, "固定", FontAwesomeIcon.Thumbtack, ref idx );
+            DrawCategory( Plugin.Configuration.FileBrowserFavorites, "收藏", FontAwesomeIcon.Star, ref idx );
+            DrawCategory( Plugin.Configuration.FileBrowserRecent, "最近", FontAwesomeIcon.History, ref idx );
         }
 
         private unsafe void DrawCategory( IEnumerable<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {

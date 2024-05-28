@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
@@ -44,14 +44,14 @@ namespace VfxEditor.FileManager {
 
             Plugin.DrawFileMenu();
 
-            if( ImGui.BeginMenu( "Edit" ) ) {
+            if( ImGui.BeginMenu( "编辑" ) ) {
                 CommandManager.Draw();
                 CopyManager.Draw();
                 DrawEditMenuItems();
                 ImGui.EndMenu();
             }
 
-            if( !Plugin.Configuration.ShowTabBar && ImGui.MenuItem( "Documents" ) ) DocumentWindow.Show();
+            if( !Plugin.Configuration.ShowTabBar && ImGui.MenuItem( "文档" ) ) DocumentWindow.Show();
 
             ImGui.Separator();
             Plugin.DrawManagersMenu( this );
@@ -78,7 +78,7 @@ namespace VfxEditor.FileManager {
             var size = ImGui.GetContentRegionAvail().X;
             var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) - ImGui.GetStyle().ItemInnerSpacing.X;
 
-            using( var child = ImRaii.Child( "Child", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
+            using( var child = ImRaii.Child( "子级", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
                 using var tabs = ImRaii.TabBar( "TabBar", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
                 if( !tabs ) return;
 
@@ -105,7 +105,7 @@ namespace VfxEditor.FileManager {
                     }
                     using( var popup = ImRaii.Popup( "DeletePopup" ) ) {
                         if( popup ) {
-                            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                            if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) ) {
                                 RemoveDocument( document );
                                 break;
                             }

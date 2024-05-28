@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
@@ -18,13 +18,13 @@ namespace VfxEditor.FileManager {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "Documents" );
 
-            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) Manager.AddDocument();
+            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "新建" ) ) Manager.AddDocument();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show source column", ref Plugin.Configuration.DocumentPopoutShowSource ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "显示来源表格", ref Plugin.Configuration.DocumentPopoutShowSource ) ) Plugin.Configuration.Save();
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using var child = ImRaii.Child( "Child", new Vector2( -1 ), true );
+            using var child = ImRaii.Child( "子级", new Vector2( -1 ), true );
             using var table = ImRaii.Table( "##Table", ShowSourceColumn ? 3 : 2, ImGuiTableFlags.RowBg );
             style.Pop();
 
@@ -67,7 +67,7 @@ namespace VfxEditor.FileManager {
                 if( popup ) {
                     var deleteDisabled = Manager.Documents.Count < 2;
                     using( var disabled = ImRaii.Disabled( deleteDisabled ) ) {
-                        if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) && !deleteDisabled ) Manager.RemoveDocument( document );
+                        if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) && !deleteDisabled ) Manager.RemoveDocument( document );
                     }
                     document.DrawRename();
                 }

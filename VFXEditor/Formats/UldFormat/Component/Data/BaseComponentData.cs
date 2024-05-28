@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.IO;
 
 namespace VfxEditor.UldFormat.Component.Data {
@@ -15,7 +15,7 @@ namespace VfxEditor.UldFormat.Component.Data {
         }
 
         public override void Draw() {
-            ImGui.TextDisabled( $"Data of size 0x{Data?.Length:X8}" );
+            ImGui.TextDisabled( $"数据大小 0x{Data?.Length:X8}" );
         }
     }
 }

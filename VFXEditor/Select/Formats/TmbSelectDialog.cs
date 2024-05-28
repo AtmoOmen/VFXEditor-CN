@@ -13,11 +13,11 @@ namespace VfxEditor.Select.Formats {
     public class TmbSelectDialog : SelectDialog {
         public TmbSelectDialog( string id, TmbManager manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
             GameTabs.AddRange( [
-                new ActionTabTmb( this, "Action" ),
-                new ActionTabTmbNonPlayer( this, "Non-Player Action" ),
-                new EmoteTabTmb( this, "Emote" ),
-                new NpcTabTmb( this, "Npc" ),
-                new CommonTabTmb( this, "Common" )
+                new ActionTabTmb( this, "技能" ),
+                new ActionTabTmbNonPlayer( this, "NPC 技能" ),
+                new EmoteTabTmb( this, "情感动作" ),
+                new NpcTabTmb( this, "NPC" ),
+                new CommonTabTmb( this, "一般" )
             ] );
         }
 

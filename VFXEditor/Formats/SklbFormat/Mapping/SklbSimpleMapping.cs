@@ -1,4 +1,4 @@
-using FFXIVClientStructs.Havok;
+﻿using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Parsing;
@@ -9,14 +9,14 @@ namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbSimpleMapping : IUiItem {
         public readonly SklbMapping Mapping;
 
-        public readonly ParsedBoneIndex BoneA = new( "Mapped Skeleton Bone", -1 );
-        public readonly ParsedBoneIndex BoneB = new( "This Skeleton Bone", -1 );
-        public readonly ParsedInt Unk1 = new( "Unknown 1" );
-        public readonly ParsedInt Unk2 = new( "Unknown 2" );
-        public readonly ParsedInt Unk3 = new( "Unknown 3" );
-        public readonly ParsedFloat4 Translation = new( "Translation" );
-        public readonly ParsedQuat Rotation = new( "Rotation", new( 0, 0, 0 ) );
-        public readonly ParsedFloat4 Scale = new( "Scale", new( 1, 1, 1, 1 ) );
+        public readonly ParsedBoneIndex BoneA = new( "骨骼节点映射", -1 );
+        public readonly ParsedBoneIndex BoneB = new( "该骨骼节点", -1 );
+        public readonly ParsedInt Unk1 = new( "未知 1" );
+        public readonly ParsedInt Unk2 = new( "未知 2" );
+        public readonly ParsedInt Unk3 = new( "未知 3" );
+        public readonly ParsedFloat4 Translation = new( "平移" );
+        public readonly ParsedQuat Rotation = new( "旋转", new( 0, 0, 0 ) );
+        public readonly ParsedFloat4 Scale = new( "缩放", new( 1, 1, 1, 1 ) );
 
         public SklbSimpleMapping( SklbMapping mapping ) {
             Mapping = mapping;

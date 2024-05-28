@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -21,7 +21,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
         protected abstract bool DrawLeftItem( T item, int idx );
 
         protected override void DrawRightColumn() {
-            if( Selected == null ) ImGui.TextDisabled( "Select an item..." );
+            if( Selected == null ) ImGui.TextDisabled( "请选择..." );
             else DrawSelected();
         }
 

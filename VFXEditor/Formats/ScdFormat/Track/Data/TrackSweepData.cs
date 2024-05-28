@@ -1,10 +1,10 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackSweepData : ScdTrackData {
-        public readonly ParsedFloat Pitch = new( "Pitch" );
-        public readonly ParsedInt Time = new( "Time" );
+        public readonly ParsedFloat Pitch = new( "音高" );
+        public readonly ParsedInt Time = new( "时间" );
 
         public override void Read( BinaryReader reader ) {
             Pitch.Read( reader );

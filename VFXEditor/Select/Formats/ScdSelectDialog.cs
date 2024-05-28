@@ -1,4 +1,4 @@
-using VfxEditor.ScdFormat;
+﻿using VfxEditor.ScdFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Bgm;
 using VfxEditor.Select.Tabs.BgmQuest;
@@ -13,15 +13,15 @@ namespace VfxEditor.Select.Formats {
     public class ScdSelectDialog : SelectDialog {
         public ScdSelectDialog( string id, ScdManager manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
             GameTabs.AddRange( [
-                new ActionTabScd( this, "Actions" ),
-                new MountTabScd( this, "Mount" ),
-                new OrchestrionTab( this, "Orchestrion" ),
-                new ZoneTabScd( this, "Zone" ),
+                new ActionTabScd( this, "技能" ),
+                new MountTabScd( this, "坐骑" ),
+                new OrchestrionTab( this, "管弦乐琴音乐" ),
+                new ZoneTabScd( this, "区域" ),
                 new BgmTab( this, "BGM" ),
-                new BgmQuestTab( this, "Quest BGM" ),
-                new InstanceTab( this, "Instance" ),
-                new VoiceTab( this, "Voice" ),
-                new CommonTabScd( this, "Common" ),
+                new BgmQuestTab( this, "任务 BGM" ),
+                new InstanceTab( this, "副本" ),
+                new VoiceTab( this, "语音" ),
+                new CommonTabScd( this, "一般" ),
             ] );
         }
     }

@@ -99,19 +99,19 @@ namespace VfxEditor.UldFormat {
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
-            TextureSplitView = new( "Texture", Textures, true,
+            TextureSplitView = new( "材质", Textures, true,
                 ( UldTexture item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Textures ) ) );
 
-            PartsSplitView = new( "Part List", Parts, true,
+            PartsSplitView = new( "组件列表", Parts, true,
                 ( UldPartList item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Parts ) ) );
 
-            ComponentDropdown = new( "Component", Components,
+            ComponentDropdown = new( "组件", Components,
                 ( UldComponent item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Components ), Components ) );
 
-            TimelineDropdown = new( "Timeline", Timelines,
+            TimelineDropdown = new( "时间线", Timelines,
                 ( UldTimeline item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Timelines ) ) );
 
-            WidgetDropdown = new( "Widget", Widgets,
+            WidgetDropdown = new( "部件", Widgets,
                 ( UldWidget item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Widgets ), Components ) );
         }
 
@@ -156,30 +156,30 @@ namespace VfxEditor.UldFormat {
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            if( UiUtils.BeginTabItem<UldTexture>( "Textures" ) ) {
+            if( UiUtils.BeginTabItem<UldTexture>( "材质" ) ) {
                 TextureList.Draw();
                 TextureSplitView.Draw();
                 ImGui.EndTabItem();
             }
-            if( UiUtils.BeginTabItem<UldPartList>( "Part Lists" ) ) {
+            if( UiUtils.BeginTabItem<UldPartList>( "组件列表" ) ) {
                 PartList.Draw();
                 PartsSplitView.Draw();
                 ImGui.EndTabItem();
             }
-            if( UiUtils.BeginTabItem<UldComponent>( "Components" ) ) {
+            if( UiUtils.BeginTabItem<UldComponent>( "组件" ) ) {
                 ComponentList.Draw();
                 ComponentDropdown.Draw();
                 ImGui.EndTabItem();
             }
-            if( UiUtils.BeginTabItem<UldTimeline>( "Timelines" ) ) {
+            if( UiUtils.BeginTabItem<UldTimeline>( "时间线" ) ) {
                 TimelineList.Draw();
                 TimelineDropdown.Draw();
                 ImGui.EndTabItem();
             }
-            if( UiUtils.BeginTabItem<UldWidget>( "Widgets" ) ) {
+            if( UiUtils.BeginTabItem<UldWidget>( "部件" ) ) {
                 WidgetList.Draw();
                 WidgetDropdown.Draw();
                 ImGui.EndTabItem();

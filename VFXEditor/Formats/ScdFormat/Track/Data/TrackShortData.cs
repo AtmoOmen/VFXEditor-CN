@@ -1,9 +1,9 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackShortData : ScdTrackData {
-        public readonly ParsedShort Value = new( "Value" );
+        public readonly ParsedShort Value = new( "值" );
 
         public override void Read( BinaryReader reader ) {
             Value.Read( reader );

@@ -20,7 +20,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
 
         protected override void DrawSelected() {
             var paths = new Dictionary<string, string>() {
-                { "Hit", Selected.HitPath },
+                { "受击", Selected.HitPath },
             };
 
             foreach( var (path, idx) in Selected.LoopPaths.WithIndex() ) {

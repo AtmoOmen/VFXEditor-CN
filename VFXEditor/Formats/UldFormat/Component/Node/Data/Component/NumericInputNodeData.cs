@@ -1,15 +1,15 @@
-using VfxEditor.Parsing;
+﻿using VfxEditor.Parsing;
 
 namespace VfxEditor.UldFormat.Component.Node.Data.Component {
     public class NumericInputNodeData : UldNodeComponentData {
         public NumericInputNodeData() : base() {
             Parsed.AddRange( [
-                new ParsedInt( "Value" ),
-                new ParsedInt( "Max" ),
-                new ParsedInt( "Min" ),
-                new ParsedInt( "Add" ),
-                new ParsedUInt( "Unknown 1" ),
-                new ParsedByteBool( "Comma" ),
+                new ParsedInt( "值" ),
+                new ParsedInt( "最大值" ),
+                new ParsedInt( "最小值" ),
+                new ParsedInt( "新增" ),
+                new ParsedUInt( "未知 1" ),
+                new ParsedByteBool( "逗号" ),
                 new ParsedReserve( 3 ),
             ] );
         }

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -50,22 +50,22 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Main" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Parameters" ) ) {
+            if( ImGui.BeginTabItem( "参数" ) ) {
                 Main.Draw();
                 ImGui.EndTabItem();
             }
 
-            DrawView( ScheduleView, "Schedulers" );
-            DrawView( TimelineView, "Timelines" );
-            DrawView( EmitterView, "Emitters" );
-            DrawView( ParticleView, "Particles" );
-            DrawView( EffectorView, "Effectors" );
-            DrawView( BinderView, "Binders" );
-            DrawView( TextureView, "Textures" );
-            DrawView( ModelView, "Models" );
+            DrawView( ScheduleView, "调度器" );
+            DrawView( TimelineView, "时间线" );
+            DrawView( EmitterView, "发射器" );
+            DrawView( ParticleView, "粒子" );
+            DrawView( EffectorView, "效果器" );
+            DrawView( BinderView, "绑定器" );
+            DrawView( TextureView, "材质" );
+            DrawView( ModelView, "模型" );
         }
 
         private static unsafe void DrawView<T>( IUiNodeView<T> view, string label ) where T : AvfxNode {
@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
                 CleanupInternalView( TextureView, commands, removedNodes );
                 CleanupInternalView( ModelView, commands, removedNodes );
             }
-            Dalamud.OkNotification( $"Removed {removedNodes.Count} nodes" );
+            Dalamud.OkNotification( $"移除了 {removedNodes.Count} 个节点" );
             Command.AddAndExecute( new CompoundCommand( commands ) );
         }
 
@@ -161,13 +161,13 @@ namespace VfxEditor.AvfxFormat {
         public void ShowExportDialog( AvfxNode node ) => ExportUi.Show( node );
 
         public void ShowImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Partial VFX{.vfxedit2,.vfxedit},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "Partial VFX{.vfxedit2,.vfxedit},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     Import( res );
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "无法导入数据" );
                 }
             } );
         }

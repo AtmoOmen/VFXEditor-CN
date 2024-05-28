@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -9,12 +9,12 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEffector : AvfxNodeWithData<EffectorType> {
         public const string NAME = "Efct";
 
-        public readonly AvfxEnum<RotationOrder> RotationOrder = new( "Rotation Order", "RoOT" );
-        public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrder = new( "Coordinate Compute Order", "CCOT" );
-        public readonly AvfxBool AffectOtherVfx = new( "Affect Other VFX", "bAOV" );
-        public readonly AvfxBool AffectGame = new( "Affect Game", "bAGm" );
-        public readonly AvfxInt LoopPointStart = new( "Loop Start", "LpSt" );
-        public readonly AvfxInt LoopPointEnd = new( "Loop End", "LpEd" );
+        public readonly AvfxEnum<RotationOrder> RotationOrder = new( "旋转顺序", "RoOT" );
+        public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrder = new( "坐标计算顺序", "CCOT" );
+        public readonly AvfxBool AffectOtherVfx = new( "影响其他视效", "bAOV" );
+        public readonly AvfxBool AffectGame = new( "影响游戏", "bAGm" );
+        public readonly AvfxInt LoopPointStart = new( "循环开始", "LpSt" );
+        public readonly AvfxInt LoopPointEnd = new( "循环结束", "LpEd" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat {
                 LoopPointEnd
             ];
 
-            Parameters = new( "Parameters", [
+            Parameters = new( "参数", [
                 new UiNodeGraphView( this ),
                 RotationOrder,
                 CoordComputeOrder,
@@ -81,10 +81,10 @@ namespace VfxEditor.AvfxFormat {
             Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) Parameters.Draw();
             }
 
@@ -94,13 +94,13 @@ namespace VfxEditor.AvfxFormat {
         private void DrawData() {
             if( Data == null ) return;
 
-            using var tabItem = ImRaii.TabItem( "Data" );
+            using var tabItem = ImRaii.TabItem( "数据" );
             if( !tabItem ) return;
 
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Effector {GetIdx()} ({Type.Value})";
+        public override string GetDefaultText() => $"效果器 {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Effct{GetIdx()}";
     }

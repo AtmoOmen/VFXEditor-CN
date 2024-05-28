@@ -20,24 +20,24 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedIntSelect<UldPartList> PartListId;
         private readonly ParsedUIntPicker<UldPartItem> PartId;
 
-        private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );
-        private readonly ParsedEnum<GridPartsType> GridParts = new( "Grid Parts Type", size: 1 );
-        private readonly ParsedEnum<GridRenderType> GridRender = new( "Grid Render Type", size: 1 );
-        private readonly ParsedShort TopOffset = new( "Top Offset" );
-        private readonly ParsedShort BottonOffset = new( "Bottom Offset" );
-        private readonly ParsedShort LeftOffset = new( "Left Offset" );
-        private readonly ParsedShort RightOffset = new( "Right Offset" );
-        private readonly ParsedInt Unknown2 = new( "Unknown 2", size: 1 );
-        private readonly ParsedInt Unknown3 = new( "Unknown 2", size: 1 );
+        private readonly ParsedUInt Unknown1 = new( "未知 1", size: 2 );
+        private readonly ParsedEnum<GridPartsType> GridParts = new( "网格组件类型", size: 1 );
+        private readonly ParsedEnum<GridRenderType> GridRender = new( "网格渲染类型", size: 1 );
+        private readonly ParsedShort TopOffset = new( "顶部偏移" );
+        private readonly ParsedShort BottonOffset = new( "底部偏移" );
+        private readonly ParsedShort LeftOffset = new( "左侧偏移" );
+        private readonly ParsedShort RightOffset = new( "右侧偏移" );
+        private readonly ParsedInt Unknown2 = new( "未知 2", size: 1 );
+        private readonly ParsedInt Unknown3 = new( "未知 3", size: 1 );
 
         public NineGridNodeData() {
-            PartListId = new( "Part List", 0,
+            PartListId = new( "组件列表", 0,
                 () => Plugin.UldManager.File.PartsSplitView,
                 ( UldPartList item ) => ( int )item.Id.Value,
                 ( UldPartList item, int _ ) => item.GetText(),
                 size: 2
             );
-            PartId = new( "Part",
+            PartId = new( "组件",
                 () => PartListId.Selected?.Parts,
                 ( UldPartItem item, int idx ) => item.GetText( idx ),
                 null

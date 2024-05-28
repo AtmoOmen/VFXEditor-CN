@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -74,13 +74,13 @@ namespace VfxEditor.ScdFormat {
             }
 
             AudioSplitView = new( Audio );
-            SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry() );
+            SoundView = new( "音效", Sounds, true, null, () => new ScdSoundEntry() );
             TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry() );
             AttributeView = new( "Attribute", Attributes, false );
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawAudio();
@@ -90,20 +90,20 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawAudio() {
-            using var tabItem = ImRaii.TabItem( "Audio" );
+            using var tabItem = ImRaii.TabItem( "音频" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Audio" );
 
-            if( ImGui.CollapsingHeader( "Settings" ) ) {
+            if( ImGui.CollapsingHeader( "设置" ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
-                ImGui.TextDisabled( "Audio player settings. These do not have any effect on the .scd file" );
-                if( ImGui.Checkbox( "Loop Music", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
+                ImGui.TextDisabled( "音频播放器设置。不会影响 .scd 文件" );
+                if( ImGui.Checkbox( "循环音乐", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
                 if( ImGui.Checkbox( "Loop Sound Effects", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
-                if( ImGui.Checkbox( "Simulate Loop Start/End", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "模拟循环开始/结束", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
                 ImGui.SetNextItemWidth( 50 );
-                if( ImGui.InputFloat( "Volume", ref Plugin.Configuration.ScdVolume ) ) {
+                if( ImGui.InputFloat( "音量", ref Plugin.Configuration.ScdVolume ) ) {
                     Plugin.Configuration.Save();
                     Audio.ForEach( x => x.Player.UpdateVolume() );
                 }
@@ -117,7 +117,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawSounds() {
-            using var tabItem = ImRaii.TabItem( "Sounds" );
+            using var tabItem = ImRaii.TabItem( "音效" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Sounds" );
@@ -125,7 +125,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawTracks() {
-            using var tabItem = ImRaii.TabItem( "Tracks" );
+            using var tabItem = ImRaii.TabItem( "轨道" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Tracks" );
@@ -133,7 +133,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawAttributes() {
-            using var tabItem = ImRaii.TabItem( "Attributes" );
+            using var tabItem = ImRaii.TabItem( "属性" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Attributes" );

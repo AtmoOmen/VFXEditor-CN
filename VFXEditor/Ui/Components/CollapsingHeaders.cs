@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace VfxEditor.Ui.Components {
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 
-                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
+                    if( UiUtils.RemoveButton( "删除", true ) ) { // REMOVE
                         CommandManager.Add( new ListRemoveCommand<T>( Items, item ) );
                         break;
                     }
@@ -38,7 +38,7 @@ namespace VfxEditor.Ui.Components {
                 }
             }
 
-            if( ImGui.Button( "+ New" ) ) { // NEW
+            if( ImGui.Button( "+ 新建" ) ) { // NEW
                 CommandManager.Add( new ListAddCommand<T>( Items, NewAction.Invoke() ) );
             }
         }

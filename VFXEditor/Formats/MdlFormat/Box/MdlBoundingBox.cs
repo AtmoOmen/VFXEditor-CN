@@ -1,11 +1,11 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Box {
     public class MdlBoundingBox : IUiItem {
-        public readonly ParsedFloat4 Min = new( "Minimum" );
-        public readonly ParsedFloat4 Max = new( "Maximum" );
+        public readonly ParsedFloat4 Min = new( "最小值" );
+        public readonly ParsedFloat4 Max = new( "最大值" );
 
         public MdlBoundingBox() { }
 

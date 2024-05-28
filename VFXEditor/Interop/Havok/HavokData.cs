@@ -1,4 +1,4 @@
-using FFXIVClientStructs.Havok;
+﻿using FFXIVClientStructs.Havok;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

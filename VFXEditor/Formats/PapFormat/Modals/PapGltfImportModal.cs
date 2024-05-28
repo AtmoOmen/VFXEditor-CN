@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using SharpGLTF.Schema2;
@@ -25,7 +25,7 @@ namespace VfxEditor.PapFormat {
         private bool Exclude = false;
         private ExcludedBonesConfiguration SelectedExcludeList;
 
-        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "Animation Import", true ) {
+        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "导入动画", true ) {
             Motion = motion;
             HavokIndex = index;
             ImportPath = importPath;
@@ -54,17 +54,17 @@ namespace VfxEditor.PapFormat {
         protected override void DrawBody() {
             if( UiUtils.IconButton( FontAwesomeIcon.InfoCircle, "Wiki" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
-            using var nodes = ImRaii.TreeNode( "Nodes Being Imported" );
+            using var nodes = ImRaii.TreeNode( "导入中节点" );
             if( nodes ) {
-                using var child = ImRaii.Child( "Child", new( ImGui.GetContentRegionAvail().X, 300 ) );
+                using var child = ImRaii.Child( "子级", new( ImGui.GetContentRegionAvail().X, 300 ) );
                 using var _ = ImRaii.PushIndent();
                 foreach( var nodeName in NodeNames ) {
                     ImGui.Text( nodeName );
                 }
             }
 
-            var text = AnimationNames.Count == 0 ? "[NONE]" : AnimationNames[AnimationIndex];
-            using( var combo = ImRaii.Combo( "Animation to Import", text ) ) {
+            var text = AnimationNames.Count == 0 ? "[无]" : AnimationNames[AnimationIndex];
+            using( var combo = ImRaii.Combo( "待导入动画", text ) ) {
                 if( combo ) {
                     for( var i = 0; i < AnimationNames.Count; i++ ) {
                         using var _ = ImRaii.PushId( i );
@@ -75,9 +75,9 @@ namespace VfxEditor.PapFormat {
                 }
             }
 
-            ImGui.Checkbox( "Compress Animation", ref Compress );
-            ImGui.Checkbox( "Skip Bones Unanimated in Original Motion", ref SkipOriginal );
-            ImGui.Checkbox( "Exclude Bones", ref Exclude );
+            ImGui.Checkbox( "压缩动画", ref Compress );
+            ImGui.Checkbox( "跳过原动作中不包含动画的骨骼", ref SkipOriginal );
+            ImGui.Checkbox( "排除骨骼", ref Exclude );
 
             if( Exclude ) {
                 using var _ = ImRaii.PushId( "Exclude" );
@@ -88,7 +88,7 @@ namespace VfxEditor.PapFormat {
 
         private void DrawExclude() {
             using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                if( ImGui.BeginCombo( "##List", SelectedExcludeList == null ? "[NONE]" : SelectedExcludeList.Name ) ) {
+                if( ImGui.BeginCombo( "##List", SelectedExcludeList == null ? "[无]" : SelectedExcludeList.Name ) ) {
                     using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                         if( ImGui.Selectable( FontAwesomeIcon.Plus.ToIconString(), false, ImGuiSelectableFlags.SpanAllColumns ) ) {
                             var newList = new ExcludedBonesConfiguration();
@@ -97,12 +97,12 @@ namespace VfxEditor.PapFormat {
                         }
                     }
                     ImGui.SameLine();
-                    ImGui.Text( "New List" );
+                    ImGui.Text( "新列表" );
 
                     ImGui.Separator();
 
                     using( var _ = ImRaii.PushColor( ImGuiCol.Text, ImGui.GetColorU32( ImGuiCol.TextDisabled ) ) ) {
-                        if( ImGui.Selectable( "[NONE]" ) ) SelectedExcludeList = null;
+                        if( ImGui.Selectable( "[无]" ) ) SelectedExcludeList = null;
                     }
 
                     foreach( var item in Plugin.Configuration.ExcludedBones ) {
@@ -121,11 +121,11 @@ namespace VfxEditor.PapFormat {
                         }
 
                         ImGui.SameLine();
-                        if( ImGui.Button( FontAwesomeIcon.Edit.ToIconString() ) ) ImGui.OpenPopup( "Rename" );
+                        if( ImGui.Button( FontAwesomeIcon.Edit.ToIconString() ) ) ImGui.OpenPopup( "重命名" );
                     }
 
                     if( SelectedExcludeList != null ) { // Might be removed by previous
-                        if( ImGui.BeginPopup( "Rename" ) ) {
+                        if( ImGui.BeginPopup( "重命名" ) ) {
                             ImGui.InputText( "##Name", ref SelectedExcludeList.Name, 255 );
                             ImGui.EndPopup();
                         }
@@ -133,7 +133,7 @@ namespace VfxEditor.PapFormat {
                 }
             }
 
-            using var child = ImRaii.Child( "Child", new( Math.Max( ImGui.GetContentRegionAvail().X, 300 ), ImGui.GetFrameHeightWithSpacing() * 10 ), true );
+            using var child = ImRaii.Child( "子级", new( Math.Max( ImGui.GetContentRegionAvail().X, 300 ), ImGui.GetFrameHeightWithSpacing() * 10 ), true );
             SelectedExcludeList?.Draw();
         }
 
@@ -155,7 +155,7 @@ namespace VfxEditor.PapFormat {
                     ( !Exclude || SelectedExcludeList == null ) ? [] : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
                     ImportPath );
             } ) );
-            Dalamud.OkNotification( "Havok data imported" );
+            Dalamud.OkNotification( "已导入 Havok 数据" );
         }
     }
 }

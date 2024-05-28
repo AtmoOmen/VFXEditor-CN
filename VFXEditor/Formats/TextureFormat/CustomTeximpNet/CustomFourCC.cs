@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using TeximpNet;
 
@@ -49,7 +49,7 @@ namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
         public CustomFourCC( string fourCharacterCode ) {
             if( fourCharacterCode != null ) {
                 if( fourCharacterCode.Length != 4 )
-                    throw new ArgumentOutOfRangeException( nameof( fourCharacterCode ), "CustomFourCC must have four characters only." );
+                    throw new ArgumentOutOfRangeException( nameof( fourCharacterCode ), "自定义四人角色编码必须有且只有四名玩家" );
 
                 m_packedValue = ( uint )( fourCharacterCode[3] << 24 | fourCharacterCode[2] << 16 | fourCharacterCode[1] << 8 | fourCharacterCode[0] );
             }

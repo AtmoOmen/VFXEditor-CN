@@ -1,4 +1,4 @@
-namespace VfxEditor.Utils.Stacks {
+﻿namespace VfxEditor.Utils.Stacks {
     public class FixedSizeStack<T> {
         private readonly int Capacity;
         private readonly T[] Buffer;

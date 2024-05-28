@@ -1,13 +1,13 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
 namespace VfxEditor.UldFormat.Texture {
     public class UldTexture : UldWorkspaceItem {
-        public readonly ParsedPaddedString Path = new( "Path", 44, 0x00 );
-        public readonly ParsedUInt IconId = new( "Icon Id" );
-        private readonly ParsedUInt Unk1 = new( "Unknown 1" );
+        public readonly ParsedPaddedString Path = new( "路径", 44, 0x00 );
+        public readonly ParsedUInt IconId = new( "图标 ID" );
+        private readonly ParsedUInt Unk1 = new( "未知 1" );
 
         private bool ShowHd = false;
 
@@ -35,14 +35,14 @@ namespace VfxEditor.UldFormat.Texture {
             Path.Draw();
 
             if( !string.IsNullOrEmpty( Path.Value ) ) {
-                ImGui.Checkbox( "Show HD", ref ShowHd );
+                ImGui.Checkbox( "显示 HD 素材", ref ShowHd );
                 if( ShowHd ) ImGui.TextDisabled( TexturePath );
                 Plugin.TextureManager.GetTexture( TexturePath )?.Draw();
             }
 
             IconId.Draw();
             if( IconId.Value > 0 ) {
-                ImGui.Checkbox( "Show HD", ref ShowHd );
+                ImGui.Checkbox( "显示 HD 素材", ref ShowHd );
                 ImGui.TextDisabled( IconPath );
                 Plugin.TextureManager.GetTexture( IconPath )?.Draw();
             }
@@ -50,7 +50,7 @@ namespace VfxEditor.UldFormat.Texture {
             Unk1.Draw();
         }
 
-        public override string GetDefaultText() => $"Texture {GetIdx()}";
+        public override string GetDefaultText() => $"材质 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Texture{GetIdx()}";
 

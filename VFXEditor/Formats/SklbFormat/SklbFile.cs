@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +37,7 @@ namespace VfxEditor.SklbFormat {
                 Data = new SklbOldData( reader );
             }
             else {
-                Dalamud.Error( $"Invalid SKLB version: {Version1:X4} {Version2:X4}" );
+                Dalamud.Error( $"无效的骨骼版本: {Version1:X4} {Version2:X4}" );
                 return;
             }
 
@@ -89,7 +89,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         public override void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawData();
@@ -100,7 +100,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         private void DrawData() {
-            using var tabItem = ImRaii.TabItem( "Data" );
+            using var tabItem = ImRaii.TabItem( "数据" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Data" );
@@ -110,7 +110,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         private void DrawLayers() {
-            using var tabItem = ImRaii.TabItem( "Layers" );
+            using var tabItem = ImRaii.TabItem( "层" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Layers" );
@@ -119,7 +119,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         private void DrawBones() {
-            using var tabItem = ImRaii.TabItem( "Bones" );
+            using var tabItem = ImRaii.TabItem( "骨骼" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Bones" );
@@ -137,7 +137,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         private void DrawMappings() {
-            using var tabItem = ImRaii.TabItem( "Mappings" );
+            using var tabItem = ImRaii.TabItem( "映射" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Mappings" );

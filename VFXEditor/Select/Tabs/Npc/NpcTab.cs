@@ -65,7 +65,7 @@ namespace VfxEditor.Select.Tabs.Npc {
         protected override void DrawExtra() => SelectUiUtils.NpcThankYou();
 
         protected override void DrawSelected() {
-            ImGui.TextDisabled( "Variant: " + Selected.Variant );
+            ImGui.TextDisabled( "分支: " + Selected.Variant );
             Dialog.DrawPaths( Loaded, Selected.Name, ResultType );
         }
 

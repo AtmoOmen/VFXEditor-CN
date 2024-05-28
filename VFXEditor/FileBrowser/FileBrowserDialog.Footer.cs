@@ -19,7 +19,7 @@ namespace VfxEditor.FileBrowser {
 
             using( var disabled = ImRaii.Disabled( string.IsNullOrEmpty( FileNameInput ) || ( SelectOnly && Selected == null ) ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( "OK" ) ) {
+                if( ImGui.Button( "确认" ) ) {
                     IsOk = true;
                     res = true;
                 }
@@ -27,7 +27,7 @@ namespace VfxEditor.FileBrowser {
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
             ImGui.SameLine();
-            if( UiUtils.RemoveButton( "Cancel" ) ) {
+            if( UiUtils.RemoveButton( "取消" ) ) {
                 IsOk = false;
                 res = true;
             }

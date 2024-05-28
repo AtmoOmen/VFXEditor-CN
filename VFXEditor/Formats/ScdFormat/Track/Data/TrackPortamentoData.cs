@@ -1,10 +1,10 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackPortamentoData : ScdTrackData {
         public readonly ParsedInt PortamentoTime = new( "Portamento Time" );
-        public readonly ParsedFloat Pitch = new( "Pitch" );
+        public readonly ParsedFloat Pitch = new( "音高" );
 
         public override void Read( BinaryReader reader ) {
             PortamentoTime.Read( reader );

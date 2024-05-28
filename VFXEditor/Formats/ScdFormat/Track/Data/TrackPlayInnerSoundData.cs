@@ -1,10 +1,10 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackPlayInnerSoundData : ScdTrackData {
         public readonly ParsedShort BankNumber = new( "Bank Number" );
-        public readonly ParsedShort SoundIndex = new( "Sound Index" );
+        public readonly ParsedShort SoundIndex = new( "音频索引" );
 
         public override void Read( BinaryReader reader ) {
             BankNumber.Read( reader );

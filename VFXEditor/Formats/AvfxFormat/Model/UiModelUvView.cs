@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using ImPlotNET;
 using System;
@@ -67,7 +67,7 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( !DrawOnce || ImGui.Button( "Fit To Contents" ) ) {
+            if( !DrawOnce || ImGui.Button( "自适应显示" ) ) {
                 ImPlot.SetNextAxesToFit();
                 DrawOnce = true;
             }

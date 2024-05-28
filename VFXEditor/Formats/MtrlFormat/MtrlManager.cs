@@ -29,8 +29,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly List<MtrlStain> Stains = [];
 
         public MtrlManager() : base( "Mtrl Editor", "Mtrl" ) {
-            SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );
-            ReplaceSelect = new MtrlSelectDialog( "Mtrl Select [REPLACED]", this, false );
+            SourceSelect = new MtrlSelectDialog( "选择文件 [加载]###MTRL", this, true );
+            ReplaceSelect = new MtrlSelectDialog( "选择文件 [替换]###MTRL", this, false );
 
             // Tiling textures
             TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
@@ -11,13 +11,13 @@ namespace VfxEditor.AvfxFormat.Dialogs {
 
         public AvfxExport( AvfxFile file ) {
             Categories = [
-                new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "Timelines" ),
-                new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "Emitters" ),
-                new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "Particles" ),
-                new ExportDialogCategory<AvfxEffector>( file.NodeGroupSet.Effectors, "Effectors" ),
-                new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "Binders" ),
-                new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "Textures" ),
-                new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "Models" )
+                new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "时间线" ),
+                new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "发射器" ),
+                new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "粒子" ),
+                new ExportDialogCategory<AvfxEffector>( file.NodeGroupSet.Effectors, "效果器" ),
+                new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "绑定器" ),
+                new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "材质" ),
+                new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "模型" )
             ];
         }
 
@@ -26,18 +26,18 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         public void Draw() {
             using var _ = ImRaii.PushId( "##ExportDialog" );
 
-            ImGui.Checkbox( "Export Dependencies", ref ExportDependencies );
+            ImGui.Checkbox( "导出依赖关系", ref ExportDependencies );
 
             ImGui.SameLine();
-            UiUtils.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
+            UiUtils.HelpMarker( @"导出选中项与它们的依赖关系 (如: 依赖材质的例子效果)。推荐选中此项" );
 
             ImGui.SameLine();
-            if( ImGui.Button( "Reset" ) ) Reset();
+            if( ImGui.Button( "重置" ) ) Reset();
 
             ImGui.SameLine();
-            if( ImGui.Button( "Export" ) ) SaveDialog();
+            if( ImGui.Button( "导出" ) ) SaveDialog();
 
-            using var child = ImRaii.Child( "Child", new( -1, -1 ), true );
+            using var child = ImRaii.Child( "子级", new( -1, -1 ), true );
             Categories.ForEach( cat => cat.Draw() );
         }
 
@@ -59,7 +59,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         }
 
         public void SaveDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 AvfxFile.Export( GetSelected(), res, ExportDependencies );
                 Plugin.AvfxManager?.ExportDialog.Hide();

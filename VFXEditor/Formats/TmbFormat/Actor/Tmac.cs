@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -15,8 +15,8 @@ namespace VfxEditor.TmbFormat.Actor {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt AbilityDelay = new( "Ability Delay" );
-        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt AbilityDelay = new( "技能延迟" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
 
         public readonly List<Tmtr> Tracks = [];
         private Tmtr SelectedTrack = null;
@@ -94,7 +94,7 @@ namespace VfxEditor.TmbFormat.Actor {
                     var isColored = TmbEntry.DoColor( Tracks[idx].MaxDanger, out var col );
                     using var color = ImRaii.PushColor( ImGuiCol.Text, col, isColored );
 
-                    if( ImGui.Selectable( $"Track {idx}", Tracks[idx] == SelectedTrack ) ) {
+                    if( ImGui.Selectable( $"轨道 {idx}", Tracks[idx] == SelectedTrack ) ) {
                         SelectedTrack = Tracks[idx];
                         selectedIndex = idx;
                     }
@@ -117,7 +117,7 @@ namespace VfxEditor.TmbFormat.Actor {
                     using var _ = ImRaii.PushId( selectedIndex );
                     SelectedTrack.Draw();
                 }
-                else ImGui.Text( "Select a timeline track..." );
+                else ImGui.Text( "选择一条时间线..." );
             }
 
             ImGui.Columns( 1 );

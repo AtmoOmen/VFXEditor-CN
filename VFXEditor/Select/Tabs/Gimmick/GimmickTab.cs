@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace VfxEditor.Select.Tabs.Gimmick {
             }
 
             ImGui.SameLine();
-            ImGui.Text( "TMB:" );
+            ImGui.Text( "时间线:" );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.TmbPath );
 

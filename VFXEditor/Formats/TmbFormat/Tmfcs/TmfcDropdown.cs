@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.Ui.Components;

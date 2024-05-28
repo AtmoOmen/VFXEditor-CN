@@ -20,20 +20,20 @@ namespace VfxEditor.Select.Formats {
     public class VfxSelectDialog : SelectDialog {
         public VfxSelectDialog( string id, AvfxManager manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
             GameTabs.AddRange( [
-                new ItemTabVfx( this, "Item" ),
-                new ItemTabVfxAccessory( this, "Accessory"),
-                new StatusTabVfx( this, "Status" ),
-                new ActionTabVfx( this, "Action" ),
-                new ActionTabVfxNonPlayer( this, "Non-Player Action" ),
-                new EmoteTabVfx( this, "Emote" ),
-                new ZoneTabVfx( this, "Zone" ),
-                new GimmickTab( this, "Gimmick" ),
-                new HousingTab( this, "Housing" ),
-                new NpcTabVfx( this, "Npc" ),
-                new MountTabVfx( this, "Mount" ),
-                new CutsceneTab( this, "Cutscene" ),
-                new JournalCutsceneTab( this, "Journal Cutscene" ),
-                new CommonTabVfx( this, "Common" )
+                new ItemTabVfx( this, "物品" ),
+                new ItemTabVfxAccessory( this, "装饰"),
+                new StatusTabVfx( this, "状态" ),
+                new ActionTabVfx( this, "技能" ),
+                new ActionTabVfxNonPlayer( this, "NPC 技能" ),
+                new EmoteTabVfx( this, "情感动作" ),
+                new ZoneTabVfx( this, "坐骑" ),
+                new GimmickTab( this, "机制" ),
+                new HousingTab( this, "房屋" ),
+                new NpcTabVfx( this, "NPC" ),
+                new MountTabVfx( this, "坐骑" ),
+                new CutsceneTab( this, "过场剧情" ),
+                new JournalCutsceneTab( this, "可回放过场剧情" ),
+                new CommonTabVfx( this, "一般" )
             ] );
         }
 
@@ -52,7 +52,7 @@ namespace VfxEditor.Select.Formats {
 
         public override void PlayPopupItems( string path ) {
             ImGui.Separator();
-            if( ImGui.Selectable( "Spawn" ) ) VfxSpawn.OnSelf( path, false );
+            if( ImGui.Selectable( "生成" ) ) VfxSpawn.OnSelf( path, false );
         }
     }
 }

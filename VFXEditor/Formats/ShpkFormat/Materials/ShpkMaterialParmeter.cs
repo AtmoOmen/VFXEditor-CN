@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
@@ -7,8 +7,8 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.ShpkFormat.Materials {
     public class ShpkMaterialParmeter : IUiItem {
         public readonly ParsedUIntHex Id = new( "Id" );
-        public readonly ParsedShort Offset = new( "Offset" );
-        public readonly ParsedShort Size = new( "Size" );
+        public readonly ParsedShort Offset = new( "偏移" );
+        public readonly ParsedShort Size = new( "大小" );
 
         public int StartSlot => Offset.Value / 4;
         public int EndSlot => ( Offset.Value + Size.Value ) / 4;

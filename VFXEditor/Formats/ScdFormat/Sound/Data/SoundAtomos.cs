@@ -1,13 +1,13 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat.Sound.Data {
     public class SoundAtomos {
-        public readonly ParsedByte Version = new( "Version" );
+        public readonly ParsedByte Version = new( "版本" );
         private byte Reserved1;
         private ushort Size = 0x10;
-        public readonly ParsedShort MinPeople = new( "Minimum Number of People" );
+        public readonly ParsedShort MinPeople = new( "最少人数" );
         public readonly ParsedShort MaxPeople = new( "Maximum Number of People" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 

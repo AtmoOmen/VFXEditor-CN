@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
@@ -7,7 +7,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SkpFormat.LookAt {
     public class SkpLookAtParam : ParsedData, IUiItem, ITextItem {
-        public readonly ParsedByte Index = new( "Index" );
+        public readonly ParsedByte Index = new( "索引" );
 
         public SkpLookAtParam() : base() { }
 
@@ -17,12 +17,12 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         }
 
         protected override List<ParsedBase> GetParsed() => [
-            new ParsedRadians4( "Limit Angles" ),
-            new ParsedFloat3( "Forward Rotation" ),
-            new ParsedRadians( "Limit Angle" ),
-            new ParsedFloat3( "Eye Positions" ),
-            new ParsedUInt( "Flags" ),
-            new ParsedFloat( "Gain" ),
+            new ParsedFloat4( "角度限制" ),
+            new ParsedFloat3( "前向旋转" ),
+            new ParsedFloat( "角度限制" ),
+            new ParsedFloat3( "眼部位置" ),
+            new ParsedUInt( "标识" ),
+            new ParsedFloat( "增益" ),
             Index,
         ];
 
@@ -37,6 +37,6 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
             foreach( var item in Parsed.Where( x => x != Index ) ) item.Draw();
         }
 
-        public string GetText() => $"Parameters {Index.Value}";
+        public string GetText() => $"参数 {Index.Value}";
     }
 }

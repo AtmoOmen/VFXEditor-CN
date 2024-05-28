@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -109,16 +109,16 @@ namespace VfxEditor.TmbFormat {
             if( maxDanger == DangerLevel.DontAddRemove ) DontAddRemoveWarning();
             else if( maxDanger == DangerLevel.Detectable || Tmfcs.Count > 0 ) DetectableWarning();
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
 
-            using( var tab = ImRaii.TabItem( "Actors" ) ) {
+            using( var tab = ImRaii.TabItem( "对象" ) ) {
                 if( tab ) ActorsDropdown.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "F-Curves" ) ) {
+            using( var tab = ImRaii.TabItem( "F 曲线" ) ) {
                 if( tab ) TmfcDropdown.Draw();
             }
 
@@ -126,7 +126,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
+            using var tabItem = ImRaii.TabItem( "参数" );
             if( !tabItem ) return;
 
             HeaderTmdh.Draw();
@@ -136,10 +136,10 @@ namespace VfxEditor.TmbFormat {
         private void DrawUnused() {
             if( UnusedTracks.Count == 0 ) return;
 
-            using var tabItem = ImRaii.TabItem( "Unused" );
+            using var tabItem = ImRaii.TabItem( "未使用" );
             if( !tabItem ) return;
 
-            ImGui.TextDisabled( "These are leftover tracks which are never actually triggered, and are only useful for research purposes" );
+            ImGui.TextDisabled( "以下为游戏内部遗留的音轨，它们从未被实际触发过，此处仅做研究用" );
             ImGui.Separator();
             UnusedTrackView.Draw();
         }
@@ -181,21 +181,21 @@ namespace VfxEditor.TmbFormat {
 
         public static void DetectableWarning() {
             ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
-            ImGui.TextWrapped( "Changes to this file are potentially detectable" );
+            ImGui.TextWrapped( "对该文件的修改可能会被检测" );
             ImGui.PopStyleColor();
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Guide" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Notes-on-TMFC" );
+            if( ImGui.SmallButton( "指南" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Notes-on-TMFC" );
         }
 
         public static void GenericWarning() {
             ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
-            ImGui.TextWrapped( "Please don't do anything stupid with this" );
+            ImGui.TextWrapped( "请不要对此项做出任何修改" );
             ImGui.PopStyleColor();
         }
 
         public static void DontAddRemoveWarning() {
             ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
-            ImGui.TextWrapped( "Don't add or remove entries in this file" );
+            ImGui.TextWrapped( "请不要在此文件中增加或移除任何条目" );
             ImGui.PopStyleColor();
         }
     }

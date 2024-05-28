@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -58,7 +58,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public bool DrawUnassignButton( string name ) {
-            if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
+            if( UiUtils.RemoveButton( $"删除 {name}", small: true ) ) {
                 CommandManager.Add( new AvfxAssignCommand( this, false ) );
                 return true;
             }

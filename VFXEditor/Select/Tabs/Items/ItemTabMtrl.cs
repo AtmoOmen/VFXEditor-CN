@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
@@ -58,7 +58,7 @@ namespace VfxEditor.Select.Tabs.Items {
                 }
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error loading IMC file " + imcPath );
+                Dalamud.Error( e, "加载 IMC 文件 时发生错误" + imcPath );
             }
         }
 

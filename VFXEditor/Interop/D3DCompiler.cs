@@ -1,4 +1,4 @@
-using Penumbra.String;
+﻿using Penumbra.String;
 using System;
 using System.Runtime.InteropServices;
 

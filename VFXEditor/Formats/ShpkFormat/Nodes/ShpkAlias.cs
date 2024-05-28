@@ -1,12 +1,12 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Nodes {
     public class ShpkAlias : IUiItem {
-        public readonly ParsedUIntHex Selector = new( "Selector" );
-        public readonly ParsedUInt NodeIdx = new( "Node Index" );
+        public readonly ParsedUIntHex Selector = new( "选择器" );
+        public readonly ParsedUInt NodeIdx = new( "节点索引" );
 
         public ShpkAlias() { }
 

@@ -60,7 +60,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             ImGui.Image( Wrap.ImGuiHandle, new Vector2( ( ( float )Width / Height ) * height, height ) );
         }
 
-        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} MIPs / {Depth} Layers / {Width}x{Height}" );
+        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} MIPs / {Depth} 层 / {Width}x{Height}" );
 
         protected override void DrawControls() {
             DrawParams();

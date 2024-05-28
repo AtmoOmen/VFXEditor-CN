@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -26,63 +26,61 @@ namespace VfxEditor.Select {
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
         public static readonly List<RacialData> CharacterRaces = [
-            new RacialData( "Midlander M", "c0101", 0 ),
-            new RacialData( "Midlander F","c0201", 1 ),
-            new RacialData( "Highlander M", "c0301", 2 ),
-            new RacialData( "Highlander F", "c0401", 3 ),
-            new RacialData( "Elezen M", "c0501", 4 ),
-            new RacialData( "Elezen F", "c0601", 5 ),
-            new RacialData( "Miquote M", "c0701", 12 ),
-            new RacialData( "Miquote F", "c0801", 13 ),
-            new RacialData( "Roegadyn M", "c0901", 16 ),
-            new RacialData( "Roegadyn F", "c1001", 17 ),
-            new RacialData( "Lalafell M", "c1101",8 ),
-            new RacialData( "Lalafell F", "c1201", 9 ),
-            new RacialData( "Aura M", "c1301", 20 ),
-            new RacialData( "Aura F", "c1401", 21 ),
-            new RacialData( "Hrothgar M", "c1501", 24 ),
-            // 1601 coming soon (tm)
-            new RacialData( "Viera M", "c1701", 28 ),
-            new RacialData( "Viera F", "c1801", 29 )
+            new RacialData( "中原之民男性", "c0101", 1 ),
+            new RacialData( "中原之民女性","c0201", 101 ),
+            new RacialData( "高地之民男性", "c0301", 201 ),
+            new RacialData( "高地之民女性", "c0401", 301 ),
+            new RacialData( "精灵族男性", "c0501", 401 ),
+            new RacialData( "精灵族女性", "c0601", 501 ),
+            new RacialData( "猫魅族男性", "c0701", 801 ),
+            new RacialData( "猫魅族女性", "c0801", 901 ),
+            new RacialData( "鲁加族男性", "c0901", 1001 ),
+            new RacialData( "鲁加族女性", "c1001", 1101 ),
+            new RacialData( "拉拉菲尔族男性", "c1101",601 ),
+            new RacialData( "拉拉菲尔族女性", "c1201", 701 ),
+            new RacialData( "敖龙族男性", "c1301", 1201 ),
+            new RacialData( "敖龙族女性", "c1401", 1301 ),
+            new RacialData( "硌狮族男性", "c1501", 1401 ),
+            // 1601 coming soon (tm) - 25
+            new RacialData( "维埃拉族男性", "c1701", 1601 ),
+            new RacialData( "维埃拉族女性", "c1801", 1701 )
         ];
 
-        public static readonly Dictionary<string, string> JobAnimationIds = new() {
-            { "Warrior", "bt_2ax_emp" },
-            { "Paladin", "bt_swd_sld" },
-            { "Gunbreaker", "bt_2gb_emp" },
-            { "Dark Knight", "bt_2sw_emp" },
-            { "Astrologian", "bt_2gl_emp" },
-            { "Sage", "bt_2ff_emp" },
-            { "Scholar", "bt_2bk_emp" },
-            { "White Mage", "bt_stf_sld" },
-            { "Machinist", "bt_2gn_emp" },
-            { "Dancer", "bt_chk_chk" },
-            { "Bard", "bt_2bw_emp" },
-            { "Samurai", "bt_2kt_emp" },
-            { "Dragoon", "bt_2sp_emp" },
-            { "Monk", "bt_clw_clw" },
-            { "Ninja", "bt_dgr_dgr" },
-            { "Reaper", "bt_2km_emp" },
-            { "Red Mage", "bt_2rp_emp" },
-            { "Black Mage", "bt_jst_sld" },
-            { "Summoner", "bt_2bk_emp" },
-            { "Blue Mage", "bt_rod_emp" },
-            // Pictomancer = bt_brs_plt
-            // Viper = bt_bld_bld
-        };
+        public static readonly Dictionary<string, string> JobAnimationIds = [
+            { "战士", "bt_2ax_emp" },
+            { "骑士", "bt_swd_sld" },
+            { "绝枪战士", "bt_2gb_emp" },
+            { "暗黑骑士", "bt_2sw_emp" },
+            { "占星术士", "bt_2gl_emp" },
+            { "贤者", "bt_2ff_emp" },
+            { "学者", "bt_2bk_emp" },
+            { "白魔法师", "bt_stf_sld" },
+            { "机工士", "bt_2gn_emp" },
+            { "舞者", "bt_chk_chk" },
+            { "吟游诗人", "bt_2bw_emp" },
+            { "武士", "bt_2kt_emp" },
+            { "龙骑士", "bt_2sp_emp" },
+            { "武僧", "bt_clw_clw" },
+            { "忍者", "bt_dgr_dgr" },
+            { "钐镰客", "bt_2km_emp" },
+            { "赤魔法师", "bt_2rp_emp" },
+            { "黑魔法师", "bt_jst_sld" },
+            { "召唤师", "bt_2bk_emp" },
+            { "青魔法师", "bt_rod_emp" },
+        ];
 
-        public static readonly Dictionary<string, string> JobMovementOverride = new() {
-            { "Black Mage", "bt_stf_sld" },
-            { "Ninja", "bt_nin_nin" },
-        };
+        public static readonly Dictionary<string, string> JobMovementOverride = [
+            { "黑魔法师", "bt_stf_sld" },
+            { "忍者", "bt_nin_nin" },
+        ];
 
-        public static readonly Dictionary<string, string> JobDrawOverride = new() {
-            { "Black Mage", "bt_stf_sld" }
-        };
+        public static readonly Dictionary<string, string> JobDrawOverride = [
+            { "黑魔法师", "bt_stf_sld" }
+        ];
 
-        public static readonly Dictionary<string, string> JobAutoOverride = new() {
-            { "Black Mage", "bt_stf_sld" }
-        };
+        public static readonly Dictionary<string, string> JobAutoOverride = [
+            { "黑魔法师", "bt_stf_sld" }
+        ];
 
         public static readonly int MaxChangePoses = 6;
 

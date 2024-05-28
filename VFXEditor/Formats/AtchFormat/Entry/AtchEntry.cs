@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -8,8 +8,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AtchFormat.Entry {
     public class AtchEntry : IUiItem {
-        public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedBool Accessory = new( "Accessory" );
+        public readonly ParsedString Name = new( "名称" );
+        public readonly ParsedBool Accessory = new( "配件" );
         public readonly List<AtchEntryState> States = [];
 
         public string WeaponName => AtchFile.WeaponNames.TryGetValue( Name.Value, out var weaponName ) ? weaponName : "";
@@ -40,7 +40,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
 
             for( var idx = 0; idx < States.Count; idx++ ) {
                 var state = States[idx];
-                if( ImGui.CollapsingHeader( $"State {idx} ({state.Bone.Value})###{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"状态 {idx} ({state.Bone.Value})###{idx}" ) ) {
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 

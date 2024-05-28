@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using NAudio.Wave;
@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
             DrawPlayer();
             DrawChannels();
@@ -92,7 +92,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawPlayer() {
-            using var tabItem = ImRaii.TabItem( "Music" );
+            using var tabItem = ImRaii.TabItem( "音乐" );
             if( !tabItem ) return;
             using var _ = ImRaii.PushId( "Music" );
 
@@ -106,7 +106,7 @@ namespace VfxEditor.ScdFormat {
                     else SaveWaveDialog();
                 }
             }
-            UiUtils.Tooltip( "Export sound file to .wav or .ogg" );
+            UiUtils.Tooltip( "导出音效文件为 .wav 或 .ogg 格式" );
 
             using( var popup = ImRaii.Popup( "SavePopup" ) ) {
                 if( popup ) {
@@ -121,43 +121,43 @@ namespace VfxEditor.ScdFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) ImportDialog();
             }
-            UiUtils.Tooltip( "Replace sound file" );
+            UiUtils.Tooltip( "替换音效文件" );
 
             var loop = Entry.LoopTime;
             ImGui.SetNextItemWidth( 246f );
             if( ImGui.InputFloat2( "##LoopStartEnd", ref loop ) ) Entry.LoopTime = loop;
 
             ImGui.SameLine();
-            ImGui.Text( "Loop Time" );
+            ImGui.Text( "循环时间" );
 
-            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
+            ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} 声道 / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} 字节" );
         }
 
         private void DrawChannels() {
             if( !ShowChannelSelect ) return;
 
-            using var tabItem = ImRaii.TabItem( "Channels" );
+            using var tabItem = ImRaii.TabItem( "声道" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Channels" );
 
-            ImGui.TextDisabled( "Which channels to play when previewing the audio file. Does not affect the .scd file" );
+            ImGui.TextDisabled( "在预览音频文件时播放哪些声道。不影响 .scd 文件" );
 
-            if( ImGui.BeginCombo( "Preview Channel 1", $"Channel #{Channel1}" ) ) {
+            if( ImGui.BeginCombo( "预览声道 1", $"Channel #{Channel1}" ) ) {
                 for( var i = 0; i < Entry.NumChannels; i++ ) {
-                    if( ImGui.Selectable( $"Channel #{i}", Channel1 == i ) ) Channel1 = i;
+                    if( ImGui.Selectable( $"声道 #{i}", Channel1 == i ) ) Channel1 = i;
                 }
                 ImGui.EndCombo();
             }
 
-            if( ImGui.BeginCombo( "Preview Channel 2", $"Channel #{Channel2}" ) ) {
+            if( ImGui.BeginCombo( "预览声道 2", $"Channel #{Channel2}" ) ) {
                 for( var i = 0; i < Entry.NumChannels; i++ ) {
-                    if( ImGui.Selectable( $"Channel #{i}", Channel2 == i ) ) Channel2 = i;
+                    if( ImGui.Selectable( $"声道 #{i}", Channel2 == i ) ) Channel2 = i;
                 }
                 ImGui.EndCombo();
             }
 
-            if( ImGui.Button( "Update" ) ) Reset();
+            if( ImGui.Button( "刷新" ) ) Reset();
         }
 
         private void ProcessQueue() {
@@ -228,7 +228,7 @@ namespace VfxEditor.ScdFormat {
                 CurrentOutput.Play();
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error playing sound" );
+                Dalamud.Error( e, "播放音效时发生错误" );
             }
         }
 
@@ -260,7 +260,7 @@ namespace VfxEditor.ScdFormat {
         // ======================
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Import File", "Audio files{.ogg,.wav},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "导入文件", "音频文件{.ogg,.wav},.*", ( bool ok, string res ) => {
                 if( ok ) {
                     Reset();
                     Entry.File.Import( res, Entry );
@@ -269,7 +269,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveWaveDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
                 if( ok ) {
                     using var stream = Entry.Data.GetStream();
                     WaveFileWriter.CreateWaveFile( res, stream );
@@ -278,7 +278,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveOggDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;
                     File.WriteAllBytes( res, data.Data );

@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -164,7 +164,7 @@ namespace VfxEditor.AvfxFormat {
                     if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected[idx] );
                 }
 
-                UiUtils.Tooltip( "Navigate to selected node" );
+                UiUtils.Tooltip( "导航至选中的节点" );
 
                 if( idx == 0 ) {
                     ImGui.SameLine();
@@ -184,10 +184,10 @@ namespace VfxEditor.AvfxFormat {
 
             if( Selected.Count == 0 ) {
                 ImGui.Text( Name );
-                ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add an item!" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "警告: 请先添加一个物体!" );
             }
 
-            if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
+            if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "警告: 请先添加一个可选择的物体!" );
 
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
@@ -196,10 +196,10 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawCombo( int idx ) {
-            using var combo = ImRaii.Combo( $"##Combo", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() );
+            using var combo = ImRaii.Combo( $"##Combo", Selected[idx] == null ? "[无]" : Selected[idx].GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Add( new AvfxNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
+            if( ImGui.Selectable( "[无]", Selected[idx] == null ) ) CommandManager.Add( new AvfxNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
             foreach( var item in Group.Items ) {
                 var cycle = Node.IsChildOf( item );
                 using var disabled = ImRaii.Disabled( cycle );

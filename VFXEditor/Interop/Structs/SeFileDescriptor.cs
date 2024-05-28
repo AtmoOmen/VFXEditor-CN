@@ -1,4 +1,4 @@
-using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
+﻿using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Structs {

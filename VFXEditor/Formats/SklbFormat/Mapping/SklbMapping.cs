@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -17,10 +17,10 @@ namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbMapping {
         public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
 
-        public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedFloat4 Position = new( "Translation" );
-        public readonly ParsedQuat Rotation = new( "Rotation" );
-        public readonly ParsedFloat4 Scale = new( "Scale" );
+        public readonly ParsedString Name = new( "名称" );
+        public readonly ParsedFloat4 Position = new( "平移" );
+        public readonly ParsedQuat Rotation = new( "旋转" );
+        public readonly ParsedFloat4 Scale = new( "缩放" );
 
         public readonly SklbBones Bones;
         public readonly SkeletonMapper* Mapper;
@@ -80,7 +80,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         }
 
         public void Draw( int idx ) {
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
@@ -88,7 +88,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         }
 
         private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
+            using var tabItem = ImRaii.TabItem( "参数" );
             if( !tabItem ) return;
 
             using var child = ImRaii.Child( "Child" );
@@ -101,7 +101,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         }
 
         private void DrawSimpleMappings( int idx ) {
-            using var tabItem = ImRaii.TabItem( "Simple Mappings" );
+            using var tabItem = ImRaii.TabItem( "简单映射" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "SimpleMappings" );

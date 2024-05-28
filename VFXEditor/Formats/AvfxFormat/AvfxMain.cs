@@ -74,25 +74,34 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool LTSEnabled = new( "启用 LTS", "bLTS" );
         public readonly AvfxBool AGSEnabled = new( "AGS Enabled", "bAGS" );
 
+        // New to dawntrail
+        public readonly AvfxInt APRi = new( "APri", "APri" );
+        public readonly AvfxInt DPri = new( "DPri", "DPri" );
+        public readonly AvfxBool SABEnabled = new( "SAB Enabled", "bSAB" );
+        public readonly AvfxBool SBVEnabled = new( "SBV Enabled", "bSBV" );
+        public readonly AvfxFloat SBVa = new( "SBVa", "SBVa" );
+        public readonly AvfxBool SSVEnabled = new( "SSV Enabled", "bSSV" );
+        public readonly AvfxFloat SSVa = new( "SSVa", "SSVa" );
+
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly List<AvfxScheduler> Schedulers = new();
-        public readonly List<AvfxTimeline> Timelines = new();
-        public readonly List<AvfxEmitter> Emitters = new();
-        public readonly List<AvfxParticle> Particles = new();
-        public readonly List<AvfxEffector> Effectors = new();
-        public readonly List<AvfxBinder> Binders = new();
-        public readonly List<AvfxTexture> Textures = new();
-        public readonly List<AvfxModel> Models = new();
+        public readonly List<AvfxScheduler> Schedulers = [];
+        public readonly List<AvfxTimeline> Timelines = [];
+        public readonly List<AvfxEmitter> Emitters = [];
+        public readonly List<AvfxParticle> Particles = [];
+        public readonly List<AvfxEffector> Effectors = [];
+        public readonly List<AvfxBinder> Binders = [];
+        public readonly List<AvfxTexture> Textures = [];
+        public readonly List<AvfxModel> Models = [];
 
         private readonly List<IUiItem> Display;
         private readonly int[] UiVersion = new int[4];
         private float ScaleCombined = 1.0f;
 
         public AvfxMain() : base( "AVFX" ) {
-            Parsed = new() {
+            Parsed = [
                 Version,
                 IsDelayFastParticle,
                 IsFitGround,
@@ -147,15 +156,22 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogInfluence,
                 LTSEnabled,
                 AGSEnabled,
-            };
+                APRi,
+                DPri,
+                SABEnabled,
+                SBVEnabled,
+                SBVa,
+                SSVEnabled,
+                SSVa,
+            ];
 
             NodeGroupSet = new( this );
 
-            Display = new() {
-                new UiFloat3( "修改后缩放", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
-                new UiFloat3( "修改后位置", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
-                new UiFloat3( "修改后旋转", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
-                new UiFloat3( "修改后颜色", RevisedValuesR, RevisedValuesG, RevisedValuesB ),
+            Display = [
+                new UiFloat3( "缩放 (修改后)", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
+                new UiFloat3( "位置 (修改后)", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
+                new UiFloat3( "旋转 (修改后)", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
+                new UiFloat3( "颜色 (修改后)", RevisedValuesR, RevisedValuesG, RevisedValuesB ),
                 IsDelayFastParticle,
                 IsFitGround,
                 IsTranformSkip,
@@ -189,7 +205,14 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 LTSEnabled,
                 AGSEnabled,
-            };
+                APRi,
+                DPri,
+                SABEnabled,
+                SBVEnabled,
+                SBVa,
+                SSVEnabled,
+                SSVa,
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -277,14 +300,14 @@ namespace VfxEditor.AvfxFormat {
 
             ImGui.TextDisabled( $"版本 {UiVersion[0]}.{UiVersion[1]}.{UiVersion[2]}.{UiVersion[3]}" );
 
-            if( ImGui.InputFloat( "修改后缩放(整体)", ref ScaleCombined ) ) {
+            if( ImGui.InputFloat( "整体缩放 (修改后)", ref ScaleCombined ) ) {
                 RevisedValuesScaleX.Value = ScaleCombined;
                 RevisedValuesScaleY.Value = ScaleCombined;
                 RevisedValuesScaleZ.Value = ScaleCombined;
             };
 
             ImGui.SameLine();
-            UiUtils.HelpMarker( "修改后的位置、缩放和旋转仅会作用于未链接绑定器的效果。获取更多信息请查看\"绑定器\"一栏" );
+            UiUtils.HelpMarker( "修改后的位置、缩放和旋转仅会作用于未链接绑定器的效果。更多信息请查看\"绑定器\"一栏" );
 
             DrawItems( Display );
         }

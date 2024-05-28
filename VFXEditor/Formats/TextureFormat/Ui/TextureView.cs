@@ -1,7 +1,8 @@
-﻿using Dalamud.Interface;
-using ImGuiNET;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Select;
@@ -11,7 +12,6 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Ui {
     public class TextureView : SplitView<TextureReplace> {
-        public readonly List<TextureReplace> Textures;
         private readonly TexSelectDialog ExtractSelect;
         private readonly TexSelectDialog ImportSelect;
 
@@ -19,12 +19,13 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         private string SearchText = "";
         private ExtractFileType ExtractType = ExtractFileType.ATEX_TEX;
 
-        private static readonly TextureFormat[] ValidPngFormat = new TextureFormat[] {
+        private static readonly TextureFormat[] ValidPngFormat = [
             TextureFormat.DXT5,
             TextureFormat.DXT3,
             TextureFormat.DXT1,
             TextureFormat.A8R8G8B8,
-        };
+            TextureFormat.BC5,
+        ];
 
         private enum ExtractFileType {
             ATEX_TEX,
@@ -32,17 +33,16 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             DDS,
         }
 
-        private static readonly ExtractFileType[] ExtractTypes = new ExtractFileType[] {
+        private static readonly ExtractFileType[] ExtractTypes = [
             ExtractFileType.ATEX_TEX,
             ExtractFileType.PNG,
             ExtractFileType.DDS
-        };
+        ];
 
-        public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "Textures" ) {
-            Textures = textures;
+        public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "材质", textures ) {
             InitialWidth = 300;
-            ExtractSelect = new( "Texture Extract", manager, false, Extract );
-            ImportSelect = new( "Texture Import", manager, false, Import );
+            ExtractSelect = new( "解压材质", manager, true, Extract );
+            ImportSelect = new( "导入材质", manager, false, Import );
         }
 
         // ==============
@@ -102,7 +102,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            if( !Textures.Contains( Selected ) ) ClearSelected();
+            if( !Items.Contains( Selected ) ) ClearSelected();
 
             base.Draw();
         }
@@ -110,13 +110,13 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         protected override void DrawPreLeft() { }
 
         protected override void DrawLeftColumn() {
-            if( Textures.Count == 0 ) {
-                ImGui.TextDisabled( "无已替换的材质" );
+            if( Items.Count == 0 ) {
+                ImGui.TextDisabled( "无已替换材质" );
                 return;
             }
 
-            for( var idx = 0; idx < Textures.Count; idx++ ) {
-                var item = Textures[idx];
+            for( var idx = 0; idx < Items.Count; idx++ ) {
+                var item = Items[idx];
                 if( !string.IsNullOrEmpty( SearchText ) && !item.Matches( SearchText ) ) continue;
                 var name = item.GetExportReplace();
 
@@ -126,7 +126,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                     if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
                 }
 
-                if( UiUtils.DrawDragDrop( Textures, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", false ) ) break;
+                if( UiUtils.DrawDragDrop( Items, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", false ) ) break;
 
                 using( var _ = ImRaii.PushId( idx ) ) {
                     ImGui.SameLine();
@@ -141,8 +141,6 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
         protected override void DrawRightColumn() => Selected?.DrawBody();
 
-        public void ClearSelected() { Selected = null; }
-
         public static void DrawHd( bool isHd ) {
             var pos = ImGui.GetCursorScreenPos() + new Vector2( 0, 4 );
             ImGui.Dummy( new Vector2( 15, 10 ) );
@@ -156,13 +154,15 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
 
         public void Extract( SelectResult result ) {
-            if( !Dalamud.DataManager.FileExists( result.Path ) ) return;
-            var ext = result.Path.Split( '.' )[^1].ToLower();
-            var file = Dalamud.DataManager.GetFile<TextureDataFile>( result.Path );
+            var file = result.Type == SelectResultType.Local ?
+                ( Path.Exists( result.Path ) ? TextureDataFile.LoadFromLocal( result.Path ) : null ) :
+                ( Dalamud.DataManager.FileExists( result.Path ) ? Dalamud.DataManager.GetFile<TextureDataFile>( result.Path ) : null );
+
+            if( file == null ) return;
 
             if( ExtractType == ExtractFileType.DDS ) file.SaveDdsDialog();
             else if( ExtractType == ExtractFileType.PNG ) file.SavePngDialog();
-            else file.SaveTexDialog( ext );
+            else file.SaveTexDialog( result.Path.Split( '.' )[^1].ToLower() );
         }
 
         public static void Import( SelectResult result ) => Plugin.TextureManager.Import( result );

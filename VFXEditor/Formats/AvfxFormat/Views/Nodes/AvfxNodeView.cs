@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public T Read( BinaryReader reader, int size );
 
         public T GetSelected();
-        public void ResetSelected();
+        public void ClearSelected();
         public void SetSelected( T selected );
 
         public static void DrawControls( IUiNodeView<T> view, AvfxFile file ) {
@@ -72,7 +72,7 @@ namespace VfxEditor.AvfxFormat {
                 reader.BaseStream.Position = 0;
 
                 var size = ms.Length;
-                file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( new[] { selected.Renamed } ) );
+                file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( [selected.Renamed] ) );
             }
         }
     }

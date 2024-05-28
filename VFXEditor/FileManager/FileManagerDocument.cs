@@ -20,13 +20,14 @@ namespace VfxEditor.FileManager {
         protected string Name = "";
 
         protected SelectResult Source;
-        public string SourceDisplay => Source == null ? "[无]" : Source.DisplayString;
-        public string SourcePath => Source == null ? "" : Source.Path;
-
         protected SelectResult Replace;
+        public string SourceDisplay => Source == null ? "[无]" : Source.DisplayString;
         public string ReplaceDisplay => Replace == null ? "[无]" : Replace.DisplayString;
         public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
         protected bool Disabled = false;
+
+        private string SourceTextInput = "";
+        private string ReplaceTextInput = "";
 
         public string WriteLocation { get; protected set; }
 
@@ -54,12 +55,12 @@ namespace VfxEditor.FileManager {
 
         protected void LoadLocal( string path, bool verify ) {
             if( !System.IO.File.Exists( path ) ) {
-                Dalamud.Error( $"Local file: [{path}] does not exist" );
+                Dalamud.Error( $"本地文件: [{path}] 不存在" );
                 return;
             }
 
             if( !path.EndsWith( $".{Extension}" ) ) {
-                Dalamud.Error( $"{path} is the wrong file type" );
+                Dalamud.Error( $"{path} 文件类型非法" );
                 return;
             }
 
@@ -70,18 +71,18 @@ namespace VfxEditor.FileManager {
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "读取文件时发生错误" );
-                UiUtils.ErrorNotification( "读取文件时发生错误" );
+                Dalamud.ErrorNotification( "读取文件时发生错误" );
             }
         }
 
         protected void LoadGame( string path, bool verify ) {
             if( !Dalamud.DataManager.FileExists( path ) ) {
-                Dalamud.Error( $"Game file: [{path}] does not exist" );
+                Dalamud.Error( $"游戏文件: [{path}] 不存在" );
                 return;
             }
 
             if( !path.EndsWith( $".{Extension}" ) ) {
-                Dalamud.Error( $"{path} is the wrong file type" );
+                Dalamud.Error( $"{path} 文件类型非法" );
                 return;
             }
 
@@ -94,7 +95,7 @@ namespace VfxEditor.FileManager {
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "读取文件时发生错误" );
-                UiUtils.ErrorNotification( "读取文件时发生错误" );
+                Dalamud.ErrorNotification( "读取文件时发生错误" );
             }
         }
 
@@ -103,6 +104,7 @@ namespace VfxEditor.FileManager {
         public void SetSource( SelectResult result ) {
             if( result == null ) return;
             Source = result;
+            SourceTextInput = "";
 
             if( result.Type == SelectResultType.Local ) LoadLocal( result.Path, true );
             else LoadGame( result.Path, true );
@@ -116,17 +118,25 @@ namespace VfxEditor.FileManager {
             File?.Dispose();
             File = null;
             Source = null;
+            SourceTextInput = "";
         }
 
-        public void SetReplace( SelectResult result ) { Replace = result; }
+        public void SetReplace( SelectResult result ) {
+            Replace = result;
+            ReplaceTextInput = "";
+            Plugin.AddCustomBackupLocation( Replace, WriteLocation );
+        }
 
-        protected void RemoveReplace() { Replace = null; }
+        protected void RemoveReplace() {
+            Replace = null;
+            ReplaceTextInput = "";
+        }
 
         // =====================
 
         protected void WriteFile( string path ) {
             if( File == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"Wrote {Id} file to {path}" );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"已写入了 {Id} 个文件至 {path}" );
             System.IO.File.WriteAllBytes( path, File.ToBytes() );
         }
 
@@ -138,14 +148,10 @@ namespace VfxEditor.FileManager {
 
             File?.Update();
 
-            if( Plugin.Configuration.UpdateWriteLocation ) {
-                var newWriteLocation = Manager.NewWriteLocation;
-                WriteFile( newWriteLocation );
-                WriteLocation = newWriteLocation;
-            }
-            else {
-                WriteFile( WriteLocation );
-            }
+            var newWriteLocation = Manager.NewWriteLocation;
+            WriteFile( newWriteLocation );
+            WriteLocation = newWriteLocation;
+            Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
             if( File != null && !ReplacePath.Contains( ".sklb" ) ) {
                 Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, File.GetPapIds(), File.GetPapTypes() );
@@ -161,6 +167,10 @@ namespace VfxEditor.FileManager {
             Source = source;
             Replace = replace;
             Disabled = disabled;
+
+            SourceTextInput = "";
+            ReplaceTextInput = "";
+
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
             if( File != null ) File.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
@@ -260,7 +270,7 @@ namespace VfxEditor.FileManager {
             var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && ImGui.IsMouseHoveringRect( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ) );
 
             var color = hovered ?
-                ImGui.ColorConvertFloat4ToU32( UiUtils.YELLOW_COLOR ) :
+                ImGui.ColorConvertFloat4ToU32( UiUtils.DALAMUD_ORANGE ) :
                 ( Disabled ?
                     ImGui.ColorConvertFloat4ToU32( UiUtils.RED_COLOR ) :
                     ImGui.GetColorU32( ImGuiCol.TextDisabled )
@@ -317,10 +327,11 @@ namespace VfxEditor.FileManager {
 
         protected virtual void DrawExtraColumn() { }
 
+        // ====== TEXT INPUTS ============
+
         protected void DisplaySourceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Source" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-            var sourceString = Source == null ? "" : Source.DisplayString;
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -330,11 +341,18 @@ namespace VfxEditor.FileManager {
             // Input
             ImGui.SameLine();
             ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputTextWithHint( "", "[无]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Source != null ) ) {
+                if( ImGui.InputTextWithHint( "", SourceDisplay, ref SourceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
+                    var cleanedPath = SourceTextInput.Trim().Replace( "\\", "/" );
+                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[游戏] {cleanedPath}", cleanedPath );
+                    SetSource( result );
+                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
+                }
+            }
+            DrawCopy( Source );
 
             // Search
             ImGui.SameLine();
-
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
             }
@@ -343,7 +361,6 @@ namespace VfxEditor.FileManager {
         protected void DisplayReplaceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Replace" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-            var previewString = Replace == null ? "" : Replace.DisplayString;
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -353,24 +370,36 @@ namespace VfxEditor.FileManager {
             // Input
             ImGui.SameLine();
             ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputTextWithHint( "", "[无]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-            if( Replace != null && ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
-
-            if( Replace != null && ImGui.BeginPopup( "CopyPopup" ) ) {
-                ImGui.Text( Replace.Path );
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 2 );
-                if( ImGui.SmallButton( "复制" ) ) ImGui.SetClipboardText( Replace.Path );
-                ImGui.EndPopup();
+            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Replace != null ) ) {
+                if( ImGui.InputTextWithHint( "", ReplaceDisplay, ref ReplaceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
+                    var cleanedPath = ReplaceTextInput.Trim().Replace( "\\", "/" );
+                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[游戏] {cleanedPath}", cleanedPath );
+                    SetReplace( result );
+                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
+                }
             }
+            DrawCopy( Replace );
 
             // Search
             ImGui.SameLine();
-
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();
             }
         }
+
+        private static void DrawCopy( SelectResult result ) {
+            if( result == null ) return;
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
+
+            using var popup = ImRaii.Popup( "CopyPopup" );
+            if( !popup ) return;
+            ImGui.TextDisabled( result.Path );
+            ImGui.SameLine();
+            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 4, -2 ) );
+            SelectUiUtils.Copy( result.Path );
+        }
+
+        // ==========================
 
         protected virtual void DisplayFileControls() {
             if( UiUtils.OkButton( "刷新" ) ) Update();
@@ -473,7 +502,7 @@ namespace VfxEditor.FileManager {
             ImGui.PopStyleColor();
         }
 
-        private static readonly string WarningText = "请 不要 修改移动类技能 (冲刺、后跳等)。尝试修改 .tmb 或 .pap 文件前请先阅读指南";
+        private static readonly string WarningText = "请 不要 修改移动类技能 (如冲刺、后跳等) 初次尝试修改 .tmb 或 .pap 文件前请先阅读相关指南";
 
         protected static void DrawAnimationWarning() {
             using var color = ImRaii.PushColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );

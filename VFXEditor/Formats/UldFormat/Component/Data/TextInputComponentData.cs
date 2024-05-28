@@ -6,11 +6,11 @@ namespace VfxEditor.UldFormat.Component.Data {
         public TextInputComponentData() {
             AddUnknown( 16, "未知节点 ID" );
 
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedSheetColor( "颜色" ),
                 new ParsedSheetColor( "输入法颜色" ),
                 new ParsedUInt( "未知" ),
-            } );
+            ] );
         }
     }
 }

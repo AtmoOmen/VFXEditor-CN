@@ -39,7 +39,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedEnum<SelfCommand> SelfCommandSelect = new( "选择命令", size: 1 );
         public readonly ParsedEnum<TargetCommand> TargetCommandSelect = new( "目标命令", size: 1 );
         public readonly ParsedReserve Reserved1 = new( 2 );
-        public readonly ParsedInt SelfArgument = new( "自引用参数" );
+        public readonly ParsedInt SelfArgument = new( "自身参数" );
         public readonly ParsedInt TargetArgument = new( "目标参数" );
 
         public AttributeResultCommand() { }
@@ -62,7 +62,7 @@ namespace VfxEditor.ScdFormat {
 
         public void Draw() {
             SelfCommandSelect.Draw();
-            TargetArgument.Draw();
+            TargetCommandSelect.Draw();
             SelfArgument.Draw();
             TargetArgument.Draw();
         }

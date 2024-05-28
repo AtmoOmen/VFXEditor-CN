@@ -1,10 +1,10 @@
-﻿using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using ImGuiNET;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Housing {
     public class HousingTab : SelectTab<HousingRow, ParsedPaths> {
-        public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Housing", SelectResultType.GameHousing ) { }
+        public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Housing" ) { }
 
         // ===== LOADING =====
 
@@ -21,14 +21,13 @@ namespace VfxEditor.Select.Tabs.Housing {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             ImGui.Text( "SGB:" );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.SgbPath );
 
-            DrawPaths( "视效", Loaded.Paths, Selected.Name );
-        }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-        protected override string GetName( HousingRow item ) => item.Name;
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameHousing );
+        }
     }
 }

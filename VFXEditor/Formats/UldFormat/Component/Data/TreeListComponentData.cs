@@ -3,7 +3,7 @@
 namespace VfxEditor.UldFormat.Component.Data {
     public class TreeListComponentData : UldGenericData {
         public TreeListComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "未知节点 ID 1" ),
                 new ParsedUInt( "未知节点 ID 2" ),
                 new ParsedUInt( "未知节点 ID 3" ),
@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "环绕", size: 1),
                 new ParsedUInt( "取向", size: 1 ),
                 new ParsedUInt( "内边距", size: 2 )
-            } );
+            ] );
         }
     }
 }

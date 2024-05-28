@@ -1,6 +1,6 @@
-﻿using Dalamud.Interface;
-using ImGuiNET;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,21 +28,21 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly uint DxMagic;
         public DX DxVersion => GetDxVersion( DxMagic );
 
-        private readonly List<ShpkShader> VertexShaders = new();
-        private readonly List<ShpkShader> PixelShaders = new();
+        private readonly List<ShpkShader> VertexShaders = [];
+        private readonly List<ShpkShader> PixelShaders = [];
 
-        public readonly List<ShpkMaterialParmeter> MaterialParameters = new();
-        public readonly List<ShpkParameterInfo> Constants = new();
-        public readonly List<ShpkParameterInfo> Samplers = new();
-        public readonly List<ShpkParameterInfo> Resources = new();
+        public readonly List<ShpkMaterialParmeter> MaterialParameters = [];
+        public readonly List<ShpkParameterInfo> Constants = [];
+        public readonly List<ShpkParameterInfo> Samplers = [];
+        public readonly List<ShpkParameterInfo> Resources = [];
 
-        public readonly List<ShpkKey> SystemKeys = new();
-        public readonly List<ShpkKey> SceneKeys = new();
-        public readonly List<ShpkKey> MaterialKeys = new();
-        public readonly List<ShpkKey> SubViewKeys = new();
+        public readonly List<ShpkKey> SystemKeys = [];
+        public readonly List<ShpkKey> SceneKeys = [];
+        public readonly List<ShpkKey> MaterialKeys = [];
+        public readonly List<ShpkKey> SubViewKeys = [];
 
-        private readonly List<ShpkNode> Nodes = new();
-        private readonly List<ShpkAlias> Aliases = new();
+        private readonly List<ShpkNode> Nodes = [];
+        private readonly List<ShpkAlias> Aliases = [];
 
         private readonly CommandDropdown<ShpkShader> VertexView;
         private readonly CommandDropdown<ShpkShader> PixelView;
@@ -116,22 +116,22 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             // ====== CONSTRUCT VIEWS ==========
 
-            VertexView = new( "Vertex Shader", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
-            PixelView = new( "Pixel Shader", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
+            VertexView = new( "顶点着色器", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
+            PixelView = new( "像素着色器", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
 
             MaterialParameterView = new( "参数", MaterialParameters, false, null, () => new() );
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ConstantView = new( "常量", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            SamplerView = new( "采样器", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ResourceView = new( "资源", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
 
-            SystemKeyView = new( "System Key", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            SceneKeyView = new( "Scene Key", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SystemKeyView = new( "系统键", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SceneKeyView = new( "画面键", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            MaterialKeyView = new( "材料键", MaterialKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SubViewKeyView = new( "子视图键", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
 
-            NodeView = new( "Node", Nodes, null, () => new() );
-            AliasView = new( "Alias", Aliases, false, null, () => new() );
+            NodeView = new( "节点", Nodes, null, () => new() );
+            AliasView = new( "别名", Aliases, false, null, () => new() );
 
             // TODO: don't be dumb when adding keys, actually update selectors and stuff
             // TOOD: when adding keys, make sure to do it everywhere
@@ -305,7 +305,7 @@ namespace VfxEditor.Formats.ShpkFormat {
                     using var disabled = ImRaii.Disabled( parameter == null || slot != parameter.StartSlot );
                     using var none = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR, parameter == null );
                     using var selected = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, parameter != null && parameter == MaterialParameterView.GetSelected() );
-                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, parameters.Count > 1 );
+                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE, parameters.Count > 1 );
 
                     if( ImGui.Selectable( parameter == null ? "[无]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
                         MaterialParameterView.SetSelected( parameter );

@@ -8,22 +8,24 @@ using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 namespace VfxEditor.Formats.MdlFormat.Utils {
     public class MdlWriteData : MdlFileData {
         public uint TotalStringLength { get; private set; } = 0;
-        public readonly List<string> AllStrings = new();
-        public readonly Dictionary<string, uint> StringToOffset = new();
-        public readonly List<string> ShapeStrings = new();
+        public readonly List<string> AllStrings = [];
+        public readonly Dictionary<string, uint> StringToOffset = [];
+        public readonly List<string> ShapeStrings = [];
 
-        public readonly Dictionary<MdlLod, long> LodPlaceholders = new();
+        public readonly Dictionary<MdlLod, long> LodPlaceholders = [];
 
-        public readonly List<MemoryStream> VertexData = new();
-        public readonly List<MemoryStream> IndexData = new();
-        private readonly List<BinaryWriter> VertexWriters = new();
-        private readonly List<BinaryWriter> IndexWriters = new();
+        public readonly List<MemoryStream> VertexData = [];
+        public readonly List<MemoryStream> IndexData = [];
+        private readonly List<BinaryWriter> VertexWriters = [];
+        private readonly List<BinaryWriter> IndexWriters = [];
 
-        public readonly Dictionary<MdlMesh, (uint[], uint)> MeshOffsets = new();
-        public readonly Dictionary<MdlTerrainShadowMesh, (uint, uint)> TerrainShadowOffsets = new();
+        public readonly Dictionary<MdlMesh, (uint[], uint)> MeshOffsets = [];
+        public readonly Dictionary<MdlTerrainShadowMesh, (uint, uint)> TerrainShadowOffsets = [];
 
-        public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = new() { new(), new(), new() };
-        public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = new() { new(), new(), new() };
+        public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = [[], [], []];
+        public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = [[], [], []];
+
+        public readonly List<string> BoneTableStrings = [];
 
         public MdlWriteData( MdlFile file ) {
             for( var j = 0; j < 3; j++ ) {
@@ -39,7 +41,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
                 IndexWriters.Add( iWriter );
             }
 
-            foreach( var item in file.BoneTables ) item.PopulateWrite( this );
+            foreach( var item in file.BoneTables.Tables ) item.PopulateWrite( this );
             for( var i = 0; i < file.AllLods.Count; i++ ) file.AllLods[i].PopulateWrite( this, i );
             for( var i = 0; i < file.ExtraLods.Count; i++ ) file.ExtraLods[i].PopulateWrite( this, i );
             foreach( var item in file.Eids ) item.PopulateWrite( this );
@@ -55,6 +57,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
             AddStringOffsets( AttributeStrings );
             AddStringOffsets( BoneStrings );
             AddStringOffsets( MaterialStrings );
+            AddStringOffsets( BoneTableStrings );
             AddStringOffsets( ShapeStrings );
         }
 
@@ -115,6 +118,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         // ========= STRINGS =================
 
         public void AddBone( string item ) => AddString( BoneStrings, item );
+        public void AddBoneTable( string item ) => AddString( BoneTableStrings, item );
         public void AddAttribute( string item ) => AddString( AttributeStrings, item );
         public void AddMaterial( string item ) => AddString( MaterialStrings, item );
         public void AddShape( string item ) => AddString( ShapeStrings, item );
@@ -125,6 +129,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
 
         private void AddStringOffsets( List<string> list ) {
             foreach( var item in list ) {
+                if( AllStrings.Contains( item ) ) continue;
                 AllStrings.Add( item );
                 OffsetToString[TotalStringLength] = item;
                 StringToOffset[item] = TotalStringLength;

@@ -23,13 +23,14 @@ namespace VfxEditor.FileManager {
         public SelectDialog SourceSelect { get; protected set; }
         public SelectDialog ReplaceSelect { get; protected set; }
 
-        protected FileManagerBase( string title, string id, string extension, string workspaceKey, string workspacePath ) : base( title, true, new( 800, 1000 ), Plugin.WindowSystem ) {
+        protected FileManagerBase( string title, string id, string extension, string workspaceKey, string workspacePath ) :
+            base( title, true, new( 800, 1000 ), Plugin.WindowSystem, isMainWindow: true ) {
+
             Title = title;
             Extension = extension;
             WorkspaceKey = workspaceKey;
             WorkspacePath = workspacePath;
             Id = id;
-
             Configuration = Plugin.Configuration.GetManagerConfig( Id );
         }
 
@@ -44,6 +45,8 @@ namespace VfxEditor.FileManager {
         public abstract void SetReplace( SelectResult result );
 
         public string GetId() => Id;
+
+        public string GetName() => Id.ToLower();
 
         public WindowSystem GetWindowSystem() => WindowSystem;
     }

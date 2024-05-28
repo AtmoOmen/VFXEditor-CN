@@ -29,7 +29,11 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
 
         public MtrlSampler( MtrlFile file ) {
             File = file;
-            Id = new( "Sampler", () => File.ShaderFile?.Samplers, ( ShpkParameterInfo item ) => item.GetText(), ( ShpkParameterInfo item ) => item.Id );
+            Id = new( "Sampler",
+                () => File.ShaderFile?.Samplers,
+                ( ShpkParameterInfo item, int _ ) => item.GetText(),
+                ( ShpkParameterInfo item ) => item.Id
+            );
         }
 
         public MtrlSampler( MtrlFile file, BinaryReader reader ) : this( file ) {
@@ -83,9 +87,9 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         }
 
         public string GetText( int idx ) {
-            var selected = Id.GetSelected();
+            var selected = Id.Selected;
             if( selected != null ) return selected.GetText();
-            return $"采样器 {idx}"; ;
+            return $"采样器 {idx}";
         }
 
         private static uint Masked( uint flags ) => flags & ( ~( 0x3u | ( 0x3u << 2 ) | ( 0x3FF << 10 ) | ( 0xF << 20 ) ) );

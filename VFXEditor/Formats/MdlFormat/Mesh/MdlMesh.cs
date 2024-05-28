@@ -1,6 +1,5 @@
 ﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,12 +36,12 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         private readonly ushort VertexCount; // Maxes out at ushort.MaxValue
 
-        private List<byte[]> RawVertexData = new() { Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>() };
+        private List<byte[]> RawVertexData = [[], [], []];
 
-        private readonly List<MdlSubMesh> Submeshes = new();
+        private readonly List<MdlSubMesh> Submeshes = [];
         private readonly UiSplitView<MdlSubMesh> SubmeshView;
 
-        private readonly List<MdlShapeMesh> Shapes = new();
+        private readonly List<MdlShapeMesh> Shapes = [];
 
         public MdlMesh( MdlFile file, MdlVertexDeclaration format, BinaryReader reader ) : base( file ) {
             Format = format;
@@ -58,14 +57,14 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             BoneTableIndex.Value = _boneTableIndex == 255 ? -1 : _boneTableIndex;
 
             _IndexOffset = 2 * reader.ReadUInt32();
-            _VertexBufferOffsets = new uint[] { reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32() };
+            _VertexBufferOffsets = [reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32()];
             Strides = reader.ReadBytes( 3 );
             StreamCount = reader.ReadByte();
 
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
         }
 
-        public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
+        public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount, Strides );
 
         public override void Draw() {
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -102,9 +101,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             PopulateIndexData( data, reader, lod );
 
-            RawVertexData = new();
+            RawVertexData = [];
             for( var i = 0; i < 3; i++ ) {
-                var stride = Format.GetStride( i );
+                var stride = Strides[i];
                 if( stride == 0 ) continue;
                 reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffsets[i];
                 RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );

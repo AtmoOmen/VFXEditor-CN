@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabTmb : SelectTab<CommonRow> {
-        public CommonTabTmb( SelectDialog dialog, string name ) : base( dialog, name, "Common-Tmb", SelectResultType.GameMisc ) { }
+        public CommonTabTmb( SelectDialog dialog, string name ) : base( dialog, name, "Common-Tmb" ) { }
 
         // ===== LOADING =====
 
@@ -17,9 +17,7 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "路径", Selected.Path, Selected.Name );
+            Dialog.DrawPaths( Selected.Path, Selected.Name, SelectResultType.GameMisc );
         }
-
-        protected override string GetName( CommonRow item ) => item.Name;
     }
 }

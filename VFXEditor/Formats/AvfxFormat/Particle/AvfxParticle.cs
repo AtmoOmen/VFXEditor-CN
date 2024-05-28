@@ -24,7 +24,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsDepthWrite = new( "深度写入", "DsDw" );
         public readonly AvfxBool IsSoftParticle = new( "柔性粒子", "DsSp" );
         public readonly AvfxInt CollisionType = new( "碰撞类型", "Coll" );
-        public readonly AvfxBool Bs11 = new( "BS11", "bS11" );
+        public readonly AvfxBool S11Enabled = new( "启用 S11", "bS11" );
+
+        // New to dawntrail
+        public readonly AvfxInt ShUT = new( "ShUT", "ShUT" );
+        public readonly AvfxInt ShR = new( "ShR", "ShR" );
+        public readonly AvfxBool E24Enabled = new( "启用 E24", "bE24" );
+
         public readonly AvfxBool IsApplyToneMap = new( "应用色调映射", "bATM" );
         public readonly AvfxBool IsApplyFog = new( "应用雾效", "bAFg" );
         public readonly AvfxBool ClipNearEnable = new( "启用近裁剪", "bNea" );
@@ -68,18 +74,15 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxParticleTexturePalette TP;
         public readonly AvfxParticleSimple Simple;
 
-        public readonly List<AvfxParticleUvSet> UvSets = new();
+        public readonly List<AvfxParticleUvSet> UvSets = [];
         public readonly UiUvSetSplitView UvView;
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxBase> Parsed2;
 
         public readonly AvfxNodeGroupSet NodeGroups;
-
         public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplitDisplay;
-
         public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
-
         private readonly UiDisplayList Parameters;
 
         public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {
@@ -99,7 +102,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Parsing
 
-            Parsed = new() {
+            Parsed = [
                 LoopStart,
                 LoopEnd,
                 Type,
@@ -116,7 +119,10 @@ namespace VfxEditor.AvfxFormat {
                 IsDepthWrite,
                 IsSoftParticle,
                 CollisionType,
-                Bs11,
+                S11Enabled,
+                ShUT,
+                ShR,
+                E24Enabled,
                 IsApplyToneMap,
                 IsApplyFog,
                 ClipNearEnable,
@@ -149,9 +155,9 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            };
+            ];
 
-            Parsed2 = new() {
+            Parsed2 = [
                 TC1,
                 TC2,
                 TC3,
@@ -160,11 +166,11 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            };
+            ];
 
             // Drawing
 
-            Parameters = new( "参数", new() {
+            Parameters = new( "参数", [
                 new UiNodeGraphView( this ),
                 LoopStart,
                 LoopEnd,
@@ -182,7 +188,10 @@ namespace VfxEditor.AvfxFormat {
                 IsDepthWrite,
                 IsSoftParticle,
                 CollisionType,
-                Bs11,
+                S11Enabled,
+                ShUT,
+                ShR,
+                E24Enabled,
                 IsApplyToneMap,
                 IsApplyFog,
                 ClipNearEnable,
@@ -195,9 +204,9 @@ namespace VfxEditor.AvfxFormat {
                 ApplyRateLightBuffer,
                 DOTy,
                 DepthOffset
-            } );
+            ] );
 
-            AnimationSplitDisplay = new( "Animation", new() {
+            AnimationSplitDisplay = new( "动画", [
                 Life,
                 Simple,
                 Gravity,
@@ -214,11 +223,11 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            } );
+            ] );
 
             UvView = new( UvSets );
 
-            TextureDisplaySplit = new( "Textures", new() {
+            TextureDisplaySplit = new( "材质", [
                 TC1,
                 TC2,
                 TC3,
@@ -227,16 +236,17 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            } );
+            ] );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
             Peek( reader, Parsed2, size );
 
+            UpdateData(); // TODO: check if moving this here breaks anything
+
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
-                    UpdateData();
                     Data?.Read( _reader, _size );
                 }
                 else if( _name == "UvSt" ) {
@@ -273,22 +283,25 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Line => new AvfxParticleDataLine(),
                 ParticleType.Model => new AvfxParticleDataModel( this ),
                 ParticleType.Polyline => new AvfxParticleDataPolyline(),
-                ParticleType.Quad => null,
+                ParticleType.Quad => new AvfxParticleDataQuad(),
                 ParticleType.Polygon => new AvfxParticleDataPolygon(),
                 ParticleType.Decal => new AvfxParticleDataDecal(),
                 ParticleType.DecalRing => new AvfxParticleDataDecalRing(),
                 ParticleType.Disc => new AvfxParticleDataDisc(),
                 ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
                 ParticleType.Laser => new AvfxParticleDataLaser(),
+                ParticleType.Unknown_15 => new AvfxParticleDataUnknown15(),
                 _ => null,
             };
-            Data?.SetAssigned( true );
+
+            Data?.SetAssigned( !Data.Optional );
         }
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Particle" );
             DrawRename();
             Type.Draw();
+            Data?.DrawEnableCheckbox();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -314,7 +327,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawData() {
-            if( Data == null ) return;
+            if( Data == null || ( Data.Optional && !Data.IsAssigned() ) ) return;
 
             using var tabItem = ImRaii.TabItem( "数据" );
             if( !tabItem ) return;
@@ -322,7 +335,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Particle {GetIdx()} ({Type.Value})";
+        public override string GetDefaultText() => $"粒子 {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Ptcl{GetIdx()}";
     }

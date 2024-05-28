@@ -1,10 +1,7 @@
-﻿using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Numerics;
 using VfxEditor.DirectX;
+using VfxEditor.Formats.AvfxFormat.Curve;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -15,12 +12,12 @@ namespace VfxEditor.AvfxFormat {
         Base
     }
 
-    public partial class AvfxCurve : AvfxOptional {
+    public partial class AvfxCurve : AvfxCurveBase {
         public readonly int RenderId = Renderer.NewId;
 
         private static int EDITOR_ID = 0;
         private readonly CurveType Type;
-        private readonly int Id;
+        private readonly int Id = EDITOR_ID++;
 
         public readonly AvfxEnum<CurveBehavior> PreBehavior = new( "前置行为", "BvPr" );
         public readonly AvfxEnum<CurveBehavior> PostBehavior = new( "后置行为", "BvPo" );
@@ -31,28 +28,22 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed;
         private readonly List<IUiItem> Display;
 
-        private readonly string Name;
-        private readonly bool Locked;
-
-        public AvfxCurve( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
-            Name = name;
+        public AvfxCurve( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( name, avfxName, locked ) {
             Type = type;
-            Locked = locked;
 
-            Id = EDITOR_ID++;
             KeyList = new( this );
 
-            Parsed = new() {
+            Parsed = [
                 PreBehavior,
                 PostBehavior,
                 Random,
                 KeyList
-            };
+            ];
 
-            Display = new() {
+            Display = [
                 PreBehavior,
                 PostBehavior,
-            };
+            ];
             if( type != CurveType.Color ) Display.Add( Random );
         }
 
@@ -68,65 +59,9 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            DrawAssignButton( Name, true );
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            if( !Locked && DrawUnassignButton( Name ) ) return;
+        protected override void DrawBody() {
             DrawItems( Display );
             DrawEditor();
-        }
-
-        public override string GetDefaultText() => Name;
-
-        // ======== STATIC DRAW ==========
-
-        public static void DrawUnassignedCurves( List<AvfxCurve> curves ) {
-            var first = true;
-            var currentX = 0f;
-            var maxX = ImGui.GetContentRegionAvail().X;
-            var imguiStyle = ImGui.GetStyle();
-            var spacing = imguiStyle.ItemInnerSpacing.X;
-
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( spacing, imguiStyle.ItemSpacing.Y ) );
-
-            foreach( var curve in curves.Where( x => !x.IsAssigned() ) ) {
-                var width = ImGui.CalcTextSize( $"+ {curve.Name}" ).X + imguiStyle.FramePadding.X * 2 + spacing;
-                if( first ) {
-                    currentX += width;
-                }
-                else {
-                    if( ( maxX - currentX - width ) > spacing + 4 ) {
-                        currentX += width;
-                        ImGui.SameLine();
-                    }
-                    else {
-                        currentX = width;
-                    }
-                }
-
-                curve.Draw();
-                first = false;
-            }
-        }
-
-        public static void DrawAssignedCurves( List<AvfxCurve> curves ) {
-            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
-            if( !tabBar ) return;
-
-            foreach( var curve in curves.Where( x => x.IsAssigned() ) ) {
-                if( ImGui.BeginTabItem( curve.Name ) ) {
-                    curve.DrawAssigned();
-                    ImGui.EndTabItem();
-                }
-            }
         }
     }
 }

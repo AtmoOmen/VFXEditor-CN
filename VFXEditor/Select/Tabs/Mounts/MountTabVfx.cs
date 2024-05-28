@@ -39,13 +39,14 @@ namespace VfxEditor.Select.Tabs.Mounts {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-            ImGui.Text( "分支: " + Selected.Variant );
+            ImGui.TextDisabled( "分支: " + Selected.Variant );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "视效", Loaded.Path, Selected.Name );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            Dialog.DrawPaths( Loaded.Path, Selected.Name, SelectResultType.GameMount );
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using ImGuiNET;
+using Lumina.Excel.GeneratedSheets2;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -11,16 +12,20 @@ namespace VfxEditor.Select.Tabs.Npc {
         public List<string> pap;
 
         public NpcFilesStruct() {
-            vfx = new();
-            tmb = new();
-            pap = new();
+            vfx = [];
+            tmb = [];
+            pap = [];
         }
     }
 
     public abstract class NpcTab : SelectTab<NpcRow, List<string>> {
-        private static Dictionary<string, NpcFilesStruct> NpcFiles = new();
+        private static Dictionary<string, NpcFilesStruct> NpcFiles = [];
 
-        public NpcTab( SelectDialog dialog, string name, SelectResultType resultType ) : base( dialog, name, "Npc", resultType ) { }
+        private readonly SelectResultType ResultType;
+
+        public NpcTab( SelectDialog dialog, string name, SelectResultType resultType ) : base( dialog, name, "Npc" ) {
+            ResultType = resultType;
+        }
 
         public NpcTab( SelectDialog dialog, string name ) : this( dialog, name, SelectResultType.GameNpc ) { }
 
@@ -59,7 +64,10 @@ namespace VfxEditor.Select.Tabs.Npc {
 
         protected override void DrawExtra() => SelectUiUtils.NpcThankYou();
 
-        protected override string GetName( NpcRow item ) => item.Name;
+        protected override void DrawSelected() {
+            ImGui.TextDisabled( "分支: " + Selected.Variant );
+            Dialog.DrawPaths( Loaded, Selected.Name, ResultType );
+        }
 
         // ====== UTILS ===========
 

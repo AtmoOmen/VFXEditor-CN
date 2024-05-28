@@ -40,26 +40,27 @@ namespace VfxEditor.Formats.MtrlFormat {
     }
 
     public class MtrlFile : FileManagerFile {
-        private readonly byte[] Version;
+        public readonly uint Version;
         private readonly byte[] ExtraData;
 
-        private readonly List<MtrlTexture> Textures = new();
-        private readonly List<MtrlAttributeSet> UvSets = new();
-        private readonly List<MtrlAttributeSet> ColorSets = new();
+        private readonly List<MtrlTexture> Textures = [];
+        private readonly List<MtrlAttributeSet> UvSets = [];
+        private readonly List<MtrlAttributeSet> ColorSets = [];
 
         public readonly ParsedString Shader;
         private readonly ParsedFlag<TableFlags> Flags = new( "标识", 1 );
 
-        public readonly MtrlColorTable ColorTable;
+        public bool ColorTableEnabled => Flags.HasFlag( TableFlags.Has_Color_Table );
         public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Dyeable );
-        public readonly MtrlDyeTable DyeTable;
+
+        public readonly MtrlTables Tables;
 
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "着色器选项" );
         private readonly ParsedUIntHex ShaderFlags = new( "着色器标志" );
 
-        private readonly List<MtrlKey> Keys = new();
-        private readonly List<MtrlMaterialParameter> MaterialParameters = new();
-        private readonly List<MtrlSampler> Samplers = new();
+        private readonly List<MtrlKey> Keys = [];
+        private readonly List<MtrlMaterialParameter> MaterialParameters = [];
+        private readonly List<MtrlSampler> Samplers = [];
 
         private readonly CommandSplitView<MtrlTexture> TextureView;
         private readonly CommandSplitView<MtrlAttributeSet> UvSetView;
@@ -75,7 +76,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly int ModdedMod4 = 0;
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
-            Version = reader.ReadBytes( 4 );
+            Version = reader.ReadUInt32();
             reader.ReadUInt16(); // file size
             var dataSize = reader.ReadUInt16();
             var stringSize = reader.ReadUInt16();
@@ -100,7 +101,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             ColorSets.ForEach( x => x.ReadString( reader, stringsStart ) );
 
             reader.BaseStream.Position = stringsStart + shaderOffset;
-            Shader = new( "Shader", new List<ParsedStringIcon>() {
+            Shader = new( "着色器", new List<ParsedStringIcon>() {
                 new() {
                     Icon = () => FontAwesomeIcon.Sync,
                     Remove = false,
@@ -122,9 +123,9 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-            ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( this, reader ) : new( this );
-            DyeTable = ( Flags.HasFlag( TableFlags.Dyeable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
-            for( var i = 0; i < 16; i++ ) ColorTable.Rows[i].SetDyeRow( DyeTable.Rows[i] );
+
+            Tables = ColorTableEnabled ? new( this, reader, dataEnd ) : new( this );
+
             reader.BaseStream.Position = dataEnd;
 
             var shaderValueSize = reader.ReadUInt16();
@@ -147,11 +148,11 @@ namespace VfxEditor.Formats.MtrlFormat {
             // ======== VIEWS =========
 
             TextureView = new( "材质", Textures, false, ( MtrlTexture item, int idx ) => item.Text, () => new() );
-            UvSetView = new( "UV Set", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
-            ColorSetView = new( "Color Set", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
-            KeyView = new( "Key", Keys, false, ( MtrlKey item, int idx ) => item.GetText( idx ), () => new() );
-            MaterialParameterView = new( "Constant", MaterialParameters, false, null, () => new( this ) );
-            SamplerView = new( "Sampler", Samplers, false, ( MtrlSampler item, int idx ) => item.GetText( idx ), () => new( this ) );
+            UvSetView = new( "UV 集合", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
+            ColorSetView = new( "颜色集合", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
+            KeyView = new( "键", Keys, false, ( MtrlKey item, int idx ) => item.GetText( idx ), () => new() );
+            MaterialParameterView = new( "持久", MaterialParameters, false, null, () => new( this ) );
+            SamplerView = new( "采样器", Samplers, false, ( MtrlSampler item, int idx ) => item.GetText( idx ), () => new( this ) );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
@@ -207,8 +208,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataStart = writer.BaseStream.Position;
-            if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) ColorTable.Write( writer );
-            if( Flags.HasFlag( TableFlags.Dyeable ) ) DyeTable.Write( writer );
+            Tables.Write( writer );
             var dataEnd = writer.BaseStream.Position;
 
             writer.Write( ( ushort )MaterialParameters.Select( x => x.Values.Count * 4 ).Sum() );
@@ -267,9 +267,9 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) ColorSetView.Draw();
             }
 
-            if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) {
+            if( ColorTableEnabled ) {
                 using var tab = ImRaii.TabItem( "颜色表" );
-                if( tab ) ColorTable.Draw();
+                if( tab ) Tables.Draw();
             }
         }
 
@@ -280,7 +280,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             Shader.Draw();
             ImGui.TextDisabled( ShaderFilePath );
             if( ShaderFileState != ShpkFileState.None ) {
-                using var color = ImRaii.PushColor( ImGuiCol.TextDisabled, ShaderFileState == ShpkFileState.Missing ? UiUtils.DALAMUD_RED : UiUtils.PARSED_GREEN );
+                using var color = ImRaii.PushColor( ImGuiCol.Text, ShaderFileState == ShpkFileState.Missing ? UiUtils.DALAMUD_RED : UiUtils.PARSED_GREEN );
                 ImGui.SameLine();
                 ImGui.Text( $"[{ShaderFileState}]" );
             }

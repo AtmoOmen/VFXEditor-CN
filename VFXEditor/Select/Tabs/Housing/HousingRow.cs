@@ -1,7 +1,8 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Housing {
-    public class HousingRow {
+    public class HousingRow : ISelectItemWithIcon {
         public readonly string Name;
         public readonly string SgbPath;
         public readonly int RowId;
@@ -16,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Housing {
             Icon = item.Item.Value.Icon;
 
             var model = item.ModelKey;
-            SgbPath = $"bgcommon/hou/outdoor/general/{model.ToString().PadLeft( 4, '0' )}/asset/gar_b0_m{model.ToString().PadLeft( 4, '0' )}.sgb";
+            SgbPath = $"bgcommon/hou/outdoor/general/{model:D4}/asset/gar_b0_m{model:D4}.sgb";
         }
 
         public HousingRow( HousingFurniture item ) {
@@ -25,7 +26,11 @@ namespace VfxEditor.Select.Tabs.Housing {
             Icon = item.Item.Value.Icon;
 
             var model = item.ModelKey;
-            SgbPath = $"bgcommon/hou/indoor/general/{model.ToString().PadLeft( 4, '0' )}/asset/fun_b0_m{model.ToString().PadLeft( 4, '0' )}.sgb";
+            SgbPath = $"bgcommon/hou/indoor/general/{model:D4}/asset/fun_b0_m{model:D4}.sgb";
         }
+
+        public string GetName() => Name;
+
+        public uint GetIconId() => Icon;
     }
 }

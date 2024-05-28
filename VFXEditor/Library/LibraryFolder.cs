@@ -10,7 +10,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Library {
     public unsafe class LibraryFolder : LibraryGeneric {
-        public readonly List<LibraryGeneric> Children = new();
+        public readonly List<LibraryGeneric> Children = [];
         public bool IsRoot => Parent == null;
 
         public LibraryFolder( LibraryFolder parent, string name, string id, List<LibraryProps> items ) : base( parent, name, id ) {
@@ -113,7 +113,7 @@ namespace VfxEditor.Library {
             if( !popup ) return false;
 
             if( UiUtils.IconSelectable( FontAwesomeIcon.FolderPlus, "新建子文件夹" ) ) {
-                var newFolder = new LibraryFolder( this, "新建文件夹", UiUtils.RandomString( 12 ), new() );
+                var newFolder = new LibraryFolder( this, "新建文件夹", UiUtils.RandomString( 12 ), [] );
                 Add( newFolder );
                 library.Save();
                 return true;

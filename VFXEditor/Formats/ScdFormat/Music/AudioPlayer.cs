@@ -5,7 +5,6 @@ using NAudio.Wave;
 using System;
 using System.IO;
 using System.Numerics;
-using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Utils;
@@ -26,16 +25,7 @@ namespace VfxEditor.ScdFormat {
         private double CurrentTime => LeftStream?.CurrentTime == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
-
-        private int ConverterSamplesOut = 0;
-        private int ConverterSecondsOut = 0;
-        private int ConverterSamples = 0;
-        private float ConverterSeconds = 0f;
-
-        private bool LoopTimeInitialized = false;
-        private bool LoopTimeRefreshing = false;
-        private double LoopStartTime = 0;
-        private double LoopEndTime = 0;
+        private bool LoopSound => ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects );
 
         private double QueueSeek = -1;
 
@@ -50,20 +40,14 @@ namespace VfxEditor.ScdFormat {
         public void Draw() {
             using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
-
             DrawPlayer();
             DrawChannels();
-            DrawConverter();
             ProcessQueue(); // Loop, etc.
-        }
-
-        public void DrawMiniPlayer() {
-            using var _ = ImRaii.PushId( "Music" );
-            DrawControls();
-            ProcessQueue(); // Loop, etc.
+            Entry.DrawTabs();
         }
 
         private void DrawControls() {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding with { X = 4 } ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( State == PlaybackState.Stopped ) {
                     if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
@@ -91,25 +75,25 @@ namespace VfxEditor.ScdFormat {
                 }
             }
 
-            if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
-                var startX = 221f * ( LoopStartTime / TotalTime );
-                var endX = 221f * ( LoopEndTime / TotalTime );
+            if( State != PlaybackState.Stopped && Entry.LoopTime.Y > 0 && Plugin.Configuration.SimulateScdLoop ) {
+                if( Entry.LoopTime.X > ( TotalTime + 1f ) || Entry.LoopTime.Y > ( TotalTime + 1f ) ) return; // out of bounds
 
-                var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
-                var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
+                var dragWidth = ImGui.GetStyle().GrabMinSize + 4f;
+                var range = Entry.LoopTime * ( ( 221f - dragWidth ) / ( float )TotalTime ) + new Vector2( dragWidth / 2f );
+
+                var startPos = drawPos + new Vector2( range.X - 1, 0 );
+                var endPos = drawPos + new Vector2( range.Y - 1, 0 );
 
                 var height = ImGui.GetFrameHeight();
-
                 var drawList = ImGui.GetWindowDrawList();
-                drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
-                drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+                drawList.AddRectFilled( startPos, startPos + new Vector2( 2, height ), ImGui.GetColorU32( UiUtils.PARSED_GREEN ), 1 );
+                drawList.AddRectFilled( endPos, endPos + new Vector2( 2, height ), ImGui.GetColorU32( UiUtils.DALAMUD_RED ), 1 );
             }
         }
 
         private void DrawPlayer() {
             using var tabItem = ImRaii.TabItem( "音乐" );
             if( !tabItem ) return;
-
             using var _ = ImRaii.PushId( "Music" );
 
             DrawControls();
@@ -139,17 +123,12 @@ namespace VfxEditor.ScdFormat {
             }
             UiUtils.Tooltip( "替换音效文件" );
 
-            var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
+            var loop = Entry.LoopTime;
             ImGui.SetNextItemWidth( 246f );
-            if( ImGui.InputInt2( "##LoopStartEnd", ref loopStartEnd[0] ) ) {
-                Entry.LoopStart = loopStartEnd[0];
-                Entry.LoopEnd = loopStartEnd[1];
-            }
+            if( ImGui.InputFloat2( "##LoopStartEnd", ref loop ) ) Entry.LoopTime = loop;
 
             ImGui.SameLine();
-            if( UiUtils.DisabledButton( "刷新", Plugin.Configuration.SimulateScdLoop ) ) RefreshLoopStartEndTime();
-            ImGui.SameLine();
-            ImGui.Text( "循环开始/结束 (字节)" );
+            ImGui.Text( "循环时间" );
 
             ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} 声道 / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} 字节" );
         }
@@ -181,54 +160,22 @@ namespace VfxEditor.ScdFormat {
             if( ImGui.Button( "刷新" ) ) Reset();
         }
 
-        private void DrawConverter() {
-            using var tabItem = ImRaii.TabItem( "转换器" );
-            if( !tabItem ) return;
-
-            using var _ = ImRaii.PushId( "Convertor" );
-
-            ImGui.TextDisabled( "用于生成可用于循环起始/结束的字节值的工具" );
-
-            // Bytes
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesIn", ref ConverterSamples, 0, 0 );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( FontAwesomeIcon.ArrowRight.ToIconString() ); ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-            ImGui.SameLine();
-            if( ImGui.Button( "样本转字节" ) ) {
-                ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
-            }
-
-            // Time
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( "##SecondsIn", ref ConverterSeconds, 0, 0 );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( FontAwesomeIcon.ArrowRight.ToIconString() ); ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"##SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-            ImGui.SameLine();
-            if( ImGui.Button( "秒转字节" ) ) {
-                ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
-            }
-        }
-
         private void ProcessQueue() {
             var currentState = State;
             var justQueued = false;
 
-            if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
-                ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
+            if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing && LoopSound ) {
                 Play();
-                if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopStartTime > 0 ) {
+                if( Plugin.Configuration.SimulateScdLoop && Entry.LoopTime.X > 0 && Entry.LoopTime.Y > 0 ) {
                     if( QueueSeek == -1 ) {
-                        QueueSeek = LoopStartTime;
+                        QueueSeek = Entry.LoopTime.X;
                         justQueued = true;
                     }
                 }
             }
-            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopEndTime - CurrentTime ) < 0.03f ) {
+            else if( currentState == PlaybackState.Playing && Entry.LoopTime.Y > 0 && Plugin.Configuration.SimulateScdLoop && Math.Abs( Entry.LoopTime.Y - CurrentTime ) < 0.1f ) {
                 if( QueueSeek == -1 ) {
-                    QueueSeek = LoopStartTime;
+                    QueueSeek = Entry.LoopTime.X;
                     justQueued = true;
                 }
             }
@@ -245,8 +192,6 @@ namespace VfxEditor.ScdFormat {
         private void Play() {
             Reset();
             try {
-                if( !LoopTimeInitialized ) RefreshLoopStartEndTime();
-
                 var stream = Entry.Data.GetStream();
                 var format = stream.WaveFormat;
                 LeftStream = ConvertStream( stream );
@@ -255,10 +200,10 @@ namespace VfxEditor.ScdFormat {
                 var firstChannel = ShowChannelSelect ? Channel1 : 0;
                 var secondChannel = ShowChannelSelect ? Channel2 : ( format.Channels > 1 ? 1 : 0 );
 
-                var leftStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { LeftStream }, 1 );
+                var leftStreamIsolated = new MultiplexingWaveProvider( [LeftStream], 1 );
                 leftStreamIsolated.ConnectInputToOutput( firstChannel, 0 );
 
-                var rightStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { RightStream }, 1 );
+                var rightStreamIsolated = new MultiplexingWaveProvider( [RightStream], 1 );
                 rightStreamIsolated.ConnectInputToOutput( secondChannel, 0 );
 
                 LeftRightCombined = new MultiplexingWaveProvider( new[] { leftStreamIsolated, rightStreamIsolated }, 2 );
@@ -297,9 +242,29 @@ namespace VfxEditor.ScdFormat {
             }
         }
 
+        public void Reset() {
+            CurrentOutput?.Stop();
+            CurrentOutput?.Dispose();
+            LeftStream?.Dispose();
+            RightStream?.Dispose();
+            LeftStream = null;
+            RightStream = null;
+            CurrentOutput = null;
+        }
+
+        public void Dispose() {
+            CurrentOutput?.Stop();
+            Reset();
+        }
+
+        // ======================
+
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "导入文件", IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*", ( bool ok, string res ) => {
-                if( ok ) ScdFile.Import( res, Entry );
+            FileBrowserManager.OpenFileDialog( "导入文件", "音频文件{.ogg,.wav},.*", ( bool ok, string res ) => {
+                if( ok ) {
+                    Reset();
+                    Entry.File.Import( res, Entry );
+                }
             } );
         }
 
@@ -316,7 +281,7 @@ namespace VfxEditor.ScdFormat {
             FileBrowserManager.SaveFileDialog( "选择保存位置", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;
-                    File.WriteAllBytes( res, data.DecodedData );
+                    File.WriteAllBytes( res, data.Data );
                 }
             } );
         }
@@ -326,30 +291,5 @@ namespace VfxEditor.ScdFormat {
             WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
             _ => stream
         };
-
-        private async void RefreshLoopStartEndTime() {
-            if( LoopTimeRefreshing ) return;
-            LoopTimeRefreshing = true;
-            await Task.Run( () => {
-                Entry.Data.BytesToLoopStartEnd( Entry.LoopStart, Entry.LoopEnd, out LoopStartTime, out LoopEndTime );
-                LoopTimeInitialized = true;
-                LoopTimeRefreshing = false;
-            } );
-        }
-
-        public void Reset() {
-            CurrentOutput?.Stop();
-            CurrentOutput?.Dispose();
-            LeftStream?.Dispose();
-            RightStream?.Dispose();
-            LeftStream = null;
-            RightStream = null;
-            CurrentOutput = null;
-        }
-
-        public void Dispose() {
-            CurrentOutput?.Stop();
-            Reset();
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEmitterDataConeModel : AvfxData {
+    public class AvfxEmitterDataConeModel : AvfxDataWithParameters {
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "旋转顺序", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "生成方法", "GeMT" );
         public readonly AvfxInt DivideX = new( "X 轴分割", "DivX" );
@@ -16,10 +16,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionAngle = new( "注入角度", "IjA", CurveType.Angle );
         public readonly AvfxCurve InjectionAngleRandom = new( "随机注入角度", "IjAR", CurveType.Angle );
 
-        public readonly UiDisplayList Display;
-
         public AvfxEmitterDataConeModel() : base() {
-            Parsed = new() {
+            Parsed = [
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -33,22 +31,22 @@ namespace VfxEditor.AvfxFormat {
                 InjectionSpeedRandom,
                 InjectionAngle,
                 InjectionAngleRandom
-            };
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( RotationOrderType );
-            Display.Add( GenerateMethodType );
-            Display.Add( DivideX );
-            Display.Add( DivideY );
-            DisplayTabs.Add( AX );
-            DisplayTabs.Add( AY );
-            DisplayTabs.Add( AXR );
-            DisplayTabs.Add( AYR );
-            DisplayTabs.Add( Radius );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
-            DisplayTabs.Add( InjectionAngle );
-            DisplayTabs.Add( InjectionAngleRandom );
+            ParameterTab.Add( RotationOrderType );
+            ParameterTab.Add( GenerateMethodType );
+            ParameterTab.Add( DivideX );
+            ParameterTab.Add( DivideY );
+
+            Tabs.Add( AX );
+            Tabs.Add( AY );
+            Tabs.Add( AXR );
+            Tabs.Add( AYR );
+            Tabs.Add( Radius );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
+            Tabs.Add( InjectionAngle );
+            Tabs.Add( InjectionAngleRandom );
         }
     }
 }

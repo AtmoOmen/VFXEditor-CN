@@ -1,12 +1,12 @@
 ﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Gimmick {
     public class GimmickTab : SelectTab<GimmickRow, ParsedPaths> {
-        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Gimmick", SelectResultType.GameGimmick ) { }
+        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Gimmick" ) { }
 
         // ===== LOADING =====
 
@@ -37,9 +37,9 @@ namespace VfxEditor.Select.Tabs.Gimmick {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.TmbPath );
 
-            DrawPaths( "视效", Loaded.Paths, Selected.Name );
-        }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-        protected override string GetName( GimmickRow item ) => item.Name;
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameGimmick );
+        }
     }
 }

@@ -4,13 +4,13 @@
         public readonly AvfxCurve Width = new( "宽度", "Wdt" );
 
         public AvfxParticleDataLaser() : base() {
-            Parsed = new() {
+            Parsed = [
                 Length,
                 Width
-            };
+            ];
 
-            DisplayTabs.Add( Width );
-            DisplayTabs.Add( Length );
+            Tabs.Add( Width );
+            Tabs.Add( Length );
         }
     }
 }

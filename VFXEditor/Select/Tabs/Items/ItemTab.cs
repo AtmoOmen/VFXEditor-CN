@@ -6,20 +6,23 @@ namespace VfxEditor.Select.Tabs.Items {
         Weapon = 0x01,
         SubWeapon = 0x02,
         Armor = 0x04,
-        Acc = 0x08,
+        Accessory = 0x08,
     }
 
     public abstract class ItemTab<T> : SelectTab<ItemRow, T> where T : class {
         private readonly ItemTabFilter Filter;
 
-        public ItemTab( SelectDialog dialog, string name, string stateId, ItemTabFilter filter ) : base( dialog, name, stateId, SelectResultType.GameItem ) {
+        public ItemTab( SelectDialog dialog, string name, string stateId, ItemTabFilter filter ) : base( dialog, name, stateId ) {
             Filter = filter;
         }
+
+        protected override bool CheckMatch( ItemRow item, string searchInput ) =>
+            SelectUiUtils.Matches( item.Name, searchInput ) || SelectUiUtils.Matches( item.ModelString, searchInput );
 
         // ======== LOADING =========
 
         public override void LoadData() {
-            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
+            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Item>() ) {
                 if(
                     row.EquipSlotCategory.Value?.MainHand == 1 ||
                     row.EquipSlotCategory.Value?.OffHand == 1
@@ -49,13 +52,11 @@ namespace VfxEditor.Select.Tabs.Items {
                     row.EquipSlotCategory.Value?.Wrists == 1 ||
                     row.EquipSlotCategory.Value?.Ears == 1
                 ) {
-                    if( !Filter.HasFlag( ItemTabFilter.Acc ) ) continue;
+                    if( !Filter.HasFlag( ItemTabFilter.Accessory ) ) continue;
                     var armor = new ItemRowArmor( row );
                     if( armor.HasModel ) Items.Add( armor );
                 }
             }
         }
-
-        protected override string GetName( ItemRow item ) => item.Name;
     }
 }

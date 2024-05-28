@@ -4,13 +4,13 @@
         public readonly AvfxCurve CarryOverFactorRandom = new( "随机传递因子", "COFR" );
 
         public AvfxBinderDataSpline() : base() {
-            Parsed = new() {
+            Parsed = [
                 CarryOverFactor,
                 CarryOverFactorRandom
-            };
+            ];
 
-            DisplayTabs.Add( CarryOverFactor );
-            DisplayTabs.Add( CarryOverFactorRandom );
+            Tabs.Add( CarryOverFactor );
+            Tabs.Add( CarryOverFactorRandom );
         }
     }
 }

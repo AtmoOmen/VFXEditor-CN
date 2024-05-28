@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         private bool ExportDependencies = true;
 
         public AvfxExport( AvfxFile file ) {
-            Categories = new() {
+            Categories = [
                 new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "时间线" ),
                 new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "发射器" ),
                 new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "粒子" ),
@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
                 new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "绑定器" ),
                 new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "材质" ),
                 new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "模型" )
-            };
+            ];
         }
 
         public void Reset() => Categories.ForEach( cat => cat.Reset() );

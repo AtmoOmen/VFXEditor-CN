@@ -1,14 +1,12 @@
-﻿using Dalamud.Interface;
-using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
+using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabTmb : SelectTab<ActionRow> {
         public ActionTabTmb( SelectDialog dialog, string name ) : this( dialog, name, "Action-Tmb" ) { }
 
-        public ActionTabTmb( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
+        public ActionTabTmb( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 
@@ -21,29 +19,13 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-            DrawPath( "开始", Selected.StartPath, $"{Selected.Name} Start" );
-            DrawMovementCancel( Selected.StartMotion );
+            Dialog.DrawPaths( new Dictionary<string, string>() {
+                { "开始",  Selected.StartTmbPath },
+                { "结束",  Selected.EndTmbPath },
+                { "命中",  Selected.HitTmbPath },
+                { "武器",  Selected.WeaponTmbPath },
 
-            DrawPath( "结束", Selected.EndPath, $"{Selected.Name} End" );
-            DrawMovementCancel( Selected.EndMotion );
-
-            DrawPath( "命中", Selected.HitPath, $"{Selected.Name} Hit" );
-
-            DrawPath( "武器", Selected.WeaponPath, $"{Selected.Name} Weapon" );
-        }
-
-        protected override string GetName( ActionRow item ) => item.Name;
-
-        private void DrawMovementCancel( bool disabled ) {
-            if( !disabled ) return;
-            if( Dialog.ShowLocal ) return;
-            ImGui.Indent( 25f );
-            UiUtils.IconText( FontAwesomeIcon.QuestionCircle, true );
-            UiUtils.Tooltip( "这一参数位于游戏的数据表格中，无法被 VFXEditor 移除" );
-            ImGui.SameLine();
-            ImGui.TextDisabled( "被移动取消的动画" );
-            ImGui.Unindent( 25f );
+            }, Selected.Name, SelectResultType.GameAction );
         }
     }
 }

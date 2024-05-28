@@ -12,16 +12,16 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x14;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedBool Enabled = new( "启用" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
 
         public C131( TmbFile file ) : base( file ) { }
 
         public C131( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
-            Unk1,
+        protected override List<ParsedBase> GetParsed() => [
+            Enabled,
             Unk2
-        };
+        ];
     }
 }

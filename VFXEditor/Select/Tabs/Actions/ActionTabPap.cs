@@ -1,4 +1,4 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +6,7 @@ namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabPap : SelectTab<ActionRowPap, Dictionary<string, Dictionary<string, string>>> {
         public ActionTabPap( SelectDialog dialog, string name ) : this( dialog, name, "Action-Pap" ) { }
 
-        public ActionTabPap( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
+        public ActionTabPap( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 
@@ -18,19 +18,16 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         public override void LoadSelection( ActionRowPap item, out Dictionary<string, Dictionary<string, string>> loaded ) {
             loaded = new Dictionary<string, Dictionary<string, string>> {
-                { "开始", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.Start ) ) },
-                { "结束", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.End ) ) },
-                { "命中", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.Hit ) ) }
+                { "Start", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.StartPath ) ) },
+                { "End", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.EndPath ) ) },
+                { "Hit", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.HitPath ) ) }
             };
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameAction );
         }
-
-        protected override string GetName( ActionRowPap item ) => item.Name;
     }
 }

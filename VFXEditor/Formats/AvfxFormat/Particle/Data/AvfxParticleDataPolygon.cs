@@ -3,11 +3,11 @@
         public readonly AvfxCurve Count = new( "数量", "Cnt" );
 
         public AvfxParticleDataPolygon() : base() {
-            Parsed = new() {
+            Parsed = [
                 Count
-            };
+            ];
 
-            DisplayTabs.Add( Count );
+            Tabs.Add( Count );
         }
     }
 }

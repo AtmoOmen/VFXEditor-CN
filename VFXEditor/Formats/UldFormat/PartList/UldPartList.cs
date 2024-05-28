@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command.ListCommands;
@@ -7,13 +7,13 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartList : UldWorkspaceItem {
-        public readonly List<UldPartItem> Parts = new();
+        public readonly List<UldPartItem> Parts = [];
 
         private int Offset => 12 + Parts.Count * 12;
 
-        public UldPartList() { }
+        public UldPartList( uint id ) : base( id ) { }
 
-        public UldPartList( BinaryReader reader ) {
+        public UldPartList( BinaryReader reader ) : this( 0 ) {
             Id.Read( reader );
             var partCount = reader.ReadInt32();
             reader.ReadInt32(); // skip offset

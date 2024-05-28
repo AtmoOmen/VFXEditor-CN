@@ -1,6 +1,6 @@
-﻿using ImGuiNET;
-using Lumina.Extensions;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using Lumina.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
@@ -22,19 +22,19 @@ namespace VfxEditor.UldFormat {
         private readonly UldAtkHeader2 OffsetsHeader2;
 
         private readonly UldListHeader TextureList;
-        public readonly List<UldTexture> Textures = new();
+        public readonly List<UldTexture> Textures = [];
 
         private readonly UldListHeader PartList;
-        public readonly List<UldPartList> Parts = new();
+        public readonly List<UldPartList> Parts = [];
 
         private readonly UldListHeader ComponentList;
-        public readonly List<UldComponent> Components = new();
+        public readonly List<UldComponent> Components = [];
 
         private readonly UldListHeader TimelineList;
-        public readonly List<UldTimeline> Timelines = new();
+        public readonly List<UldTimeline> Timelines = [];
 
         private readonly UldListHeader WidgetList;
-        public readonly List<UldWidget> Widgets = new();
+        public readonly List<UldWidget> Widgets = [];
 
         public readonly CommandSplitView<UldTexture> TextureSplitView;
         public readonly CommandSplitView<UldPartList> PartsSplitView;
@@ -99,20 +99,20 @@ namespace VfxEditor.UldFormat {
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
-            TextureSplitView = new( "Texture", Textures, true,
-                ( UldTexture item, int idx ) => item.GetText(), () => new() );
+            TextureSplitView = new( "材质", Textures, true,
+                ( UldTexture item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Textures ) ) );
 
-            PartsSplitView = new( "Part List", Parts, true,
-                ( UldPartList item, int idx ) => item.GetText(), () => new() );
+            PartsSplitView = new( "组件列表", Parts, true,
+                ( UldPartList item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Parts ) ) );
 
-            ComponentDropdown = new( "Component", Components,
-                ( UldComponent item, int idx ) => item.GetText(), () => new( Components ) );
+            ComponentDropdown = new( "组件", Components,
+                ( UldComponent item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Components ), Components ) );
 
-            TimelineDropdown = new( "Timeline", Timelines,
-                ( UldTimeline item, int idx ) => item.GetText(), () => new() );
+            TimelineDropdown = new( "时间线", Timelines,
+                ( UldTimeline item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Timelines ) ) );
 
-            WidgetDropdown = new( "Widget", Widgets,
-                ( UldWidget item, int idx ) => item.GetText(), () => new( Components ) );
+            WidgetDropdown = new( "部件", Widgets,
+                ( UldWidget item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Widgets ), Components ) );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -159,57 +159,37 @@ namespace VfxEditor.UldFormat {
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawTextures();
-            DrawParts();
-            DrawComponents();
-            DrawTimelines();
-            DrawWidgets();
-        }
-
-        private void DrawTextures() {
-            using var tabItem = ImRaii.TabItem( "材质" );
-            if( !tabItem ) return;
-
-            TextureList.Draw();
-            TextureSplitView.Draw();
-        }
-
-        private void DrawParts() {
-            using var tabItem = ImRaii.TabItem( "分部列表" );
-            if( !tabItem ) return;
-
-            PartList.Draw();
-            PartsSplitView.Draw();
-        }
-
-        private void DrawComponents() {
-            using var tabItem = ImRaii.TabItem( "组件" );
-            if( !tabItem ) return;
-
-            ComponentList.Draw();
-            ComponentDropdown.Draw();
-        }
-
-        private void DrawTimelines() {
-            using var tabItem = ImRaii.TabItem( "时间线" );
-            if( !tabItem ) return;
-
-            TimelineList.Draw();
-            TimelineDropdown.Draw();
-        }
-
-        private void DrawWidgets() {
-            using var tabItem = ImRaii.TabItem( "控件" );
-            if( !tabItem ) return;
-
-            WidgetList.Draw();
-            WidgetDropdown.Draw();
+            if( UiUtils.BeginTabItem<UldTexture>( "材质" ) ) {
+                TextureList.Draw();
+                TextureSplitView.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldPartList>( "组件列表" ) ) {
+                PartList.Draw();
+                PartsSplitView.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldComponent>( "组件" ) ) {
+                ComponentList.Draw();
+                ComponentDropdown.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldTimeline>( "时间线" ) ) {
+                TimelineList.Draw();
+                TimelineDropdown.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldWidget>( "部件" ) ) {
+                WidgetList.Draw();
+                WidgetDropdown.Draw();
+                ImGui.EndTabItem();
+            }
         }
 
         // ========== WORKSPACE ==========
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = new();
+            Dictionary<string, string> ret = [];
             Textures.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Parts.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Components.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );

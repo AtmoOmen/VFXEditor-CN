@@ -56,15 +56,13 @@ namespace VfxEditor.DirectX {
             WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumWireframe = meshes.Select( x => x.Indices.Count ).Sum();
             UpdateDraw();
-
-            Dalamud.Log( $"Loaded wireframe {NumWireframe}" );
         }
 
         public void LoadEmpty( int renderId, FileManagerFile file ) {
             CurrentRenderId = renderId;
             IsSklb = file is SklbFile;
             NumWireframe = 0;
-            BoneList = new();
+            BoneList = [];
             WireframeVertices?.Dispose();
             Model.ClearVertexes();
             UpdateDraw();

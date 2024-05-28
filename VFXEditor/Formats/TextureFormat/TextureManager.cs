@@ -16,20 +16,20 @@ using VfxEditor.Utils;
 namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : DalamudWindow, IFileManager {
         private int TEX_ID = 0;
-        public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
-        public static string TempPng => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_png.png" ).Replace( '\\', '/' );
+        public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.atex" ).Replace( '\\', '/' );
+        public static string TempPng => Path.Combine( Plugin.Configuration.WriteLocation, "temp_png.png" ).Replace( '\\', '/' );
 
         public readonly WindowSystem WindowSystem = new();
 
-        public readonly List<IDalamudTextureWrap> Wraps = new();
-        public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
+        public readonly List<IDalamudTextureWrap> Wraps = [];
+        public readonly List<IDalamudTextureWrap> WrapsToCleanup = [];
 
-        private readonly List<TextureReplace> Textures = new();
-        private readonly Dictionary<string, TexturePreview> Previews = new();
+        private readonly List<TextureReplace> Textures = [];
+        private readonly Dictionary<string, TexturePreview> Previews = [];
         private readonly TextureView View;
         private readonly ManagerConfiguration Configuration;
 
-        public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem ) {
+        public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem, isMainWindow: true ) {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
         }
@@ -39,6 +39,8 @@ namespace VfxEditor.Formats.TextureFormat {
         public IEnumerable<IFileDocument> GetDocuments() => Textures;
 
         public string GetId() => "材质";
+
+        public string GetName() => "tex";
 
         public bool IsWindowOpen() => IsOpen;
 

@@ -1,9 +1,9 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public abstract class EmoteTab<T> : SelectTab<EmoteRow, T> where T : class {
-        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Emote", SelectResultType.GameEmote ) { }
+        public EmoteTab( SelectDialog dialog, string name ) : base( dialog, name, "Emote" ) { }
 
         // ===== LOADING =====
 
@@ -15,8 +15,6 @@ namespace VfxEditor.Select.Tabs.Emotes {
         }
 
         // ===== DRAWING ======
-
-        protected override string GetName( EmoteRow item ) => item.Name;
 
         protected override bool CheckMatch( EmoteRow item, string searchInput ) => base.CheckMatch( item, SearchInput ) || SelectUiUtils.Matches( item.Command, searchInput );
     }

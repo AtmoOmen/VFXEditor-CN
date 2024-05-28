@@ -23,16 +23,16 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "持续时间", value: 30 );
         private readonly ParsedInt Unk1 = new( "未知 1" );
-        private readonly TmbOffsetString Path = new( "路径", new() {
+        private readonly TmbOffsetString Path = new( "路径", [
             new() {
-                Icon = () => VfxSpawn.Active ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
+                Icon = () => VfxSpawn.IsActive ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
                 Remove = false,
                 Action = ( string path ) => {
-                    if( VfxSpawn.Active ) VfxSpawn.Remove();
+                    if( VfxSpawn.IsActive ) VfxSpawn.Clear();
                     else VfxSpawn.OnSelf( path, false );
                 }
             }
-        }, false );
+        ], false );
         private readonly ParsedShort BindPoint1 = new( "绑定点 1", value: 1 );
         private readonly ParsedShort BindPoint2 = new( "绑定点 2", value: 0xFF );
         private readonly ParsedShort BindPoint3 = new( "绑定点 3", value: 2 );
@@ -48,7 +48,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C012( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk1,
             Path,
@@ -62,6 +62,6 @@ namespace VfxEditor.TmbFormat.Entries {
             RGBA,
             Visibility,
             Unk3
-        };
+        ];
     }
 }

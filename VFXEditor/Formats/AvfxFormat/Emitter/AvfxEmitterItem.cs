@@ -31,9 +31,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ParameterLink = new( "参数链接", "PrLk", value: -1 );
         public readonly AvfxInt StartFrame = new( "起始帧", "StFr", value: 0 );
         public readonly AvfxBool StartFrameNullUpdate = new( "起始帧空更新", "bStN", value: false );
-        public readonly AvfxFloat ByInjectionAngleX = new( "通过 X 轴注射角度", "BIAX", value: 0 );
-        public readonly AvfxFloat ByInjectionAngleY = new( "通过 Y 轴注射角度", "BIAY", value: 0 );
-        public readonly AvfxFloat ByInjectionAngleZ = new( "通过 Z 轴注射角度", "BIAZ", value: 0 );
+        public readonly AvfxRadians ByInjectionAngleX = new( "通过 X 轴注射角度", "BIAX", value: 0 );
+        public readonly AvfxRadians ByInjectionAngleY = new( "通过 Y 轴注射角度", "BIAY", value: 0 );
+        public readonly AvfxRadians ByInjectionAngleZ = new( "通过 Z 轴注射角度", "BIAZ", value: 0 );
         public readonly AvfxInt GenerateDelay = new( "生成延迟", "GenD", 0 );
         public readonly AvfxBool GenerateDelayByOne = new( "生成 1 单元延迟", "bGD", value: false );
 
@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
             IsParticle = isParticle;
             Emitter = emitter;
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 TargetIdx,
                 LocalDirection,
@@ -77,26 +77,26 @@ namespace VfxEditor.AvfxFormat {
                 ByInjectionAngleZ,
                 GenerateDelay,
                 GenerateDelayByOne
-            };
+            ];
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = new() {
+            Display = [
                 Enabled,
                 LocalDirection,
                 CreateTime,
                 CreateCount,
                 CreateProbability,
                 ParentInfluenceColor
-            };
+            ];
 
-            CoordOptionsDisplay = new() {
+            CoordOptionsDisplay = [
                 InfluenceCoordScale,
                 InfluenceCoordRot,
                 InfluenceCoordPos
-            };
+            ];
 
-            Display2 = new() {
+            Display2 = [
                 InfluenceCoordBinderPosition,
                 InfluenceCoordUnstickiness,
                 InheritParentVelocity,
@@ -107,10 +107,12 @@ namespace VfxEditor.AvfxFormat {
                 ParameterLink,
                 StartFrame,
                 StartFrameNullUpdate,
-                new UiFloat3( "通过注射角度", ByInjectionAngleX, ByInjectionAngleY, ByInjectionAngleZ ),
+                ByInjectionAngleX,
+                ByInjectionAngleY,
+                ByInjectionAngleZ,
                 GenerateDelay,
                 GenerateDelayByOne
-            };
+            ];
         }
 
         public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );

@@ -3,6 +3,7 @@ using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Mesh;
+using VfxEditor.DirectX.Pap;
 using VfxEditor.DirectX.Renderers;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -13,14 +14,15 @@ namespace VfxEditor.DirectX {
 
         public readonly ModelPreview ModelPreview;
         public readonly GradientRenderer GradientView;
-        public readonly PapPreview PapPreview;
+        public readonly PapBonePreview PapPreview;
+        public readonly GradientRenderer PapMaterialPreview;
         public readonly BoneNamePreview PhybPreview;
         public readonly BoneNamePreview SklbPreview;
         public readonly BoneNamePreview EidPreview;
         public readonly MaterialPreview MaterialPreview;
         public readonly MeshPreview MeshPreview;
 
-        private readonly List<ModelRenderer> Renderers = new();
+        private readonly List<ModelRenderer> Renderers = [];
 
         public static Include IncludeHandler { get; private set; }
 
@@ -33,13 +35,14 @@ namespace VfxEditor.DirectX {
             ModelPreview = new( Device, Ctx, shaderPath );
             GradientView = new( Device, Ctx, shaderPath );
             PapPreview = new( Device, Ctx, shaderPath );
+            PapMaterialPreview = new( Device, Ctx, shaderPath );
             PhybPreview = new( Device, Ctx, shaderPath );
             SklbPreview = new( Device, Ctx, shaderPath );
             EidPreview = new( Device, Ctx, shaderPath );
             MaterialPreview = new( Device, Ctx, shaderPath );
             MeshPreview = new( Device, Ctx, shaderPath );
 
-            Renderers = new() {
+            Renderers = [
                 ModelPreview,
                 PapPreview,
                 PhybPreview,
@@ -47,7 +50,7 @@ namespace VfxEditor.DirectX {
                 EidPreview,
                 MaterialPreview,
                 MeshPreview,
-            };
+            ];
         }
 
         public void RedrawMaterials() {
@@ -59,6 +62,9 @@ namespace VfxEditor.DirectX {
         public void Dispose() {
             Renderers.ForEach( x => x.Dispose() );
             Renderers.Clear();
+
+            GradientView.Dispose();
+            PapMaterialPreview.Dispose();
 
             Device = null;
             Ctx = null;

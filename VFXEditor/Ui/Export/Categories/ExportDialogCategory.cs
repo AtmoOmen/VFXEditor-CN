@@ -11,7 +11,7 @@ namespace VfxEditor.Ui.Export.Categories {
         public readonly IFileManager Manager;
 
         private bool ExportAll = false;
-        private readonly Dictionary<IFileDocument, bool> ToExport = new();
+        private readonly Dictionary<IFileDocument, bool> ToExport = [];
 
         public ExportDialogCategory( IFileManager manager ) {
             Manager = manager;
@@ -28,7 +28,7 @@ namespace VfxEditor.Ui.Export.Categories {
             ImGui.SameLine();
             var selectedCount = GetItemsToExport().Count();
             var totalCount = Manager.GetDocuments().Where( x => x.CanExport() ).Count();
-            using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.YELLOW_COLOR, selectedCount > 0 );
+            using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.DALAMUD_ORANGE, selectedCount > 0 );
             if( ImGui.CollapsingHeader( $"{id} [{selectedCount}/{totalCount}]###{id}" ) ) {
                 color.Pop();
 

@@ -7,19 +7,19 @@
         public readonly AvfxCurve3Axis Position = new( "位置", "Pos" );
 
         public AvfxEffectorDataCameraQuake() : base() {
-            Parsed = new() {
+            Parsed = [
                 Attenuation,
                 RadiusOut,
                 RadiusIn,
                 Rotation,
                 Position
-            };
+            ];
 
-            DisplayTabs.Add( Attenuation );
-            DisplayTabs.Add( RadiusOut );
-            DisplayTabs.Add( RadiusIn );
-            DisplayTabs.Add( Rotation );
-            DisplayTabs.Add( Position );
+            Tabs.Add( Attenuation );
+            Tabs.Add( RadiusOut );
+            Tabs.Add( RadiusIn );
+            Tabs.Add( Rotation );
+            Tabs.Add( Position );
         }
     }
 }

@@ -14,10 +14,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private readonly ushort _BoneStartIndex;
         private readonly ushort _BoneCount;
 
-        public readonly List<ParsedString> Bones = new();
+        public readonly List<ParsedString> Bones = [];
         public readonly CommandListView<ParsedString> BoneView;
 
-        public readonly List<ParsedString> Attributes = new();
+        public readonly List<ParsedString> Attributes = [];
         public readonly CommandListView<ParsedString> AttributeView;
 
         public MdlSubMesh( BinaryReader reader ) : base( null ) {
@@ -36,7 +36,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             for( var i = 0; i < _BoneCount; i++ ) {
                 var bone = new ParsedString( "##Bone" ) {
-                    Value = data.BoneStrings[data.SubmeshBoneMap[_BoneStartIndex + i]],
+                    Value = ( ( _BoneStartIndex + i ) < data.SubmeshBoneMap.Count ) ?
+                        ( data.SubmeshBoneMap[_BoneStartIndex + i] < data.BoneStrings.Count ?
+                            data.BoneStrings[data.SubmeshBoneMap[_BoneStartIndex + i]] : "[ERROR]" ) : "[ERROR]"
                 };
                 Bones.Add( bone );
             }
@@ -44,7 +46,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             for( var i = 0; i < data.AttributeStrings.Count; i++ ) {
                 if( ( _AttributeIndexMask & ( 1u << i ) ) != 0 ) {
                     var attr = new ParsedString( "##Atribute" ) {
-                        Value = data.AttributeStrings[i]
+                        Value = ( i < data.AttributeStrings.Count ) ? data.AttributeStrings[i] : "[ERROR]"
                     };
                     Attributes.Add( attr );
                 }

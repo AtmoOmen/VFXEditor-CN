@@ -12,13 +12,13 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         }
 
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
-            loaded = new();
+            loaded = [];
             var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( path );
         }
 
         protected override void DrawSelected() {
-            DrawPaths( "路径", Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameNpc );
         }
     }
 }

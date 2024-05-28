@@ -1,7 +1,7 @@
 ﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEmitterDataModel : AvfxData {
+    public class AvfxEmitterDataModel : AvfxDataWithParameters {
         public readonly AvfxInt ModelIdx = new( "模型索引", "MdNo", value: -1 );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "旋转顺序", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "生成方法", "GeMT" );
@@ -12,10 +12,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionSpeedRandom = new( "随机注入速度", "IjSR" );
 
         public readonly AvfxNodeSelect<AvfxModel> ModelSelect;
-        public readonly UiDisplayList Display;
 
         public AvfxEmitterDataModel( AvfxEmitter emitter ) : base() {
-            Parsed = new() {
+            Parsed = [
                 ModelIdx,
                 RotationOrderType,
                 GenerateMethodType,
@@ -24,17 +23,17 @@ namespace VfxEditor.AvfxFormat {
                 AZ,
                 InjectionSpeed,
                 InjectionSpeedRandom
-            };
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( emitter, "模型", emitter.NodeGroups.Models, ModelIdx ) );
-            Display.Add( RotationOrderType );
-            Display.Add( GenerateMethodType );
-            DisplayTabs.Add( AX );
-            DisplayTabs.Add( AY );
-            DisplayTabs.Add( AZ );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( emitter, "模型", emitter.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( RotationOrderType );
+            ParameterTab.Add( GenerateMethodType );
+
+            Tabs.Add( AX );
+            Tabs.Add( AY );
+            Tabs.Add( AZ );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
         }
 
         public override void Enable() {

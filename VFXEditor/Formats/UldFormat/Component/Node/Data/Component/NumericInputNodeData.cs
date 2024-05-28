@@ -3,7 +3,7 @@
 namespace VfxEditor.UldFormat.Component.Node.Data.Component {
     public class NumericInputNodeData : UldNodeComponentData {
         public NumericInputNodeData() : base() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedInt( "值" ),
                 new ParsedInt( "最大值" ),
                 new ParsedInt( "最小值" ),
@@ -11,7 +11,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
                 new ParsedUInt( "未知 1" ),
                 new ParsedByteBool( "逗号" ),
                 new ParsedReserve( 3 ),
-            } );
+            ] );
         }
     }
 }

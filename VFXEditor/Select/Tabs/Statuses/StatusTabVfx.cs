@@ -1,9 +1,10 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Statuses {
     public class StatusTabVfx : SelectTab<StatusRow> {
-        public StatusTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Status-Vfx", SelectResultType.GameStatus ) { }
+        public StatusTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Status-Vfx" ) { }
 
         // ===== LOADING =====
 
@@ -18,13 +19,15 @@ namespace VfxEditor.Select.Tabs.Statuses {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-            DrawPath( "命中", Selected.HitPath, $"{Selected.Name} Hit" );
-            DrawPath( "循环 1", Selected.LoopPath1, $"{Selected.Name} Loop 1" );
-            DrawPath( "循环 2", Selected.LoopPath2, $"{Selected.Name} Loop 2" );
-            DrawPath( "循环 3", Selected.LoopPath3, $"{Selected.Name} Loop 3" );
-        }
+            var paths = new Dictionary<string, string>() {
+                { "受击", Selected.HitPath },
+            };
 
-        protected override string GetName( StatusRow item ) => item.Name;
+            foreach( var (path, idx) in Selected.LoopPaths.WithIndex() ) {
+                paths[$"Loop {idx + 1}"] = path;
+            }
+
+            Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );
+        }
     }
 }

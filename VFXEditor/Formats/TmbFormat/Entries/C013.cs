@@ -14,20 +14,20 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int ExtraSize => 0;
         public override DangerLevel Danger => DangerLevel.Yellow;
 
-        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedInt Duration = new( "持续时间" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt Unk3 = new( "未知 3" );
+        private readonly ParsedInt TmfcId = new( "F 曲线 ID" );
         private readonly ParsedInt Unk4 = new( "未知 4" );
 
         public C013( TmbFile file ) : base( file ) { }
 
         public C013( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
-            Unk1,
+        protected override List<ParsedBase> GetParsed() => [
+            Duration,
             Unk2,
-            Unk3,
+            TmfcId,
             Unk4
-        };
+        ];
     }
 }

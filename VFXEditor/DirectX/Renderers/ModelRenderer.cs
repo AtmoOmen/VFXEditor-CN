@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using ImGuiNET;
 using SharpDX;
@@ -82,11 +82,11 @@ namespace VfxEditor.DirectX.Renderers {
             // ======= CUBE ==========
 
             Cube = new( 3, false,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
-                } );
+                ] );
             Cube.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Cube.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, false );
@@ -259,8 +259,6 @@ namespace VfxEditor.DirectX.Renderers {
 
             // ======= PASSES ======
 
-            // TODO: make this always on top (depth stuff)
-
             Ctx.OutputMerger.SetDepthStencilState( StencilState );
             Ctx.OutputMerger.SetTargets( StencilView, RenderTarget );
 
@@ -309,6 +307,12 @@ namespace VfxEditor.DirectX.Renderers {
 
             var topRight = pos + new Vec2( LastSize.X - 5, 5 );
 
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( DrawButton( FontAwesomeIcon.Cog.ToIconString(), new Vec2( 25, 25 ), topRight - new Vec2( 25, 0 ) ) ) ImGui.OpenPopup( "Popup" );
+            }
+
+            topRight += new Vec2( -30, 0 );
+
             if( DrawButton( "重置", new Vec2( 43, 25 ), topRight - new Vec2( 43, 0 ) ) ) {
                 LastMousePos = default;
                 Yaw = default;
@@ -316,6 +320,13 @@ namespace VfxEditor.DirectX.Renderers {
                 EyePosition = new( 0, 0, 0 );
                 Distance = 5;
                 UpdateViewMatrix();
+            }
+
+            using( var popup = ImRaii.Popup( "Popup" ) ) {
+                if( popup ) {
+                    Plugin.Configuration.DrawDirectXCommon();
+                    DrawPopup();
+                }
             }
 
             // ================
@@ -332,6 +343,8 @@ namespace VfxEditor.DirectX.Renderers {
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
         }
+
+        protected abstract void DrawPopup();
 
         public override void Dispose() {
             RasterizeState?.Dispose();
@@ -351,11 +364,11 @@ namespace VfxEditor.DirectX.Renderers {
             Cube?.Dispose();
         }
 
-        private static bool DrawButton( string text, Vec2 size, Vec2 pos ) {
+        private static bool DrawButton( string text, Vec2 size, Vec2 topLeft ) {
             var drawList = ImGui.GetWindowDrawList();
-            var hovered = UiUtils.MouseOver( pos, pos + size );
-            drawList.AddRectFilled( pos, pos + size, ImGui.GetColorU32( hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
-            drawList.AddText( pos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), text );
+            var hovered = UiUtils.MouseOver( topLeft, topLeft + size );
+            drawList.AddRectFilled( topLeft, topLeft + size, ImGui.GetColorU32( hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
+            drawList.AddText( topLeft + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), text );
             if( hovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) return true;
             return false;
         }
@@ -432,7 +445,7 @@ namespace VfxEditor.DirectX.Renderers {
             }
 
             indexCount = mesh.Indices.Count;
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

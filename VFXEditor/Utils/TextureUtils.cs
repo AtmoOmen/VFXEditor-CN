@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using VfxEditor.Formats.TextureFormat;
 
 namespace VfxEditor.Utils {
@@ -14,8 +13,8 @@ namespace VfxEditor.Utils {
                 Width = ( ushort )width,
                 Height = ( ushort )height,
                 Depth = 1,
-                MipLevels = ( ushort )mipLevels,
-                LodOffset = new uint[] { 0, 1, 2 },
+                MipLevelsCount = ( byte )mipLevels,
+                LodOffset = [0, 1, 2],
                 OffsetToSurface = new uint[13]
             };
             Array.Clear( header.OffsetToSurface, 0, 13 );
@@ -46,133 +45,6 @@ namespace VfxEditor.Utils {
             return buffer;
         }
 
-        // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
-
-        public static byte[] CreateDdsHeader( uint width, uint height, TextureFormat format, uint depth, uint mipLevels ) {
-            using var ms = new MemoryStream();
-            using var writer = new BinaryWriter( ms );
-
-            writer.Write( 0x20534444u ); // Magic
-            writer.Write( 124u ); // Header size
-            writer.Write( depth > 1 ? 0x00000004u : 528391u ); // flags
-            writer.Write( height );
-            writer.Write( width );
-
-            var mipSize = format switch {
-                TextureFormat.A8R8G8B8 => ( height * width ) * 4,
-                TextureFormat.DXT1 => ( height * width ) / 2,
-                TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => ( height * width ) * 2,
-                _ => height * width
-            };
-
-            writer.Write( mipSize );
-            writer.Write( 0u );
-            writer.Write( mipLevels );
-            writer.Write( new byte[44] );
-            writer.Write( 32u );
-
-            var pfFlags = format switch {
-                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => 65,
-                TextureFormat.A8 => 2,
-                _ => 4,
-            };
-            writer.Write( pfFlags );
-
-            uint magic;
-            switch( format ) {
-                case TextureFormat.DXT1:
-                    magic = 0x31545844;
-                    break;
-                case TextureFormat.DXT3:
-                    magic = 0x33545844;
-                    break;
-                case TextureFormat.DXT5:
-                    magic = 0x35545844;
-                    break;
-                case TextureFormat.A8R8G8B8:
-                case TextureFormat.R4G4B4A4:
-                case TextureFormat.R5G5B5A1:
-                case TextureFormat.A8:
-                    magic = 0;
-                    break;
-                default:
-                    return null;
-            }
-
-            if( depth > 1 ) {
-                magic = BitConverter.ToUInt32( Encoding.UTF8.GetBytes( "DX10" ), 0 );
-            }
-
-            writer.Write( magic );
-
-            switch( format ) {
-                case TextureFormat.A8R8G8B8: {
-                        writer.Write( 32u ); // Number of rbg (+a) bits
-                        writer.Write( 16711680u ); // Red mask
-                        writer.Write( 65280u ); // Green mask
-                        writer.Write( 255u ); // Blue mask
-                        writer.Write( 4278190080u ); // Alpha mask
-                        writer.Write( 4096u ); // Complexity
-                        writer.Write( new byte[16] );
-                        break;
-                    }
-                case TextureFormat.R4G4B4A4: {
-                        writer.Write( 16u );
-                        writer.Write( 3840u );
-                        writer.Write( 240u );
-                        writer.Write( 15u );
-                        writer.Write( 61440u );
-                        writer.Write( 4096u );
-                        writer.Write( new byte[16] );
-                        break;
-                    }
-                case TextureFormat.R5G5B5A1: {
-                        writer.Write( 16u );
-                        writer.Write( 31744u );
-                        writer.Write( 992u );
-                        writer.Write( 31u );
-                        writer.Write( 32768u );
-                        writer.Write( 4096u );
-                        writer.Write( new byte[16] );
-                        break;
-                    }
-                case TextureFormat.A8: {
-                        writer.Write( 8u );
-                        writer.Write( 0u );
-                        writer.Write( 0u );
-                        writer.Write( 0u );
-                        writer.Write( 255u );
-                        writer.Write( 4096u );
-                        writer.Write( new byte[16] );
-                        break;
-                    }
-                default: {
-                        writer.Write( new byte[40] );
-                        break;
-                    }
-            }
-
-            if( depth > 1 ) {
-                var dxgiFormat = format switch {
-                    TextureFormat.DXT1 => DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM,
-                    TextureFormat.DXT5 => DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM,
-                    _ => DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM
-                };
-                writer.Write( ( uint )dxgiFormat );
-
-                // D3D10_RESOURCE_DIMENSION resourceDimension
-                writer.Write( 3 );
-                // UINT miscFlag
-                writer.Write( 0 );
-                // UINT arraySize
-                writer.Write( depth );
-                // UINT miscFlags2
-                writer.Write( 0 );
-            }
-
-            return ms.ToArray();
-        }
-
         public static int GetMipSize( TextureFormat format, int width, int height ) => format switch {
             TextureFormat.DXT1 => ( width * height ) / 2,
             TextureFormat.DXT5 or TextureFormat.A8 => width * height,
@@ -186,8 +58,8 @@ namespace VfxEditor.Utils {
             using var compressedMs = new MemoryStream();
             using var writer = new BinaryWriter( compressedMs );
 
-            mipPartOffsets = new();
-            mipPartCounts = new();
+            mipPartOffsets = [];
+            mipPartCounts = [];
 
             var mipLength = GetMipSize( format, width, height );
 

@@ -1,5 +1,7 @@
-﻿namespace VfxEditor.Select.Tabs.Job {
-    public class JobRow {
+using VfxEditor.Select.Base;
+
+namespace VfxEditor.Select.Tabs.Job {
+    public class JobRow : ISelectItem {
         public readonly string Name;
         public readonly string Id;
 
@@ -7,5 +9,7 @@
             Name = name;
             Id = id;
         }
+
+        public string GetName() => Name;
     }
 }

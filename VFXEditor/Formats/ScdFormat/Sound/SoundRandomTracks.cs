@@ -9,7 +9,7 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public class SoundRandomTracks {
-        public readonly List<RandomTrackInfo> Entries = new();
+        public readonly List<RandomTrackInfo> Entries = [];
         private readonly CommandTable<RandomTrackInfo> EntryTable;
 
         public readonly ParsedInt CycleInterval = new( "循环间隔" );
@@ -17,11 +17,11 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedShort CycleRange = new( "循环范围" );
 
         public SoundRandomTracks() {
-            EntryTable = new( "Entries", true, false, Entries, new() {
-                ( "轨道序列", ImGuiTableColumnFlags.None, -1 ),
-                ( "音频序列", ImGuiTableColumnFlags.None, -1 ),
-                ( "Limit", ImGuiTableColumnFlags.None, -1 ),
-            },
+            EntryTable = new( "条目", true, false, Entries, [
+                ( "轨道索引", ImGuiTableColumnFlags.None, -1 ),
+                ( "音频索引", ImGuiTableColumnFlags.None, -1 ),
+                ( "限制", ImGuiTableColumnFlags.None, -1 ),
+            ],
             () => new() );
         }
 

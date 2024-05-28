@@ -10,27 +10,27 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxInt ItemCount = new( "物体数", "ItCn" );
         public readonly AvfxInt TriggerCount = new( "触发器数", "TrCn" );
-        public readonly List<AvfxSchedulerItem> Items = new();
-        public readonly List<AvfxSchedulerItem> Triggers = new();
+        public readonly List<AvfxSchedulerItem> Items = [];
+        public readonly List<AvfxSchedulerItem> Triggers = [];
         public readonly List<AvfxBase> Parsed;
         public readonly AvfxNodeGroupSet NodeGroups;
 
         private readonly CommandTable<AvfxSchedulerItem> ItemTable;
         private readonly CommandTable<AvfxSchedulerItem> TriggerTable;
 
-        private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = new() {
+        private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = [
             ( "时间线", ImGuiTableColumnFlags.None, -1 ),
             ( "启用", ImGuiTableColumnFlags.None, -1 ),
             ( "开始时间", ImGuiTableColumnFlags.None, -1 )
-        };
+        ];
 
         public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
-            Parsed = new() {
+            Parsed = [
                 ItemCount,
                 TriggerCount
-            };
+            ];
 
             ItemTable = new( "ItEm", true, true, Items, Columns, () => new( this, "Item", true ),
             ( AvfxSchedulerItem item, bool add ) => {

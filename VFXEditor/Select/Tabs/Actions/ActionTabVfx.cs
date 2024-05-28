@@ -1,13 +1,14 @@
 ﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabVfx : SelectTab<ActionRowVfx, ParsedPaths> {
         public ActionTabVfx( SelectDialog dialog, string name ) : this( dialog, name, "Action-Vfx" ) { }
 
-        public ActionTabVfx( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
+        public ActionTabVfx( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 
@@ -15,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             var sheet = Dalamud.DataManager.GetExcelSheet<Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
-                var action = new ActionRowVfx( item, false );
+                var action = new ActionRowVfx( item );
                 Items.Add( action );
                 if( action.HitAction != null ) Items.Add( action.HitAction );
             }
@@ -33,7 +34,6 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
                 using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
                     SelectUiUtils.Copy( Loaded.OriginalPath );
@@ -45,13 +45,12 @@ namespace VfxEditor.Select.Tabs.Actions {
                 SelectUiUtils.DisplayPath( Loaded.OriginalPath );
             }
 
-            DrawPath( "咏唱", Selected.CastVfxPath, $"{Selected.Name} Cast" );
-            DrawPath( "开始", Selected.StartVfxPath, $"{Selected.Name} Start" );
-            if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                DrawPaths( "视效", Loaded.Paths, Selected.Name );
-            }
-        }
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-        protected override string GetName( ActionRowVfx item ) => item.Name;
+            Dialog.DrawPaths( new Dictionary<string, string>() {
+                { "咏唱", Selected.CastVfxPath },
+                { "开始", Selected.StartVfxPath }
+            }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name, SelectResultType.GameAction );
+        }
     }
 }

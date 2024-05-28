@@ -1,14 +1,11 @@
-﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxCurve3Axis : AvfxOptional {
-        public readonly string Name;
-        public readonly bool Locked;
-
+    public class AvfxCurve3Axis : AvfxCurveBase {
         public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "轴连接", "ACT" );
         public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "随机轴连接", "ACTR" );
         public readonly AvfxCurve X;
@@ -19,11 +16,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve RZ;
 
         private readonly List<AvfxBase> Parsed;
-        private readonly List<AvfxCurve> Curves;
+        private readonly List<AvfxCurveBase> Curves;
 
-        public AvfxCurve3Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
-            Name = name;
-            Locked = locked;
+        public AvfxCurve3Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( name, avfxName, locked ) {
             X = new( "X", "X", type );
             Y = new( "Y", "Y", type );
             Z = new( "Z", "Z", type );
@@ -31,7 +26,7 @@ namespace VfxEditor.AvfxFormat {
             RY = new( "随机 Y", "YR", type );
             RZ = new( "随机 Z", "ZR", type );
 
-            Parsed = new() {
+            Parsed = [
                 AxisConnectType,
                 AxisConnectRandomType,
                 X,
@@ -40,16 +35,16 @@ namespace VfxEditor.AvfxFormat {
                 RX,
                 RY,
                 RZ
-            };
+            ];
 
-            Curves = new() {
+            Curves = [
                 X,
                 Y,
                 Z,
                 RX,
                 RY,
                 RZ
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
@@ -60,28 +55,12 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            DrawAssignButton( Name, true );
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            if( !Locked && DrawUnassignButton( Name ) ) return;
-
-            AvfxCurve.DrawUnassignedCurves( Curves );
-
+        protected override void DrawBody() {
+            DrawUnassignedCurves( Curves );
             AxisConnectType.Draw();
             AxisConnectRandomType.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            AvfxCurve.DrawAssignedCurves( Curves );
+            DrawAssignedCurves( Curves );
         }
-
-        public override string GetDefaultText() => Name;
     }
 }

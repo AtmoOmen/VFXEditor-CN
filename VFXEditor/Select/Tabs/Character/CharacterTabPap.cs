@@ -1,6 +1,7 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedPap {
@@ -10,7 +11,7 @@ namespace VfxEditor.Select.Tabs.Character {
         // Pose # -> Start, Loop
         public Dictionary<string, Dictionary<string, string>> Poses;
 
-        public Dictionary<string, string> FacePaths;
+        public List<(string, uint, string)> FacePaths;
 
         public string GroundStart;
         public string Jmn;
@@ -18,14 +19,13 @@ namespace VfxEditor.Select.Tabs.Character {
     }
 
     public class CharacterTabPap : SelectTab<CharacterRow, SelectedPap> {
-        public CharacterTabPap( SelectDialog dialog, string name ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) { }
+        public CharacterTabPap( SelectDialog dialog, string name ) : base( dialog, name, "Character" ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() => CharacterTab.Load( Items );
 
         public override void LoadSelection( CharacterRow item, out SelectedPap loaded ) {
-            // General
             var general = new Dictionary<string, string>();
             var idlePath = item.GetPap( "resident/idle" );
             var movePathA = item.GetPap( "resident/move_a" );
@@ -33,8 +33,6 @@ namespace VfxEditor.Select.Tabs.Character {
             if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "闲置动作", idlePath );
             if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "移动动作 A", movePathA );
             if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "移动动作 B", movePathB );
-
-            // ===== STAND =======
 
             var poses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
@@ -47,8 +45,6 @@ namespace VfxEditor.Select.Tabs.Character {
                     } );
                 }
             }
-
-            // ======= SIT ========
 
             var sitPoses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
@@ -65,18 +61,17 @@ namespace VfxEditor.Select.Tabs.Character {
             var jmn = item.GetPap( "emote/jmn" );
             var groundStart = item.GetPap( "event_base/event_base_ground_start" );
 
-            // ====== FACES ========
-
-            var facePaths = new Dictionary<string, string>();
-            foreach( var face in item.Data.FaceOptions ) {
-                facePaths[$"面部 {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
-            }
+            var facePaths = item.Data.FaceOptions
+                .Select( id => (id, $"chara/human/{item.SkeletonId}/animation/f{id:D4}/resident/face.pap") )
+                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                .Select( x => ($"面部 {x.id}", item.Data.FaceToIcon.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+                .ToList();
 
             loaded = new SelectedPap {
                 General = general,
                 Poses = poses,
                 SitPoses = sitPoses,
-                FacePaths = SelectDataUtils.FileExistsFilter( facePaths ),
+                FacePaths = facePaths,
                 Jmn = Dalamud.DataManager.FileExists( jmn ) ? jmn : null,
                 GroundStart = Dalamud.DataManager.FileExists( groundStart ) ? groundStart : null,
             };
@@ -89,25 +84,28 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "一般" ) ) {
-                DrawPaths( Loaded.General, Selected.Name );
+                Dialog.DrawPaths( Loaded.General, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "姿势" ) ) {
-                DrawPaths( Loaded.Poses, Selected.Name );
+                Dialog.DrawPaths( Loaded.Poses, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Ground Sit" ) ) {
-                DrawPath( "Ground Start", Loaded.GroundStart, Selected.Name );
-                DrawPath( "Jmn", Loaded.Jmn, Selected.Name );
-                DrawPaths( Loaded.SitPoses, Selected.Name );
+            if( ImGui.BeginTabItem( "坐姿" ) ) {
+                Dialog.DrawPaths( new Dictionary<string, string>() {
+                    { "开始坐下", Loaded.GroundStart },
+                    { "Jmn", Loaded.Jmn },
+                }, Selected.Name, SelectResultType.GameCharacter );
+
+                ImGui.Separator();
+                Dialog.DrawPaths( Loaded.SitPoses, Selected.Name, SelectResultType.GameCharacter );
+
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Faces" ) ) {
-                DrawPaths( Loaded.FacePaths, Selected.Name );
+            if( ImGui.BeginTabItem( "面部" ) ) {
+                Dialog.DrawPaths( Loaded.FacePaths, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
         }
-
-        protected override string GetName( CharacterRow item ) => item.Name;
     }
 }

@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser {
@@ -8,7 +8,7 @@ namespace VfxEditor.FileBrowser {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ImGui.GetStyle().ItemSpacing.Y );
             ImGui.Separator();
 
-            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 100 - ( Filters.Filters.Count == 0 ? 0 : 150 ) );
+            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 100 - ( Filters.Filters.Count == 0 ? 0 : 200 ) );
             using( var disabled = ImRaii.Disabled( SelectOnly ) ) {
                 ImGui.InputText( "##FileName", ref FileNameInput, 255, SelectOnly ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None );
             }
@@ -19,7 +19,7 @@ namespace VfxEditor.FileBrowser {
 
             using( var disabled = ImRaii.Disabled( string.IsNullOrEmpty( FileNameInput ) || ( SelectOnly && Selected == null ) ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( "OK" ) ) {
+                if( ImGui.Button( "确认" ) ) {
                     IsOk = true;
                     res = true;
                 }

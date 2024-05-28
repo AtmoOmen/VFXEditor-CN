@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,19 +48,17 @@ namespace VfxEditor.UldFormat.Component {
         public readonly ParsedDataEnum<ComponentType, UldGenericData> Type;
         public UldGenericData Data;
 
-        public readonly List<UldNode> Nodes = new();
+        public readonly List<UldNode> Nodes = [];
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
-        public UldComponent( List<UldComponent> components ) {
+        public UldComponent( uint id, List<UldComponent> components ) : base( id ) {
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ) );
-
-            Id.Value = 1001; // default
+                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
         }
 
-        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -82,7 +80,7 @@ namespace VfxEditor.UldFormat.Component {
 
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, NodeSplitView ) );
         }
 
         public void Write( BinaryWriter writer ) {

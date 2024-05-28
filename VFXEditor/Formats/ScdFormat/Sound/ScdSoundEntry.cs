@@ -51,7 +51,7 @@ namespace VfxEditor.ScdFormat {
     public class ScdSoundEntry : ScdEntry, IUiItem {
         public readonly ParsedByte BusNumber = new( "总线编号" );
         public readonly ParsedByte Priority = new( "优先级" );
-        public readonly ParsedEnum<SoundType> Type = new( "Type", size: 1 );
+        public readonly ParsedEnum<SoundType> Type = new( "类型", size: 1 );
         public readonly ParsedFlag<SoundAttribute> Attributes = new( "属性" );
         public readonly ParsedFloat Volume = new( "音量" );
         public readonly ParsedShort LocalNumber = new( "本地编号" ); // TODO: ushort
@@ -63,7 +63,7 @@ namespace VfxEditor.ScdFormat {
         public SoundAcceleration Acceleration = new();
         public SoundAtomos Atomos = new();
         public SoundExtra Extra = new();
-        public SoundUnknown Unknown = new();
+        public SoundBypass BypassPLIIz = new();
         public SoundRandomTracks RandomTracks = new(); // Includes Cycle
         public SoundTracks Tracks = new();
 
@@ -72,7 +72,7 @@ namespace VfxEditor.ScdFormat {
         private bool AccelerationEnabled => Attributes.Value.HasFlag( SoundAttribute.Acceleration );
         private bool AtomosEnabled => Attributes.Value.HasFlag( SoundAttribute.Atomosgear );
         private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.Extra_Desc );
-        private bool UnknownEnabled => Attributes.Value.HasFlag( SoundAttribute.Fixed_Volume ) || Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
+        private bool BypassEnabled => Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
 
         public readonly ScdLayoutEntry Layout;
@@ -99,7 +99,7 @@ namespace VfxEditor.ScdFormat {
             if( AccelerationEnabled ) Acceleration.Read( reader );
             if( AtomosEnabled ) Atomos.Read( reader );
             if( ExtraEnabled ) Extra.Read( reader );
-            if( UnknownEnabled ) Unknown.Read( reader );
+            if( BypassEnabled ) BypassPLIIz.Read( reader );
 
             if( RandomTracksEnabled ) RandomTracks.Read( reader, Type.Value, trackCount );
             else Tracks.Read( reader, trackCount );
@@ -121,7 +121,7 @@ namespace VfxEditor.ScdFormat {
             if( AccelerationEnabled ) Acceleration.Write( writer );
             if( AtomosEnabled ) Atomos.Write( writer );
             if( ExtraEnabled ) Extra.Write( writer );
-            if( UnknownEnabled ) Unknown.Write( writer );
+            if( BypassEnabled ) BypassPLIIz.Write( writer );
 
             if( RandomTracksEnabled ) RandomTracks.Write( writer, Type.Value );
             else Tracks.Write( writer );
@@ -132,53 +132,68 @@ namespace VfxEditor.ScdFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var _ = ImRaii.PushId( "Sound" );
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Entries" ) ) {
+            if( ImGui.BeginTabItem( "条目" ) ) {
                 if( RandomTracksEnabled ) RandomTracks.Draw( Type.Value );
                 else Tracks.Draw();
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "参数" ) ) {
-                using var child = ImRaii.Child( "Child" );
-                Attributes.Draw();
-                BusNumber.Draw();
-                Priority.Draw();
-                Type.Draw();
-                LocalNumber.Draw();
-                UserId.Draw();
-                PlayHistory.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Attributes.Draw();
+                    BusNumber.Draw();
+                    Priority.Draw();
+                    Type.Draw();
+                    LocalNumber.Draw();
+                    UserId.Draw();
+                    PlayHistory.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Layout" ) ) {
-                using var _ = ImRaii.PushId( "Layout" );
-                using var child = ImRaii.Child( "Child" );
-                Layout.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Layout.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( RoutingEnabled && ImGui.BeginTabItem( "路由" ) ) {
-                RoutingInfo.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    RoutingInfo.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( BusDuckingEnabled && ImGui.BeginTabItem( "总线下降" ) ) {
-                BusDucking.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    BusDucking.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( AccelerationEnabled && ImGui.BeginTabItem( "加速" ) ) {
-                Acceleration.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Acceleration.Draw();
+                }
                 ImGui.EndTabItem();
             }
-            if( AtomosEnabled && ImGui.BeginTabItem( "Atomos" ) ) {
-                Atomos.Draw();
+            if( AtomosEnabled && ImGui.BeginTabItem( "原子" ) ) {
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Atomos.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( ExtraEnabled && ImGui.BeginTabItem( "额外" ) ) {
-                Extra.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Extra.Draw();
+                }
                 ImGui.EndTabItem();
             }
-            if( UnknownEnabled && ImGui.BeginTabItem( "未知" ) ) {
-                Unknown.Draw();
+            if( BypassEnabled && ImGui.BeginTabItem( "经过 PLIIz" ) ) {
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    BypassPLIIz.Draw();
+                }
                 ImGui.EndTabItem();
             }
         }

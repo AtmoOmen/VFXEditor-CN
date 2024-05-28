@@ -3,11 +3,11 @@
         public readonly AvfxCurve CarryOverFactor = new( "传递因子", "COF" );
 
         public AvfxBinderDataUnknown4() : base() {
-            Parsed = new() {
+            Parsed = [
                 CarryOverFactor
-            };
+            ];
 
-            DisplayTabs.Add( CarryOverFactor );
+            Tabs.Add( CarryOverFactor );
         }
     }
 }

@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Tabs.Job {
     }
 
     public class JobTab : SelectTab<JobRow, SelectedJob> {
-        public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job", SelectResultType.GameJob ) { }
+        public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job" ) { }
 
         public override void LoadData() {
             foreach( var item in SelectDataUtils.JobAnimationIds ) Items.Add( new JobRow( item.Key, item.Value ) );
@@ -43,7 +43,7 @@ namespace VfxEditor.Select.Tabs.Job {
                 if( Dalamud.DataManager.FileExists( idlePath ) ) raceGeneral.Add( "闲置动作", idlePath );
                 if( Dalamud.DataManager.FileExists( movePathA ) ) raceGeneral.Add( "移动动作 A", movePathA );
                 if( Dalamud.DataManager.FileExists( movePathB ) ) raceGeneral.Add( "移动动作 B", movePathB );
-                if( Dalamud.DataManager.FileExists( drawPath ) ) raceGeneral.Add( "Draw Weapon", drawPath );
+                if( Dalamud.DataManager.FileExists( drawPath ) ) raceGeneral.Add( "绘制武器", drawPath );
                 general.Add( race.Name, raceGeneral );
 
                 // Pose
@@ -89,19 +89,17 @@ namespace VfxEditor.Select.Tabs.Job {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "一般" ) ) {
-                DrawPaths( Loaded.General, Selected.Name );
+                Dialog.DrawPaths( Loaded.General, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "姿势" ) ) {
-                DrawPaths( Loaded.Poses, Selected.Name );
+                Dialog.DrawPaths( Loaded.Poses, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "自动攻击" ) ) {
-                DrawPaths( Loaded.AutoAttack, Selected.Name );
+                Dialog.DrawPaths( Loaded.AutoAttack, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
         }
-
-        protected override string GetName( JobRow item ) => item.Name;
     }
 }

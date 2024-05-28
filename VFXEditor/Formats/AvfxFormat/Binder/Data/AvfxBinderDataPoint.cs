@@ -3,11 +3,11 @@
         public readonly AvfxCurve SpringStrength = new( "弹簧强度", "SpS" );
 
         public AvfxBinderDataPoint() : base() {
-            Parsed = new() {
+            Parsed = [
                 SpringStrength
-            };
+            ];
 
-            DisplayTabs.Add( SpringStrength );
+            Tabs.Add( SpringStrength );
         }
     }
 }

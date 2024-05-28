@@ -3,7 +3,7 @@
         public CharacterTabAtch( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected() {
-            DrawPath( "路径", Selected.AtchPath, Selected.Name );
+            Dialog.DrawPaths( Selected.AtchPath, Selected.Name, SelectResultType.GameCharacter );
         }
     }
 }

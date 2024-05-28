@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
@@ -6,11 +7,11 @@ using VfxEditor.Parsing;
 namespace VfxEditor.ScdFormat {
     [Flags]
     public enum ConditionType1st {
-        Attr = 0x01,
+        Attribute = 0x01,
         Label = 0x02,
         Equal = 0x04,
         Bank = 0x08,
-        ExternalId1st = 0x10,
+        External_Id_First = 0x10,
         Unknown = 0x40
     }
 
@@ -27,8 +28,9 @@ namespace VfxEditor.ScdFormat {
         LT = 0x20,
         LE = 0x30,
         EQ = 0x40,
+        Unknown = 0x42, // A float or something?
         NE = 0x50,
-        CondMask = 0xF0
+        CondMask = 0xF0,
     }
 
     public enum JoinType {
@@ -37,12 +39,18 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class AttributeExtendData {
-        public readonly ParsedEnum<ConditionType1st> FirstCondition = new( "第一条件", size: 1 );
+        public readonly ParsedFlag<ConditionType1st> FirstCondition = new( "第一条件", size: 1 );
         public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "第二条件", size: 1 );
         public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "连接类型", size: 1 );
         public readonly ParsedByte NumberOfConditions = new( "情况数" );
-        public readonly ParsedInt SelfArgument = new( "自引用参数" );
-        public readonly ParsedInt TargetArgument = new( "目标参数" );
+
+        public readonly ParsedInt SelfArgument = new( "自身参数" );
+        // idk what's up with this
+        public ParsedBase TargetArgument => SecondCondition.Value == ConditionType2nd.Unknown ? TargetArgument_Float : TargetArgument_Int;
+
+        public readonly ParsedInt TargetArgument_Int = new( "目标参数" );
+        public readonly ParsedFloat TargetArgument_Float = new( "目标参数" );
+
 
         public readonly AttributeResultCommand Result = new();
 
@@ -71,7 +79,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            FirstCondition.Draw();
+            FirstCondition.DrawWithIndent();
             SecondCondition.Draw();
             JoinTypeSelect.Draw();
             NumberOfConditions.Draw();
@@ -79,6 +87,7 @@ namespace VfxEditor.ScdFormat {
             TargetArgument.Draw();
 
             using var _ = ImRaii.PushId( "Result" );
+            ImGui.Separator();
             Result.Draw();
         }
     }

@@ -7,10 +7,9 @@ namespace VfxEditor.Select.Tabs.Emotes {
         public override void LoadSelection( EmoteRow item, out ParsedPaths loaded ) => ParsedPaths.ReadFile( item.VfxPapFiles, SelectDataUtils.AvfxRegex, out loaded );
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             ImGui.TextDisabled( Selected.Command );
 
-            DrawPaths( "视效", Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameEmote );
         }
     }
 }

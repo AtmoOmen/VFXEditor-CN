@@ -26,6 +26,9 @@ cbuffer PSMaterialConstants : register(b1)
     float3 EyePosition;
     LightData Light1;
     LightData Light2;
+    
+    float4x4 InvViewMatrix;
+    float4x4 InvProjectionMatrix;
 }
 
 float attenuation(float r, float f, float d)
@@ -60,6 +63,7 @@ float3 computeDiffuse(LightData light, float3 worldPos, float3 N)
 
 float3 computeSpecular(LightData light, float3 worldPos, float3 N)
 {
+    /*
     float3 L = light.Position - worldPos;
     float distance = length(L);
     L = L / distance;
@@ -72,11 +76,20 @@ float3 computeSpecular(LightData light, float3 worldPos, float3 N)
     float3 H = normalize(L + V);
     float NdotH = max(0, dot(N, H));
     
-    float specular = pow(RdotV, SpecularIntensity * 10) * SpecularPower * att;
-    if (specular < 0)
-    {
-        specular = 0;
-    }
+    float specular = pow(RdotV, SpecularPower * 10) * SpecularIntensity * att;
+    */
     
-    return light.Color * specular;
+    float3 L = light.Position - worldPos;
+    L = normalize(L);
+    float NdotL = dot(N, L);
+    float3 R = reflect(-L, N);
+
+    if (NdotL > 0)
+    {
+        float3 V = EyePosition - worldPos;
+        V = normalize(V);
+        float RdotV = dot(R, V);
+        return light.Color * pow(max(0.0f, RdotV), SpecularPower * 10) * SpecularIntensity;
+    }
+    return 0;
 }

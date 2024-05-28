@@ -1,13 +1,10 @@
-﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxCurveColor : AvfxOptional {
-        public readonly string Name;
-        public readonly bool Locked;
-
+    public class AvfxCurveColor : AvfxCurveBase {
         public readonly AvfxCurve RGB = new( "RGB", "RGB", type: CurveType.Color );
         public readonly AvfxCurve A = new( "A", "A" );
         public readonly AvfxCurve SclR = new( "红", "SclR" );
@@ -21,13 +18,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve RanA = new( "随机透明度", "RanA" );
         public readonly AvfxCurve RBri = new( "随机亮度", "RBri" );
 
-        private readonly List<AvfxCurve> Curves;
+        private readonly List<AvfxCurveBase> Curves;
 
-        public AvfxCurveColor( string name, string avfxName = "Col", bool locked = false ) : base( avfxName ) {
-            Name = name;
-            Locked = locked;
-
-            Curves = new() {
+        public AvfxCurveColor( string name, string avfxName = "Col", bool locked = false ) : base( name, avfxName, locked ) {
+            Curves = [
                 RGB,
                 A,
                 SclR,
@@ -40,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
                 RanB,
                 RanA,
                 RBri
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Curves, size );
@@ -51,26 +45,10 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Curves ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            DrawAssignButton( Name, true );
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            if( !Locked && DrawUnassignButton( Name ) ) return;
-
-            AvfxCurve.DrawUnassignedCurves( Curves );
-
+        protected override void DrawBody() {
+            DrawUnassignedCurves( Curves );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            AvfxCurve.DrawAssignedCurves( Curves );
+            DrawAssignedCurves( Curves );
         }
-
-        public override string GetDefaultText() => Name;
     }
 }

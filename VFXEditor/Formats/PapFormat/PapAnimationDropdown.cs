@@ -3,7 +3,6 @@ using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public unsafe class PapAnimationDropdown : Dropdown<PapAnimation> {
@@ -13,12 +12,12 @@ namespace VfxEditor.PapFormat {
             File = file;
         }
 
-        protected override string GetText( PapAnimation item, int idx ) => item.GetName();
+        public override string GetText( PapAnimation item, int idx ) => item.GetName();
 
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 
         private void OnNew() {
-            FileBrowserManager.OpenFileDialog( "选择文件", ".hkx,.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "动画{.hkx,.pap}", ( bool ok, string res ) => {
                 if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
             } );
         }
@@ -26,7 +25,7 @@ namespace VfxEditor.PapFormat {
         private void OnDelete( PapAnimation item ) {
             var index = Items.IndexOf( item );
 
-            var command = new CompoundCommand( new ICommand[]{
+            var command = new CompoundCommand( [
                 new ListRemoveCommand<PapAnimation>( Items, item, ( PapAnimation item, bool remove ) => item.File.RefreshHavokIndexes() ),
                 new PapHavokCommand( File, () => {
                     var container = File.MotionData.AnimationContainer;
@@ -39,10 +38,10 @@ namespace VfxEditor.PapFormat {
                     container->Animations = HavokData.CreateArray( File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
                     container->Bindings = HavokData.CreateArray( File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
                 } )
-            } );
+            ] );
             CommandManager.Add( command );
 
-            UiUtils.OkNotification( "已移除 Havok 数据" );
+            Dalamud.OkNotification( "已移除 Havok 数据" );
         }
 
         protected override void DrawSelected() => Selected.Draw();

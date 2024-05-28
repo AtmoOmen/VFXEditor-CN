@@ -18,7 +18,7 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 | `.scd` | Sound files (background music, sound effects) |
 | `.eid` | Bind points used to attach VFXs to character models |
 | `.uld` | Determines the layout of UI elements |
-| `.atex` | Texture files for VFXs |
+| `.atex` | Texture files for `.avfx` |
 | `.tex` | Texture files for UI elements and game models |
 | `.atch` | Attachment points for weapons and other accessories (like the Machinist bag and Astrologian deck) |
 | `.sklb` | Skeleton and bone definitions |
@@ -26,6 +26,7 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 | `.shpk` | Bundled packages of vertex and pixel shaders |
 | `.shcd` | Individual shaders |
 | `.mtrl` | Materials for models |
+| `.mdl` | Meshes |
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
@@ -60,46 +61,107 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
+- [ ] New `.pap` animation from gLTF (currently can only replace)
+- [ ] Hex editor for replacing arbitrary files
 - [ ] More investigation into `.pap` _Type_ and animation names
 - [ ] C192
 - [ ] `.uld` update component type
-- [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
 - [ ] More research into sound position (C063)
 - [ ] Weird crackling when playing back 4-ch and 6-ch files. Maybe related to clipping/conversion?
 - [ ] Make it so node names don't change when others are deleted (Particle 1, etc.)
 - [ ] More accurate spline curve calculations
-- [ ] Add VFX to weapons without it (see [here](https://docs.google.com/document/d/1M04dbdV1qUt0EzRalvwbB1oI3aPT6t8KEf9KgQfGn6E/edit#heading=h.s58fuxqb2bff). Would require modifiying VFX id in imc file, and also doing a raw file copy?)
 - [ ] Sound icon on timeline
-- [ ] Better PNG import support
 - [ ] Investigate VFX flags, better structs
 - [ ] Weapons / footsteps / etc. in live view
 - [ ] Add pre and post behavior to curve editor
 - [ ] Update "try on" preview
 
 ```
-bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_closed.tmb
-bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_open.tmb
-bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_close.tmb
-bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_opened.tmb
-bgcommon/world/air/shared/timelines/for_bg/tlbg_w_air_001_01a_loop.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_010_01_closed.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_013_01_open.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_a_tbx_001_01_opened.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_a_tbx_001_01_close.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_010_01_opend.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_a_tbx_001_01_open.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_a_tbx_001_01_fadeout.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_010_01_fadeout.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_010_01_open.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_013_01_close.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_w_tbx_010_01_close.tmb
-bgcommon/world/tbx/shared/timelines/for_bg/tlbg_a_tbx_001_01_closed.tmb
-bg/ffxiv/sea_s1/shared/timelines/for_bg/tlbg_s1f2_f1_fusy2_loop.tmb
-bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_sui00c_loop.tmb
-bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_sui00a_loop.tmb
-bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_suis1_loop.tmb
-bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_suis2_loop.tmb
-bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_sui00d_loop.tmb
+.kdlb
+.bklb
+.kdb (kinedriver)
+
+Client.System.Resource.Handle.AnimationExtensionLoadResourceHandle
+Client.System.Resource.Handle.BonamikLoadResourceHandle
+Client.System.Resource.Handle.BonamikResourceHandle
+Client.System.Resource.Handle.ExtraSkeletonLoadResourceHandle
+Client.System.Resource.Handle.EyeAnimationResourceHandle
+Client.System.Resource.Handle.FacialParameterEditResourceHandle
+Client.System.Resource.Handle.KineDriverLoadResourceHandle
+Client.System.Resource.Handle.KineDriverResourceHandle
+
+chara/human/c%04d/skeleton/base/b0001/bnm_c%04db0001.bnmb
+chara/human/c%04d/skeleton/face/f%04d/bnm_c%04df%04d.bnmb
+chara/human/c%04d/skeleton/hair/h%04d/bnm_c%04dh%04d.bnmb
+chara/human/c%04d/skeleton/met/m%04d/bnm_c%04dm%04d.bnmb
+chara/human/c%04d/skeleton/top/t%04d/bnm_c%04dt%04d.bnmb
+chara/demihuman/d%04d/skeleton/base/b0001/bnm_d%04db0001.bnmb
+chara/weapon/w%04d/skeleton/parts/p%04d/bnm_w%04dp%04d.bnmb
+chara/weapon/w%04d/skeleton/base/b0001/bnm_w%04db0001.bnmb
+chara/monster/m%04d/skeleton/base/b0001/bnm_m%04db0001.bnmb
+
+https://github.com/BlasterGrim/TresGame/tree/6a0fd71b783a1fcba90c9df619447dc620817910/Plugins/BonamikRt/Source/BonamikRt/Public
+
+common/graphics/common_shader_param.spm
+common/graphics/chara_shader_param.spm
+common/graphics/bg_shader_param.spm
+https://imgur.com/wcMGZxY
+HairSpecularShift breaks into HairSpecularPrimaryShift, HairSpecularBackScatterShift, and HairSpecularSecondaryShift; HairRoughnessOffsetRate breaks into HairBackScatterRoughnessOffsetRate, and HairSecondaryRoughnessOffsetRate
+
+
+https://github.com/Irastris/ValkyrieUproject/tree/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public
+https://github.com/RussellJerome/TresGame/blob/main/Plugins/KineDriverRt/Source/KineDriverRt/Public/KineDriver_StructsAndEnums.h
+
+chara/xls/bonamik/bonamik-monster.bklb
+chara/xls/bonamik/bonamik-weapon.bklb
+chara/xls/bonamik/bonamik-human-base.bklb
+chara/xls/bonamik/bonamik-human-equipment.bklb
+chara/xls/bonamik/bonamik-human-face.bklb
+chara/xls/bonamik/bonamik-human-hair.bklb
+chara/xls/bonamik/bonamik-demihuman.bklb
+chara/xls/bonamik/bonamik-human-equipment.bklb
+chara/xls/bonamik/bonamik-monster.bklb
+chara/xls/bonamik/bonamik-weapon.bklb
+chara/xls/bonamik/bonamik-demihuman.bklb
+chara/xls/bonamik/bonamik-human-base.bklb
+chara/xls/bonamik/bonamik-human-face.bklb
+chara/xls/bonamik/bonamik-human-hair.bklb
+
+chara/xls/kinedriver/kinedriver-human-equipment.kdlb
+chara/xls/kinedriver/kinedriver-human-base.kdlb
+chara/xls/kinedriver/kinedriver-human-face.kdlb
+chara/xls/kinedriver/kinedriver-human-hair.kdlb
+chara/xls/kinedriver/kinedriver-demihuman.kdlb
+chara/xls/kinedriver/kinedriver-monster.kdlb
+chara/xls/kinedriver/kinedriver-weapon.kdlb
+chara/xls/kinedriver/kinedriver-demihuman.kdlb
+chara/xls/kinedriver/kinedriver-human-base.kdlb
+chara/xls/kinedriver/kinedriver-human-equipment.kdlb
+chara/xls/kinedriver/kinedriver-human-face.kdlb
+chara/xls/kinedriver/kinedriver-human-hair.kdlb
+chara/xls/kinedriver/kinedriver-monster.kdlb
+chara/xls/kinedriver/kinedriver-weapon.kdlb
+
+table TypeIdInfo {
+  id:ubyte;
+  unk_uint_1:uint;
+  has_kdb:bool;
+}
+table TypeIdArray {
+  has_kdbs:bool;
+  type_id_info:[TypeIdInfo];
+}
+table SkeletonIdArray {
+  skeleton_id:uint;
+  unk_default_1:uint;
+  type_id_array:[TypeIdArray];
+}
+
+
+chara/xls/extraskl/extra_weapon.eslb
+chara/human/c1701/skeleton/face/f0002/kdi_c1701f0002.kdb
+
+--------------------------------
 
 chara/xls/animation/papLoadTable.plt
 chara/xls/boneDeformer/human.pbd
@@ -111,10 +173,7 @@ chara/xls/animation/MotionLineTable.mlt
 chara/xls/animation/animation_work_table-monster.awt
 chara/xls/animation/animation_work_table-weapon.awt
 
-https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/src/Lumina/Data/Files/MtrlFile.cs
-https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/src/Lumina/Data/Parsing/MtrlStructs.cs
-https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/src/Lumina/Data/Parsing/MtrlStructs.cs
-
-https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Files/MdlFile.cs#L7
-https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/MdlStructs.cs#L13
+chara/xls/animation_extension/animext.anxb
+chara/xls/charadb/extra_met.est
+chara/xls/charadb/hairskeletontemplate.est
 ```

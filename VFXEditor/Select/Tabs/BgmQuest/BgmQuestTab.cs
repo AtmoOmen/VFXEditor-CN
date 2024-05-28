@@ -1,4 +1,4 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.BgmQuest {
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
     }
 
     public class BgmQuestTab : SelectTab<BgmQuestRow, SelectedBgmQuest> {
-        public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "BgmQuest", SelectResultType.GameMusic ) { }
+        public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "BgmQuest" ) { }
 
         // ===== LOADING =====
 
@@ -34,12 +34,10 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawBgmSituation( Selected.Name, Loaded.Situation );
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameMusic );
         }
 
-        protected override string GetName( BgmQuestRow item ) => item.Name;
-
-        public static BgmSituationStruct GetBgmSituation( ushort bgmId ) {
+        public static BgmSituationStruct GetBgmSituation( uint bgmId ) {
             if( bgmId < 1000 ) {
                 return new BgmSituationStruct {
                     Path = Dalamud.DataManager.GetExcelSheet<BGM>().GetRow( bgmId )?.File.ToString(),

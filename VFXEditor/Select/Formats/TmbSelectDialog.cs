@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.Select.Tabs.Actions;
@@ -11,26 +12,25 @@ using VfxEditor.TmbFormat;
 namespace VfxEditor.Select.Formats {
     public class TmbSelectDialog : SelectDialog {
         public TmbSelectDialog( string id, TmbManager manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
-            GameTabs.AddRange( new List<SelectTab>() {
+            GameTabs.AddRange( [
                 new ActionTabTmb( this, "技能" ),
-                new ActionTabTmbNonPlayer( this, "非玩家对象动作" ),
-                new EmoteTabTmb( this, "表情" ),
+                new ActionTabTmbNonPlayer( this, "NPC 技能" ),
+                new EmoteTabTmb( this, "情感动作" ),
                 new NpcTabTmb( this, "NPC" ),
-                new CommonTabTmb( this, "通常" )
-            } );
+                new CommonTabTmb( this, "一般" )
+            ] );
         }
 
         public override bool CanPlay => true;
 
         public override void PlayButton( string path ) {
-            using var _ = ImRaii.PushId( "Spawn" );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-            ImGui.SameLine();
             if( TmbSpawn.CanReset ) {
-                if( ImGui.Button( "重置" ) ) TmbSpawn.Reset();
+                if( ImGui.Button( FontAwesomeIcon.Stop.ToIconString() ) ) TmbSpawn.Reset();
             }
             else {
-                if( ImGui.Button( "播放" ) ) TmbSpawn.Apply( path );
+                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) TmbSpawn.Apply( path );
             }
         }
     }

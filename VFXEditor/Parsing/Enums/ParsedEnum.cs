@@ -37,10 +37,8 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var options = ( T[] )Enum.GetValues( typeof( T ) );
-            var text = options.Contains( Value ) ? Value.ToString() : "[未知]";
-            if( UiUtils.EnumComboBox( Name, text, options, Value, out var value ) ) {
-                Update( value );
-            }
+            var text = options.Contains( Value ) ? Value.ToString() : $"[未知 - {( int )( object )Value}]";
+            if( UiUtils.EnumComboBox( Name, text, options, Value, out var value ) ) Update( value );
         }
     }
 }

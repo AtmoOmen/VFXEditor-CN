@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components.SplitViews;
@@ -7,18 +7,18 @@ using VfxEditor.UldFormat.Timeline.Frames;
 
 namespace VfxEditor.UldFormat.Timeline {
     public class UldTimeline : UldWorkspaceItem {
-        public readonly List<UldFrame> Frames1 = new();
-        public readonly List<UldFrame> Frames2 = new();
+        public readonly List<UldFrame> Frames1 = [];
+        public readonly List<UldFrame> Frames2 = [];
 
         public readonly CommandSplitView<UldFrame> FramesView1;
         public readonly CommandSplitView<UldFrame> FramesView2;
 
-        public UldTimeline() {
-            FramesView1 = new( "帧", Frames1, true, null, () => new UldFrame() );
-            FramesView2 = new( "帧", Frames1, true, null, () => new UldFrame() );
+        public UldTimeline( uint id ) : base( id ) {
+            FramesView1 = new( "组", Frames1, true, null, () => new UldFrame() );
+            FramesView2 = new( "组", Frames2, true, null, () => new UldFrame() );
         }
 
-        public UldTimeline( BinaryReader reader ) : this() {
+        public UldTimeline( BinaryReader reader ) : this( 0 ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );

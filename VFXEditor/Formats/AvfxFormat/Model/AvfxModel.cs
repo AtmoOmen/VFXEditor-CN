@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEmitVertexes EmitVertexes = new();
         public readonly AvfxEmitVertexNumbers EmitVertexNumbers = new();
 
-        public readonly List<UiEmitVertex> CombinedEmitVertexes = new();
+        public readonly List<UiEmitVertex> CombinedEmitVertexes = [];
 
         private readonly List<AvfxBase> Parsed;
 
@@ -33,22 +33,22 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiModelUvView UvView;
 
         public AvfxModel() : base( NAME, AvfxNodeGroupSet.ModelColor ) {
-            Parsed = new() {
+            Parsed = [
                 EmitVertexNumbers,
                 EmitVertexes,
                 Vertexes,
                 Indexes
-            };
+            ];
 
             NodeView = new( this );
             UvView = new UiModelUvView();
 
-            VertexTable = new( "Emit", true, true, CombinedEmitVertexes, new() {
+            VertexTable = new( "Emit", true, true, CombinedEmitVertexes, [
                 ( "顺序", ImGuiTableColumnFlags.None, -1 ),
                 ( "位置", ImGuiTableColumnFlags.None, -1 ),
                 ( "法线", ImGuiTableColumnFlags.None, -1 ),
                 ( "颜色", ImGuiTableColumnFlags.None, - 1),
-            },
+            ],
             () => new( this, new(), new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
         }
 

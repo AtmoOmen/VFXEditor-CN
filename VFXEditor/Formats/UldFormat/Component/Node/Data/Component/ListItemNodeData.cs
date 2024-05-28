@@ -3,10 +3,10 @@
 namespace VfxEditor.UldFormat.Component.Node.Data.Component {
     public class ListItemNodeData : UldNodeComponentData {
         public ListItemNodeData() : base() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedByteBool( "切换" ),
                 new ParsedReserve( 3 ),
-            } );
+            ] );
         }
     }
 }

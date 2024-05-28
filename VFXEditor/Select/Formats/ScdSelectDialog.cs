@@ -12,17 +12,17 @@ using VfxEditor.Select.Tabs.Zone;
 namespace VfxEditor.Select.Formats {
     public class ScdSelectDialog : SelectDialog {
         public ScdSelectDialog( string id, ScdManager manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
-            GameTabs.AddRange( new SelectTab[]{
-                new ActionTabScd( this, "Actions" ),
+            GameTabs.AddRange( [
+                new ActionTabScd( this, "技能" ),
                 new MountTabScd( this, "坐骑" ),
                 new OrchestrionTab( this, "管弦乐琴音乐" ),
                 new ZoneTabScd( this, "区域" ),
                 new BgmTab( this, "BGM" ),
                 new BgmQuestTab( this, "任务 BGM" ),
                 new InstanceTab( this, "副本" ),
-                new VoiceTab( this, "声音" ),
-                new CommonTabScd( this, "通常" ),
-            } );
+                new VoiceTab( this, "语音" ),
+                new CommonTabScd( this, "一般" ),
+            ] );
         }
     }
 }

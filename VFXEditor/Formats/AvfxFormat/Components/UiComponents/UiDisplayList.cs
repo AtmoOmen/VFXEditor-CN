@@ -9,7 +9,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
         private readonly List<IUiItem> Display;
 
-        public UiDisplayList( string name ) : this( name, new() ) { }
+        public UiDisplayList( string name ) : this( name, [] ) { }
 
         public UiDisplayList( string name, List<IUiItem> list ) : base( "" ) {
             Name = name;
@@ -21,10 +21,6 @@ namespace VfxEditor.AvfxFormat {
 
         public void AddRange( List<IUiItem> items ) => Display.AddRange( items );
 
-        public void Remove( IUiItem item ) => Display.Remove( item );
-
-        public void Prepend( IUiItem item ) => Display.Insert( 0, item );
-
         public override void Draw() {
             using var _ = ImRaii.PushId( Name );
             using var child = ImRaii.Child( "Child" );
@@ -33,13 +29,9 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => Name;
 
-        public override void ReadContents( BinaryReader reader, int size ) {
-            throw new NotImplementedException();
-        }
+        public override void ReadContents( BinaryReader reader, int size ) => throw new NotImplementedException();
 
-        public override void WriteContents( BinaryWriter writer ) {
-            throw new NotImplementedException();
-        }
+        public override void WriteContents( BinaryWriter writer ) => throw new NotImplementedException();
 
         protected override IEnumerable<AvfxBase> GetChildren() {
             yield break;

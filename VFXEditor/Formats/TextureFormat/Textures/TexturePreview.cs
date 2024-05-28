@@ -1,6 +1,6 @@
-﻿using Dalamud.Interface.Internal;
-using ImGuiNET;
+using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -17,7 +17,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public TexturePreview( TextureDataFile file, bool penumbra, string gamePath ) : base( gamePath ) {
             Format = file.Header.Format;
-            MipLevels = file.Header.MipLevels;
+            MipLevels = file.Header.MipLevelsCount;
             Width = file.Header.Width;
             Height = file.Header.Height;
             Depth = file.Header.Depth;
@@ -60,14 +60,14 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             ImGui.Image( Wrap.ImGuiHandle, new Vector2( ( ( float )Width / Height ) * height, height ) );
         }
 
-        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} MIPs / {Depth} Layers / {Width}x{Height}" );
+        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} MIPs / {Depth} 层 / {Width}x{Height}" );
 
         protected override void DrawControls() {
             DrawParams();
 
             if( Penumbra ) {
                 ImGui.SameLine();
-                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
+                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE );
                 ImGui.Text( "[Penumbra]" );
             }
 

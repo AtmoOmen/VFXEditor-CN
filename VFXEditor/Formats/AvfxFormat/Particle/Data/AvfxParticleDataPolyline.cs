@@ -1,7 +1,7 @@
 ﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataPolyline : AvfxData {
+    public class AvfxParticleDataPolyline : AvfxDataWithParameters {
         public readonly AvfxEnum<LineCreateType> CreateLineType = new( "创建线型", "LnCT" );
         public readonly AvfxEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new( "非广告牌基准轴", "NBBA" );
         public readonly AvfxInt BindWeaponType = new( "绑定武器类型", "BWpT" );
@@ -35,10 +35,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveColor ColorEdgeCenter = new( name: "中心颜色渐变", "CoEC" );
         public readonly AvfxCurveColor ColorEdgeEnd = new( name: "结束颜色渐变", "CoEE" );
 
-        public readonly UiDisplayList Display;
-
         public AvfxParticleDataPolyline() : base() {
-            Parsed = new() {
+            Parsed = [
                 CreateLineType,
                 NotBillBoardBaseAxisType,
                 BindWeaponType,
@@ -70,42 +68,41 @@ namespace VfxEditor.AvfxFormat {
                 ColorEdgeBegin,
                 ColorEdgeCenter,
                 ColorEdgeEnd
-            };
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( CreateLineType );
-            Display.Add( NotBillBoardBaseAxisType );
-            Display.Add( BindWeaponType );
-            Display.Add( PointCount );
-            Display.Add( PointCountCenter );
-            Display.Add( PointCountEndDistortion );
-            Display.Add( UseEdge );
-            Display.Add( NotBillboard );
-            Display.Add( BindWeapon );
-            Display.Add( ConnectTarget );
-            Display.Add( ConnectTargetReverse );
-            Display.Add( TagNumber );
-            Display.Add( IsSpline );
-            Display.Add( IsLocal );
+            ParameterTab.Add( CreateLineType );
+            ParameterTab.Add( NotBillBoardBaseAxisType );
+            ParameterTab.Add( BindWeaponType );
+            ParameterTab.Add( PointCount );
+            ParameterTab.Add( PointCountCenter );
+            ParameterTab.Add( PointCountEndDistortion );
+            ParameterTab.Add( UseEdge );
+            ParameterTab.Add( NotBillboard );
+            ParameterTab.Add( BindWeapon );
+            ParameterTab.Add( ConnectTarget );
+            ParameterTab.Add( ConnectTargetReverse );
+            ParameterTab.Add( TagNumber );
+            ParameterTab.Add( IsSpline );
+            ParameterTab.Add( IsLocal );
 
-            DisplayTabs.Add( Width );
-            DisplayTabs.Add( WidthBegin );
-            DisplayTabs.Add( WidthCenter );
-            DisplayTabs.Add( WidthEnd );
-            DisplayTabs.Add( Length );
-            DisplayTabs.Add( LengthRandom );
+            Tabs.Add( Width );
+            Tabs.Add( WidthBegin );
+            Tabs.Add( WidthCenter );
+            Tabs.Add( WidthEnd );
+            Tabs.Add( Length );
+            Tabs.Add( LengthRandom );
 
-            DisplayTabs.Add( ColorBegin );
-            DisplayTabs.Add( ColorCenter );
-            DisplayTabs.Add( ColorEnd );
-            DisplayTabs.Add( ColorEdgeBegin );
-            DisplayTabs.Add( ColorEdgeCenter );
-            DisplayTabs.Add( ColorEdgeEnd );
+            Tabs.Add( ColorBegin );
+            Tabs.Add( ColorCenter );
+            Tabs.Add( ColorEnd );
+            Tabs.Add( ColorEdgeBegin );
+            Tabs.Add( ColorEdgeCenter );
+            Tabs.Add( ColorEdgeEnd );
 
-            DisplayTabs.Add( CF );
-            DisplayTabs.Add( Softness );
-            DisplayTabs.Add( SoftRandom );
-            DisplayTabs.Add( PnDs );
+            Tabs.Add( CF );
+            Tabs.Add( Softness );
+            Tabs.Add( SoftRandom );
+            Tabs.Add( PnDs );
         }
     }
 }

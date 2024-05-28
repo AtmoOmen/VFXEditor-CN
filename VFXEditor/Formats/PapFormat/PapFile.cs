@@ -21,12 +21,13 @@ namespace VfxEditor.PapFormat {
     public class PapFile : FileManagerFile {
         public readonly string HkxTempLocation;
         public readonly string SourcePath;
+        public bool IsMaterial => SourcePath?.Contains( "material.pap" ) == true || Animations.Any( x => x.GetPapType() == 22 );
 
         public readonly ParsedShort ModelId = new( "模型 ID" );
         public readonly ParsedEnum<SkeletonType> ModelType = new( "骨架类型", size: 1 );
         public readonly ParsedInt Variant = new( "分支", size: 1 );
 
-        public readonly List<PapAnimation> Animations = new();
+        public readonly List<PapAnimation> Animations = [];
         public readonly PapAnimationDropdown AnimationsDropdown;
         public readonly PapMotions MotionData;
 
@@ -36,7 +37,7 @@ namespace VfxEditor.PapFormat {
 
         private readonly bool EmptyHavok = false;
 
-        public readonly HashSet<nint> Handles = new();
+        public readonly HashSet<nint> Handles = [];
 
         public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base() {
             SourcePath = sourcePath;
@@ -175,6 +176,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+
         public override List<short> GetPapTypes() => Animations.Select( x => x.GetPapType() ).ToList();
 
         public void RefreshHavokIndexes() {

@@ -4,12 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
-using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -28,8 +25,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
         public readonly AvfxExport ExportUi;
-
-        private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
             Main = AvfxMain.FromStream( reader );
@@ -58,7 +53,11 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawView( Main, "参数" );
+            if( ImGui.BeginTabItem( "参数" ) ) {
+                Main.Draw();
+                ImGui.EndTabItem();
+            }
+
             DrawView( ScheduleView, "调度器" );
             DrawView( TimelineView, "时间线" );
             DrawView( EmitterView, "发射器" );
@@ -69,17 +68,10 @@ namespace VfxEditor.AvfxFormat {
             DrawView( ModelView, "模型" );
         }
 
-        private unsafe void DrawView( IUiItem view, string label ) {
-            var labelBytes = Encoding.UTF8.GetBytes( label + "##Main" );
-            var labelRef = stackalloc byte[labelBytes.Length + 1];
-            Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );
-
-            var forceOpen = ForceOpenTabs.Contains( view );
-            if( forceOpen ) ForceOpenTabs.Remove( view );
-            var flags = forceOpen ? ImGuiTabItemFlags.None | ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
-            if( ImGuiNative.igBeginTabItem( labelRef, null, flags ) == 1 ) {
+        private static unsafe void DrawView<T>( IUiNodeView<T> view, string label ) where T : AvfxNode {
+            if( UiUtils.BeginTabItem<T>( label ) ) {
                 view.Draw();
-                ImGuiNative.igEndTabItem();
+                ImGui.EndTabItem();
             }
         }
 
@@ -94,10 +86,10 @@ namespace VfxEditor.AvfxFormat {
             else if( item is AvfxModel model ) SelectItem( ModelView, model );
         }
 
-        public void SelectItem<T>( IUiNodeView<T> view, T item ) where T : AvfxNode {
+        public static void SelectItem<T>( IUiNodeView<T> view, T item ) where T : AvfxNode {
             if( item == null ) return;
             view.SetSelected( item );
-            ForceOpenTabs.Add( view );
+            UiUtils.ForceOpenTabs.Add( typeof( T ) );
         }
 
         // ====== CLEANUP UNUSED =======
@@ -105,18 +97,24 @@ namespace VfxEditor.AvfxFormat {
         public void Cleanup() {
             var removedNodes = new List<AvfxNode>();
             var commands = new List<ICommand>();
-            CleanupInternalView( TimelineView, commands, removedNodes );
-            CleanupInternalView( EmitterView, commands, removedNodes );
-            CleanupInternalView( ParticleView, commands, removedNodes );
-            CleanupInternalView( EffectorView, commands, removedNodes );
-            CleanupInternalView( BinderView, commands, removedNodes );
-            CleanupInternalView( TextureView, commands, removedNodes );
-            CleanupInternalView( ModelView, commands, removedNodes );
+
+            var lastCount = -1;
+            while( removedNodes.Count != lastCount ) {
+                lastCount = removedNodes.Count;
+                CleanupInternalView( TimelineView, commands, removedNodes );
+                CleanupInternalView( EmitterView, commands, removedNodes );
+                CleanupInternalView( ParticleView, commands, removedNodes );
+                CleanupInternalView( EffectorView, commands, removedNodes );
+                CleanupInternalView( BinderView, commands, removedNodes );
+                CleanupInternalView( TextureView, commands, removedNodes );
+                CleanupInternalView( ModelView, commands, removedNodes );
+            }
+            Dalamud.OkNotification( $"移除了 {removedNodes.Count} 个节点" );
             Command.AddAndExecute( new CompoundCommand( commands ) );
         }
 
         private void CleanupInternalView<T>( IUiNodeView<T> view, List<ICommand> commands, List<AvfxNode> removedNodes ) where T : AvfxNode {
-            foreach( var node in view.GetGroup().Items ) {
+            foreach( var node in new List<T>( view.GetGroup().Items ) ) {
                 CleanupInternal( node, commands, removedNodes );
             }
         }
@@ -150,7 +148,6 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Dispose() {
             NodeGroupSet?.Dispose();
-            ForceOpenTabs.Clear();
         }
 
         // ========== WORKSPACE ==========

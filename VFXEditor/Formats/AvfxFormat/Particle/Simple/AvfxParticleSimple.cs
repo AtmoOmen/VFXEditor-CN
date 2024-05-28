@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
 
-            Parsed = new() {
+            Parsed = [
                 InjectionPositionType,
                 InjectionDirectionType,
                 BaseDirectionType,
@@ -146,7 +146,7 @@ namespace VfxEditor.AvfxFormat {
                 PolyLineTag,
                 Colors,
                 Frames
-            };
+            ];
 
             Display.Add( InjectionPositionType );
             Display.Add( InjectionDirectionType );
@@ -231,9 +231,9 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "简易动画";
 
-        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+        public override List<AvfxNodeSelect> GetNodeSelects() => [
             new AvfxNodeSelect<AvfxModel>( Particle, "注入模型", Particle.NodeGroups.Models, InjectionModelIdx ),
             new AvfxNodeSelect<AvfxModel>( Particle, "注入顶点绑定模型", Particle.NodeGroups.Models, InjectionVertexBindModelIdx )
-        };
+        ];
     }
 }

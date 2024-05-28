@@ -12,7 +12,7 @@ namespace VfxEditor.SklbFormat.Data {
             reader.ReadInt16(); // layer offset, always 0x2E
             HavokOffset = reader.ReadInt16();
 
-            Parsed = new() {
+            Parsed = [
                 Id,
                 new ParsedShort2( "父级 1"),
                 new ParsedShort2( "父级 2"),
@@ -25,7 +25,7 @@ namespace VfxEditor.SklbFormat.Data {
                 new ParsedShort( "连接骨骼 2" ),
                 new ParsedShort( "连接骨骼 3" ),
                 new ParsedShort( "连接骨骼 4" )
-            };
+            ];
 
             Parsed.ForEach( x => x.Read( reader ) );
         }

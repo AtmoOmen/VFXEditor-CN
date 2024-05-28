@@ -3,7 +3,7 @@
 namespace VfxEditor.UldFormat.Component.Data {
     public class WindowComponentData : UldGenericData {
         public WindowComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "未知节点 ID 1" ),
                 new ParsedUInt( "未知节点 ID 2" ),
                 new ParsedUInt( "未知节点 ID 3" ),
@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "未知节点 ID 6" ),
                 new ParsedUInt( "未知节点 ID 7" ),
                 new ParsedUInt( "未知节点 ID 8" ),
-            } );
+            ] );
         }
     }
 }

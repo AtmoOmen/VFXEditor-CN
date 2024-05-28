@@ -1,10 +1,11 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
+using System.Collections.Generic;
 using System.Linq;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select.Tabs.Statuses {
     public class StatusTabTex : SelectTab<StatusRow> {
-        public StatusTabTex( SelectDialog dialog, string name ) : base( dialog, name, "Status-Tex", SelectResultType.GameStatus ) { }
+        public StatusTabTex( SelectDialog dialog, string name ) : base( dialog, name, "Status-Tex" ) { }
 
         // ===== LOADING =====
 
@@ -16,16 +17,15 @@ namespace VfxEditor.Select.Tabs.Statuses {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-            var path = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
-            var hdPath = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
+            var icon = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
+            var hd = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
 
-            DrawPath( "Icon", path, "", Selected.Name );
-            if( Dalamud.DataManager.FileExists( hdPath ) ) {
-                DrawPath( "HD Icon", hdPath, "", $"{Selected.Name} HD" );
-            }
+            var paths = new Dictionary<string, string>() {
+                { "Icon", icon }
+            };
+            if( Dalamud.DataManager.FileExists( hd ) ) paths["HD Icon"] = hd;
+
+            Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );
         }
-
-        protected override string GetName( StatusRow item ) => item.Name;
     }
 }

@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -26,15 +26,15 @@ namespace VfxEditor.UldFormat.Widget {
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
 
-        public readonly List<UldNode> Nodes = new();
+        public readonly List<UldNode> Nodes = [];
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
-        public UldWidget( List<UldComponent> components ) {
+        public UldWidget( uint id, List<UldComponent> components ) : base( id ) {
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new( components, this ) );
+                ( UldNode item, int idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
         }
 
-        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -44,7 +44,7 @@ namespace VfxEditor.UldFormat.Widget {
             var nodeCount = reader.ReadUInt16();
             var size = reader.ReadUInt16();
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, NodeSplitView ) );
 
             reader.BaseStream.Position = pos + size;
         }

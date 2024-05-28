@@ -1,7 +1,7 @@
 ﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffectorDataRadialBlur : AvfxData {
+    public class AvfxEffectorDataRadialBlur : AvfxDataWithParameters {
         public readonly AvfxCurve Length = new( "长度", "Len" );
         public readonly AvfxCurve Strength = new( "强度", "Str" );
         public readonly AvfxCurve Gradation = new( "渐变", "Gra" );
@@ -9,12 +9,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve OuterRadius = new( "外半径", "ORad" );
         public readonly AvfxFloat FadeStartDistance = new( "开始淡出距离", "FSDc" );
         public readonly AvfxFloat FadeEndDistance = new( "结束淡出距离", "FEDc" );
-        public readonly AvfxEnum<ClipBasePoint> FadeBasePointType = new( "Fade Base Point", "FaBP" );
-
-        public readonly UiDisplayList Display;
+        public readonly AvfxEnum<ClipBasePoint> FadeBasePointType = new( "淡出基准点", "FaBP" );
 
         public AvfxEffectorDataRadialBlur() : base() {
-            Parsed = new() {
+            Parsed = [
                 Length,
                 Strength,
                 Gradation,
@@ -23,18 +21,17 @@ namespace VfxEditor.AvfxFormat {
                 FadeStartDistance,
                 FadeEndDistance,
                 FadeBasePointType
-            };
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( FadeStartDistance );
-            Display.Add( FadeEndDistance );
-            Display.Add( FadeBasePointType );
+            ParameterTab.Add( FadeStartDistance );
+            ParameterTab.Add( FadeEndDistance );
+            ParameterTab.Add( FadeBasePointType );
 
-            DisplayTabs.Add( Length );
-            DisplayTabs.Add( Strength );
-            DisplayTabs.Add( Gradation );
-            DisplayTabs.Add( InnerRadius );
-            DisplayTabs.Add( OuterRadius );
+            Tabs.Add( Length );
+            Tabs.Add( Strength );
+            Tabs.Add( Gradation );
+            Tabs.Add( InnerRadius );
+            Tabs.Add( OuterRadius );
         }
     }
 }

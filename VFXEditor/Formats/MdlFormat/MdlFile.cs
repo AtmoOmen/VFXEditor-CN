@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MdlFormat.Bone;
+using VfxEditor.Formats.MdlFormat.Bone.V6;
 using VfxEditor.Formats.MdlFormat.Box;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
@@ -45,6 +46,8 @@ namespace VfxEditor.Formats.MdlFormat {
     }
 
     public class MdlFile : FileManagerFile {
+        public const uint VERSION_6 = 0x01000006; // Updated dawntrail model
+
         private readonly uint Version;
 
         private readonly ParsedByteBool IndexBufferStreaming = new( "索引缓冲流" );
@@ -62,23 +65,23 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedShort Unknown8 = new( "未知 8" );
         private readonly ParsedShort Unknown9 = new( "未知 9" );
 
-        public readonly List<MdlEid> Eids = new();
+        public readonly List<MdlEid> Eids = [];
         private readonly CommandSplitView<MdlEid> EidView;
 
-        public readonly List<MdlLod> AllLods = new();
-        public readonly List<MdlLod> UsedLods = new();
+        public readonly List<MdlLod> AllLods = [];
+        public readonly List<MdlLod> UsedLods = [];
         private readonly UiDropdown<MdlLod> LodView;
 
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
-        public readonly List<MdlExtraLod> ExtraLods = new();
+        public readonly List<MdlExtraLod> ExtraLods = [];
         private readonly UiDropdown<MdlExtraLod> ExtraLodView;
 
-        public readonly List<MdlBoneTable> BoneTables = new();
-        private readonly UiSplitView<MdlBoneTable> BoneTableView;
+        public readonly MdlBoneTables BoneTables;
 
-        public readonly List<MdlShape> Shapes = new(); // TODO
+        public readonly List<MdlShape> Shapes = []; // TODO
 
         private readonly byte[] Padding;
+        private readonly uint StringTablePadding; // Can be weird for when exported from penumbra and other stuff
 
         // TODO
         private readonly MdlBoundingBox UnknownBoundingBox;
@@ -86,16 +89,17 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly MdlBoundingBox WaterBoundingBox;
         private readonly MdlBoundingBox VerticalFogBoundingBox;
 
-        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = new();
+        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = [];
         private readonly CommandSplitView<MdlBoneBoundingBox> BoneBoxView;
 
-        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = new();
+        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = [];
         private readonly CommandSplitView<MdlBoundingBox> UnknownBoxView;
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
             var data = new MdlFileData();
 
             Version = reader.ReadUInt32();
+
             reader.ReadUInt32(); // stack size
             reader.ReadUInt32(); // runtime size
             var vertexDeclarationCount = reader.ReadUInt16();
@@ -131,6 +135,7 @@ namespace VfxEditor.Formats.MdlFormat {
                 data.OffsetToString[( uint )pos] = value;
             }
 
+            StringTablePadding = ( uint )( stringEndPos - reader.BaseStream.Position );
             reader.BaseStream.Position = stringEndPos;
 
             // ====== MODEL HEADER =======
@@ -193,7 +198,8 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
             for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
-            for( var i = 0; i < boneTableCount; i++ ) BoneTables.Add( new( reader, data.BoneStrings ) );
+
+            BoneTables = Version == VERSION_6 ? new MdlBoneTablesV6( reader, boneTableCount, data ) : new MdlBoneTables( reader, boneTableCount, data );
 
             // // ======== SHAPES ============
 
@@ -229,7 +235,6 @@ namespace VfxEditor.Formats.MdlFormat {
                 () => new() );
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
-            BoneTableView = new( "Bone Table", BoneTables, false );
             UnknownBoxView = new( "Bounding Box", UnknownBoundingBoxes, false, null, () => new() );
             BoneBoxView = new( "Bounding Box", BoneBoundingBoxes, false,
                 ( MdlBoneBoundingBox item, int idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
@@ -260,7 +265,7 @@ namespace VfxEditor.Formats.MdlFormat {
             }
 
             using( var tab = ImRaii.TabItem( "骨骼表" ) ) {
-                if( tab ) BoneTableView.Draw();
+                if( tab ) BoneTables.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "包围盒" ) ) {
@@ -338,10 +343,9 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.AllStrings.Count );
             writer.Write( ( ushort )0 ); // padding
 
-            var stringPadding = ( uint )FileUtils.NumberToPad( writer.BaseStream.Position + data.TotalStringLength, 4 );
-            writer.Write( data.TotalStringLength + stringPadding );
+            writer.Write( data.TotalStringLength + StringTablePadding );
             foreach( var item in data.AllStrings ) FileUtils.WriteString( writer, item, true );
-            FileUtils.Pad( writer, stringPadding );
+            FileUtils.Pad( writer, StringTablePadding );
 
             Radius.Write( writer );
             writer.Write( ( ushort )data.Meshes.Count );
@@ -349,7 +353,7 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.SubMeshes.Count );
             writer.Write( ( ushort )data.MaterialStrings.Count );
             writer.Write( ( ushort )data.BoneStrings.Count );
-            writer.Write( ( ushort )BoneTables.Count );
+            writer.Write( ( ushort )BoneTables.Tables.Count );
             writer.Write( ( ushort )data.Shapes.Count );
             writer.Write( ( ushort )data.ShapesMeshes.Count );
             writer.Write( ( ushort )data.ShapeValues.Count );
@@ -382,7 +386,8 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in data.TerrainShadowSubmeshes ) item.Write( writer );
             foreach( var item in data.MaterialStrings ) writer.Write( data.StringToOffset[item] );
             foreach( var item in data.BoneStrings ) writer.Write( data.StringToOffset[item] );
-            foreach( var item in BoneTables ) item.Write( writer, data );
+
+            BoneTables.Write( writer, data );
 
             foreach( var item in data.Shapes ) item.Write( writer, data );
             foreach( var item in data.ShapesMeshes ) item.Write( writer, data );
@@ -440,7 +445,7 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in vertexSizes ) writer.Write( item );
             foreach( var item in indexSizes ) writer.Write( item );
 
-            foreach( var (item, idx) in UsedLods.WithIndex() ) {
+            foreach( var (item, idx) in AllLods.WithIndex() ) {
                 writer.BaseStream.Position = data.LodPlaceholders[item];
                 writer.Write( 0 );
                 writer.Write( vertexOffsets[idx] + vertexSizes[idx] );

@@ -49,7 +49,7 @@ namespace VfxEditor.Formats.SkpFormat {
             if( Activated.HasFlag( SkpFlags.Feet ) ) Dalamud.Error( "发现 FootIK, 请上报此情况" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
-            VerifyIgnore = new();
+            VerifyIgnore = [];
             var data = ToBytes(); // will populate VerifyIgnore
             if( verify ) Verified = FileUtils.Verify( reader, data, VerifyIgnore );
             VerifyIgnore = null;

@@ -19,13 +19,13 @@ namespace VfxEditor.PapFormat {
         private bool Compress = false;
         private bool SkipOriginal = false;
         private int AnimationIndex = 0;
-        private readonly List<string> AnimationNames = new();
-        private readonly List<string> NodeNames = new();
+        private readonly List<string> AnimationNames = [];
+        private readonly List<string> NodeNames = [];
 
         private bool Exclude = false;
         private ExcludedBonesConfiguration SelectedExcludeList;
 
-        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "Animation Import", true ) {
+        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "导入动画", true ) {
             Motion = motion;
             HavokIndex = index;
             ImportPath = importPath;
@@ -38,7 +38,10 @@ namespace VfxEditor.PapFormat {
             }
 
             foreach( var node in model.LogicalNodes ) {
-                if( string.IsNullOrEmpty( node.Name ) || node.Name.ToLower().Contains( "mesh" ) || node.Name.ToLower().Contains( "armature" ) ) continue;
+                if( string.IsNullOrEmpty( node.Name ) ||
+                    node.Name.Contains( "mesh", StringComparison.CurrentCultureIgnoreCase ) ||
+                    node.Name.Contains( "armature", StringComparison.CurrentCultureIgnoreCase )
+                ) continue;
                 if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) continue;
                 NodeNames.Add( node.Name );
             }
@@ -51,7 +54,7 @@ namespace VfxEditor.PapFormat {
         protected override void DrawBody() {
             if( UiUtils.IconButton( FontAwesomeIcon.InfoCircle, "Wiki" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
-            using var nodes = ImRaii.TreeNode( "Nodes Being Imported" );
+            using var nodes = ImRaii.TreeNode( "导入中节点" );
             if( nodes ) {
                 using var child = ImRaii.Child( "子级", new( ImGui.GetContentRegionAvail().X, 300 ) );
                 using var _ = ImRaii.PushIndent();
@@ -61,7 +64,7 @@ namespace VfxEditor.PapFormat {
             }
 
             var text = AnimationNames.Count == 0 ? "[无]" : AnimationNames[AnimationIndex];
-            using( var combo = ImRaii.Combo( "Animation to Import", text ) ) {
+            using( var combo = ImRaii.Combo( "待导入动画", text ) ) {
                 if( combo ) {
                     for( var i = 0; i < AnimationNames.Count; i++ ) {
                         using var _ = ImRaii.PushId( i );
@@ -72,9 +75,9 @@ namespace VfxEditor.PapFormat {
                 }
             }
 
-            ImGui.Checkbox( "Compress Animation", ref Compress );
-            ImGui.Checkbox( "Skip Bones Unanimated in Original Motion", ref SkipOriginal );
-            ImGui.Checkbox( "Exclude Bones", ref Exclude );
+            ImGui.Checkbox( "压缩动画", ref Compress );
+            ImGui.Checkbox( "跳过原动作中不包含动画的骨骼", ref SkipOriginal );
+            ImGui.Checkbox( "排除骨骼", ref Exclude );
 
             if( Exclude ) {
                 using var _ = ImRaii.PushId( "Exclude" );
@@ -94,7 +97,7 @@ namespace VfxEditor.PapFormat {
                         }
                     }
                     ImGui.SameLine();
-                    ImGui.Text( "New List" );
+                    ImGui.Text( "新列表" );
 
                     ImGui.Separator();
 
@@ -149,10 +152,10 @@ namespace VfxEditor.PapFormat {
                     AnimationIndex,
                     Compress,
                     SkipOriginal,
-                    ( !Exclude || SelectedExcludeList == null ) ? new() : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
+                    ( !Exclude || SelectedExcludeList == null ) ? [] : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
                     ImportPath );
             } ) );
-            UiUtils.OkNotification( "已导入 Havok 数据" );
+            Dalamud.OkNotification( "已导入 Havok 数据" );
         }
     }
 }

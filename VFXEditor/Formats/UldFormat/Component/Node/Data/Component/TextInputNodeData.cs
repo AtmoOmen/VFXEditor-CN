@@ -28,7 +28,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
 
     public class TextInputNodeData : UldNodeComponentData {
         public TextInputNodeData() : base() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "最大宽度" ),
                 new ParsedUInt( "最大行数" ),
                 new ParsedUInt( "最大字节数" ),
@@ -36,7 +36,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
                 new ParsedFlag<TextInputFlags>( "标识", size: 1 ),
                 new ParsedFlag<TextInputFlags2>( "标志 2", size: 1 ),
                 new ParsedUInt( "字符集", size: 2 ),
-            } );
+            ] );
 
             for( var i = 1; i <= 16; i++ ) Parsed.Add( new ParsedInt( $"额外字符集 {i}", size: 1 ) );
         }

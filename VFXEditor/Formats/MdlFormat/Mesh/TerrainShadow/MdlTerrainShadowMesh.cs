@@ -1,6 +1,5 @@
 ﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -18,9 +17,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
 
         private readonly ushort VertexCount;
 
-        private byte[] RawVertexData = Array.Empty<byte>();
+        private byte[] RawVertexData = [];
 
-        private readonly List<MdlTerrainShadowSubmesh> Submeshes = new();
+        private readonly List<MdlTerrainShadowSubmesh> Submeshes = [];
         private readonly UiSplitView<MdlTerrainShadowSubmesh> SubmeshView;
 
         public MdlTerrainShadowMesh( MdlFile file, BinaryReader reader ) : base( file ) {
@@ -36,8 +35,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             if( stride != 8 ) Dalamud.Log( $"地形阴影: 步幅={stride}" );
 
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
-
-
         }
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) {
@@ -65,7 +62,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
                 data.Add( new( 1, 1, 1, 1 ) ); // colot
             }
 
-            return data.ToArray();
+            return [.. data];
         }
 
         public override void Draw() {

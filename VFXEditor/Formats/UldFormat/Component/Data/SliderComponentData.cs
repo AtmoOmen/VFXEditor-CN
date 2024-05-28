@@ -3,7 +3,7 @@
 namespace VfxEditor.UldFormat.Component.Data {
     public class SliderComponentData : UldGenericData {
         public SliderComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "未知节点 ID 1" ),
                 new ParsedUInt( "未知节点 ID 2" ),
                 new ParsedUInt( "未知节点 ID 3" ),
@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "左部偏移", size: 1 ),
                 new ParsedUInt( "右部偏移", size: 1),
                 new ParsedInt( "内边距", size: 1)
-            } );
+            ] );
         }
     }
 }

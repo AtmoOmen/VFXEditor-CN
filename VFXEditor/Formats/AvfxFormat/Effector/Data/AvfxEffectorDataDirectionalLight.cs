@@ -6,17 +6,17 @@
         public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle );
 
         public AvfxEffectorDataDirectionalLight() : base() {
-            Parsed = new() {
+            Parsed = [
                 Ambient,
                 Color,
                 Power,
                 Rotation
-            };
+            ];
 
-            DisplayTabs.Add( Ambient );
-            DisplayTabs.Add( Color );
-            DisplayTabs.Add( Power );
-            DisplayTabs.Add( Rotation );
+            Tabs.Add( Ambient );
+            Tabs.Add( Color );
+            Tabs.Add( Power );
+            Tabs.Add( Rotation );
         }
     }
 }

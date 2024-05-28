@@ -1,6 +1,7 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Items {
     public struct ItemIds {
@@ -56,16 +57,18 @@ namespace VfxEditor.Select.Tabs.Items {
         Other
     }
 
-    public abstract class ItemRow {
+    public abstract class ItemRow : ISelectItemWithIcon {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
         public readonly ItemIds Ids;
         public readonly ItemIds SecondaryIds;
-        public readonly bool HasModel;
         public readonly ItemType Type = ItemType.Other;
+        public string ModelString { get; protected set; }
 
-        public string VariantString => "v" + Variant.ToString().PadLeft( 4, '0' );
+        public bool HasModel => Ids.Id1 != 0;
+
+        public string VariantString => $"v{Variant:D4}";
 
         public abstract string RootPath { get; }
 
@@ -73,16 +76,13 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public abstract int Variant { get; }
 
-        public ItemRow( Item item ) {
-            Name = item.Name.ToString();
-            RowId = ( int )item.RowId;
-            Icon = item.Icon;
+        public ItemRow( string name, uint rowId, ushort icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category ) {
+            Name = name;
+            RowId = ( int )rowId;
+            Icon = icon;
+            Ids = ids;
+            SecondaryIds = secondaryIds;
 
-            Ids = new ItemIds( item.ModelMain );
-            SecondaryIds = new ItemIds( item.ModelSub );
-            HasModel = Ids.Id1 != 0;
-
-            var category = item.EquipSlotCategory.Value;
             if( category?.MainHand == 1 ) Type = ItemType.MainHand;
             else if( category?.OffHand == 1 ) Type = ItemType.OffHand;
             else if( category?.Head == 1 ) Type = ItemType.Head;
@@ -97,6 +97,12 @@ namespace VfxEditor.Select.Tabs.Items {
             else if( category?.Ears == 1 ) Type = ItemType.Ears;
         }
 
-        public string GetVfxPath( int idx ) => $"{RootPath}{idx.ToString().PadLeft( 4, '0' )}.avfx";
+        public ItemRow( Item item ) : this( item.Name.ToString(), item.RowId, item.Icon, new( item.ModelMain ), new( item.ModelSub ), item.EquipSlotCategory.Value ) { }
+
+        public string GetVfxPath( int idx ) => $"{RootPath}{idx:D4}.avfx";
+
+        public string GetName() => Name;
+
+        public uint GetIconId() => Icon;
     }
 }

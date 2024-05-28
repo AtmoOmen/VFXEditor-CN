@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 UseScreenCopy,
                 TextureFilter,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 Rate,
                 RPow
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( UseScreenCopy );
@@ -67,8 +67,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "材质反射";
 
-        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+        public override List<AvfxNodeSelect> GetNodeSelects() => [
             new AvfxNodeSelect<AvfxTexture>( Particle, "材质", Particle.NodeGroups.Textures, TextureIdx )
-        };
+        ];
     }
 }

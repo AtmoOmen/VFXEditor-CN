@@ -4,13 +4,13 @@
         public readonly AvfxCurve DistanceRandom = new( "随机距离", "DstR" );
 
         public AvfxBinderDataCamera() : base() {
-            Parsed = new() {
+            Parsed = [
                 Distance,
                 DistanceRandom
-            };
+            ];
 
-            DisplayTabs.Add( Distance );
-            DisplayTabs.Add( DistanceRandom );
+            Tabs.Add( Distance );
+            Tabs.Add( DistanceRandom );
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat {
@@ -28,12 +27,12 @@ namespace VfxEditor.PapFormat {
         protected override void OnOk() {
             GltfAnimation.ExportAnimation(
                 Motion.File.MotionData.Skeleton,
-                new List<string>( new[] { AnimationName } ),
-                new List<PapMotion>( new[] { Motion } ),
+                new List<string>( [AnimationName] ),
+                new List<PapMotion>( [Motion] ),
                 SkipUnanimated,
                 ExportPath
             );
-            UiUtils.OkNotification( "Havok data exported" );
+            Dalamud.OkNotification( "Havok data exported" );
         }
     }
 }

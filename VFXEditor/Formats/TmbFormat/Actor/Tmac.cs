@@ -18,7 +18,7 @@ namespace VfxEditor.TmbFormat.Actor {
         private readonly ParsedInt AbilityDelay = new( "技能延迟" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
 
-        public readonly List<Tmtr> Tracks = new();
+        public readonly List<Tmtr> Tracks = [];
         private Tmtr SelectedTrack = null;
 
         public DangerLevel MaxDanger => Tracks.Count == 0 ? DangerLevel.None : Tracks.Select( x => x.MaxDanger ).Max();

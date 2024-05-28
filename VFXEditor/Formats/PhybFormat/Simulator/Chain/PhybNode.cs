@@ -13,7 +13,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public readonly ParsedFloat AttractByAnimation = new( "以动画吸引" );
         public readonly ParsedFloat WindScale = new( "风力缩放" );
         public readonly ParsedFloat GravityScale = new( "重力缩放" );
-        public readonly ParsedFloat ConeMaxAngle = new( "锥体最大角度" );
+        public readonly ParsedRadians ConeMaxAngle = new( "锥体最大角度" );
         public readonly ParsedFloat3 ConeAxisOffset = new( "锥体轴偏移" );
         public readonly ParsedFloat3 ConstraintPlaneNormal = new( "约束平面法线" );
         public readonly ParsedUInt CollisionFlag = new( "碰撞标志" );
@@ -27,7 +27,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             BoneName,
             Radius,
             AttractByAnimation,
@@ -38,7 +38,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             ConstraintPlaneNormal,
             CollisionFlag,
             ContinuousCollisionFlag,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 

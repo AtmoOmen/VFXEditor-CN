@@ -26,26 +26,35 @@ namespace VfxEditor.DirectX {
 
         public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             Model = new( 3, false,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
-                } );
+                ] );
             Model.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
 
             Emitters = new( 2, true,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0 ),
                     new( "INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1 ),
                     new( "INSTANCE", 1, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1 ),
                     new( "INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1 ),
                     new( "INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1 )
-                } );
+                ] );
             Emitters.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Emitter.fx" ), ShaderPassFlags.Pixel );
 
+            UpdatePyramidMesh();
+        }
+
+        public void UpdatePyramidMesh() {
             var builder = new MeshBuilder( true, false );
-            builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
+            builder.AddPyramid(
+                new Vector3( 0, 0, 0 ),
+                Vector3.UnitX, Vector3.UnitY,
+                Plugin.Configuration.ModelEmittersSize.X,
+                Plugin.Configuration.ModelEmittersSize.Y,
+                true );
             var data = FromMeshBuilder( builder, null, false, false, false, out var emitterCount );
             Emitters.SetVertexes( Device, data, emitterCount );
         }
@@ -79,7 +88,7 @@ namespace VfxEditor.DirectX {
                     }
                 }
 
-                Model.SetVertexes( Device, data.ToArray(), modelIndexes.Count * 3 );
+                Model.SetVertexes( Device, [.. data], modelIndexes.Count * 3 );
             }
 
             // ========= EMITTERS =====
@@ -93,11 +102,9 @@ namespace VfxEditor.DirectX {
                     var emitter = modelEmitters[idx];
                     var pos = new Vector3( emitter.Position.X, emitter.Position.Y, emitter.Position.Z );
                     var rot = GetEmitterRotationQuat( new Vector3( emitter.Normal.X, emitter.Normal.Y, emitter.Normal.Z ) );
-
                     data.Add( Matrix.AffineTransformation( 1f, rot, pos ) );
                 }
-
-                Emitters.SetInstances( Device, data.ToArray(), modelEmitters.Count );
+                Emitters.SetInstances( Device, [.. data], modelEmitters.Count );
             }
 
             UpdateDraw();
@@ -119,8 +126,12 @@ namespace VfxEditor.DirectX {
 
         protected override void DrawPasses() {
             Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
-            Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
+            if( Plugin.Configuration.ModelShowEmitters ) {
+                Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
+            }
         }
+
+        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXVfx();
 
         public override void Dispose() {
             base.Dispose();

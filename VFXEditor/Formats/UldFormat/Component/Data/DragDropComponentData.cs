@@ -3,9 +3,9 @@
 namespace VfxEditor.UldFormat.Component.Data {
     public class DragDropComponentData : UldGenericData {
         public DragDropComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "未知节点 ID 1" ),
-            } );
+            ] );
         }
     }
 }

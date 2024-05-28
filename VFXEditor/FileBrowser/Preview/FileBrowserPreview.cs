@@ -15,7 +15,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser.Preview {
     public class FileBrowserPreview {
-        public static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex", "tex" };
+        public static readonly List<string> ImageExtensions = ["jpeg", "jpg", "png", "dds", "atex", "tex"];
 
         private static readonly SemaphoreSlim Lock = new( 1, 1 );
         private IDalamudTextureWrap Texture;
@@ -125,21 +125,20 @@ namespace VfxEditor.FileBrowser.Preview {
             using var ddsFile = DDSFile.Read( path );
             if( ddsFile == null ) return null;
 
+            var height = ddsFile.MipChains[0][0].Height;
+            var width = ddsFile.MipChains[0][0].Width;
+            var ddsFormat = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );
+            mips = ddsFile.MipChains[0].Count;
+            format = $"{ddsFormat}";
+
             using var ms = new MemoryStream( File.ReadAllBytes( path ) );
             using var reader = new BinaryReader( ms );
 
-            reader.BaseStream.Position = 12;
-            var height = reader.ReadInt32();
-            var width = reader.ReadInt32();
-            reader.ReadInt32(); // pitch
-            reader.ReadInt32(); // depth
-            mips = reader.ReadInt32();
+            reader.BaseStream.Position = 0x54;
+            var headerSize = ( reader.ReadUInt32() == 0x30315844 ) ? 148 : 128;
+            reader.BaseStream.Position = headerSize;
+            var data = reader.ReadBytes( ( int )ms.Length - headerSize );
 
-            reader.BaseStream.Position = 128; // skip header
-            var data = reader.ReadBytes( ( int )ms.Length - 128 );
-
-            var ddsFormat = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );
-            format = $"{ddsFormat}";
             var convertedData = TextureDataFile.Convert( data, ddsFormat, width, height, 1 )[0];
             return Dalamud.PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
         }
@@ -152,7 +151,7 @@ namespace VfxEditor.FileBrowser.Preview {
             if( file == null ) return null;
 
             format = $"{file.Header.Format}";
-            mips = file.Header.MipLevels;
+            mips = file.Header.MipLevelsCount;
             return Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
         }
 

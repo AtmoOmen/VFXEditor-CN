@@ -1,5 +1,5 @@
-﻿namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataDisc : AvfxData {
+namespace VfxEditor.AvfxFormat {
+    public class AvfxParticleDataDisc : AvfxDataWithParameters {
         public readonly AvfxInt PartsCount = new( "组件数量", "PrtC" );
         public readonly AvfxInt PartsCountU = new( "水平组件数量", "PCnU" );
         public readonly AvfxInt PartsCountV = new( "垂直组件数量", "PCnV" );
@@ -15,11 +15,10 @@
         public readonly AvfxCurve RadiusEnd = new( "半径结束点", "RE" );
         public readonly AvfxCurveColor ColorEdgeInner = new( name: "内部边缘颜色", "CEI" );
         public readonly AvfxCurveColor ColorEdgeOuter = new( name: "外部边缘颜色", "CEO" );
-
-        public readonly UiDisplayList Display;
+        public readonly AvfxInt SS = new( "缩放比例", "SS" );
 
         public AvfxParticleDataDisc() : base() {
-            Parsed = new() {
+            Parsed = [
                 PartsCount,
                 PartsCountU,
                 PartsCountV,
@@ -34,25 +33,27 @@
                 RadiusBegin,
                 RadiusEnd,
                 ColorEdgeInner,
-                ColorEdgeOuter
-            };
+                ColorEdgeOuter,
+                SS
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( PartsCount );
-            Display.Add( PartsCountU );
-            Display.Add( PartsCountV );
-            Display.Add( PointIntervalFactoryV );
-            DisplayTabs.Add( Angle );
-            DisplayTabs.Add( HeightBeginInner );
-            DisplayTabs.Add( HeightEndInner );
-            DisplayTabs.Add( HeightBeginOuter );
-            DisplayTabs.Add( HeightEndOuter );
-            DisplayTabs.Add( WidthBegin );
-            DisplayTabs.Add( WidthEnd );
-            DisplayTabs.Add( RadiusBegin );
-            DisplayTabs.Add( RadiusEnd );
-            DisplayTabs.Add( ColorEdgeInner );
-            DisplayTabs.Add( ColorEdgeOuter );
+            ParameterTab.Add( PartsCount );
+            ParameterTab.Add( PartsCountU );
+            ParameterTab.Add( PartsCountV );
+            ParameterTab.Add( PointIntervalFactoryV );
+            ParameterTab.Add( SS );
+
+            Tabs.Add( Angle );
+            Tabs.Add( HeightBeginInner );
+            Tabs.Add( HeightEndInner );
+            Tabs.Add( HeightBeginOuter );
+            Tabs.Add( HeightEndOuter );
+            Tabs.Add( WidthBegin );
+            Tabs.Add( WidthEnd );
+            Tabs.Add( RadiusBegin );
+            Tabs.Add( RadiusEnd );
+            Tabs.Add( ColorEdgeInner );
+            Tabs.Add( ColorEdgeOuter );
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -6,8 +7,11 @@ using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Ui.Components.Base;
 using VfxEditor.UldFormat.Component.Node.Data;
 using VfxEditor.UldFormat.Component.Node.Data.Component;
+using VfxEditor.UldFormat.Timeline;
 
 namespace VfxEditor.UldFormat.Component.Node {
     public enum NodeType : int {
@@ -35,13 +39,14 @@ namespace VfxEditor.UldFormat.Component.Node {
         private readonly List<UldComponent> Components;
         private readonly UldWorkspaceItem Parent;
 
-        public readonly ParsedInt ParentId = new( "父级 ID" );
-        public readonly ParsedInt NextSiblingId = new( "下一兄弟节点 ID" );
-        public readonly ParsedInt PrevSiblingId = new( "前一兄弟节点 ID" );
-        public readonly ParsedInt ChildNodeId = new( "子级节点 ID" );
+        public readonly SelectView<UldNode> NodeView;
+        public readonly ParsedIntSelect<UldNode> ParentId;
+        public readonly ParsedIntSelect<UldNode> NextSiblingId;
+        public readonly ParsedIntSelect<UldNode> PrevSiblingId;
+        public readonly ParsedIntSelect<UldNode> ChildNodeId;
 
         public bool IsComponentNode = false;
-        public readonly ParsedInt ComponentTypeId = new( "组件 ID" );
+        public readonly ParsedInt ComponentTypeId = new( "##ComponentId" );
         public UldGenericData Data = null;
 
         public readonly ParsedDataEnum<NodeType, UldGenericData> Type;
@@ -52,67 +57,80 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt Unk2 = new( "未知 2" );
         public readonly ParsedInt Unk3 = new( "未知 3" );
         public readonly ParsedInt Unk4 = new( "未知 4" );
-        public readonly ParsedShort X = new( "X" );
-        public readonly ParsedShort Y = new( "Y" );
-        public readonly ParsedUInt W = new( "宽度", size: 2 );
-        public readonly ParsedUInt H = new( "高度", size: 2 );
+        public readonly ParsedShort2 Position = new( "位置" );
+        public readonly ParsedShort2 Size = new( "大小" );
         public readonly ParsedRadians Rotation = new( "旋转" );
         public readonly ParsedFloat2 Scale = new( "缩放" );
-        public readonly ParsedShort OriginX = new( "原点 X" );
-        public readonly ParsedShort OriginY = new( "原点 Y" );
+        public readonly ParsedShort2 Origin = new( "原点" );
         public readonly ParsedUInt Priority = new( "优先级", size: 2 );
         public readonly ParsedFlag<NodeFlags> Flags = new( "标识", size: 1 );
         public readonly ParsedInt Unk7 = new( "未知 7", size: 1 );
-        public readonly ParsedShort MultiplyRed = new( "红色相乘" );
-        public readonly ParsedShort MultiplyGreen = new( "绿色相乘" );
-        public readonly ParsedShort MultiplyBlue = new( "蓝色相乘" );
-        public readonly ParsedShort AddRed = new( "增加红色" );
-        public readonly ParsedShort AddGreen = new( "增加绿色" );
-        public readonly ParsedShort AddBlue = new( "增加蓝色" );
-        public readonly ParsedInt Alpha = new( "Alpha", size: 1 );
+        public readonly ParsedShort3 MultiplyColor = new( "颜色乘算" );
+        public readonly ParsedShort3 AddColor = new( "颜色加算" );
+        public readonly ParsedInt Alpha = new( "透明度", size: 1 );
         public readonly ParsedInt ClipCount = new( "片段数", size: 1 );
-        public readonly ParsedUInt TimelineId = new( "时间线 ID", size: 2 );
+
+        public readonly ParsedIntSelect<UldTimeline> TimelineId = new( "时间线", 0,
+            () => Plugin.UldManager.File.TimelineDropdown,
+            ( UldTimeline item ) => ( int )item.Id.Value,
+            ( UldTimeline item, int _ ) => item.GetText(),
+            size: 2
+        );
 
         // need to wait until all components are initialized, so store this until then
         private readonly long DelayedPosition;
         private readonly int DelayedSize;
         private readonly int DelayedNodeType;
 
-        public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
+        public UldNode( uint id, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : base( id ) {
             Parent = parent;
             Components = components;
             Type = new( this, "Type" );
 
-            Parsed = new() {
+            Parsed = [
                 TabIndex,
                 Unk1,
                 Unk2,
                 Unk3,
                 Unk4,
-                X,
-                Y,
-                W,
-                H,
+                Position,
+                Size,
                 Rotation,
                 Scale,
-                OriginX,
-                OriginY,
+                Origin,
                 Priority,
                 Flags,
                 Unk7,
-                MultiplyRed,
-                MultiplyGreen,
-                MultiplyBlue,
-                AddRed,
-                AddGreen,
-                AddBlue,
+                MultiplyColor,
+                AddColor,
                 Alpha,
-                ClipCount,
-                TimelineId
-            };
+                ClipCount
+            ];
+
+            NodeView = nodeView;
+            ParentId = new( "父级", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
+            NextSiblingId = new( "下一节点", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
+            PrevSiblingId = new( "上一节点", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
+            ChildNodeId = new( "子级", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
         }
 
-        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent ) : this( components, parent ) {
+        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : this( 0, components, parent, nodeView ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -134,6 +152,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             }
 
             Parsed.ForEach( x => x.Read( reader ) );
+            TimelineId.Read( reader );
 
             DelayedPosition = reader.BaseStream.Position;
             DelayedSize = ( int )( pos + size - reader.BaseStream.Position ) - 12;
@@ -170,6 +189,8 @@ namespace VfxEditor.UldFormat.Component.Node {
             writer.Write( ( ushort )0 );
 
             Parsed.ForEach( x => x.Write( writer ) );
+            TimelineId.Write( writer );
+
             Data?.Write( writer );
 
             var finalPos = writer.BaseStream.Position;
@@ -226,8 +247,13 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             if( IsComponentNode ) {
                 ComponentTypeId.Draw();
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "刷新" ) ) CommandManager.Add( new UldNodeDataCommand( this ) );
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) CommandManager.Add( new UldNodeDataCommand( this ) );
+                }
+                ImGui.SameLine();
+                ImGui.Text( "组件类型" );
             }
             else Type.Draw();
 
@@ -247,6 +273,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             using var _ = ImRaii.PushId( "Parameters" );
             using var child = ImRaii.Child( "Child" );
 
+            TimelineId.Draw();
             ParentId.Draw();
             NextSiblingId.Draw();
             PrevSiblingId.Draw();

@@ -1,13 +1,12 @@
-﻿using Lumina.Excel.GeneratedSheets;
-using System.Text;
+using Lumina.Excel.GeneratedSheets2;
 
 namespace VfxEditor.Select.Tabs.Items {
     public class ItemRowWeapon : ItemRow {
-        public readonly bool HasSubModel;
-        public readonly ItemRowWeapon SubItem = null;
+        public readonly ItemRowWeapon SubItem;
         public readonly string OverrideImcPath = null;
-        private readonly string ModelString;
         private readonly string BodyString;
+
+        public bool HasSubModel => SecondaryIds.Id1 != 0;
 
         public override string RootPath => $"chara/weapon/{ModelString}/obj/body/{BodyString}/vfx/eff/vw";
 
@@ -19,11 +18,18 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public string MdlPath => $"chara/weapon/{ModelString}/obj/body/{BodyString}/model/{ModelString}{BodyString}.mdl";
 
+        public ItemRowWeapon( string name, uint rowId, ushort icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category, string imcPath = "" ) :
+            base( name, rowId, icon, ids, secondaryIds, category ) {
+
+            OverrideImcPath = imcPath;
+            ModelString = $"w{Ids.Id:D4}";
+            BodyString = $"b{Ids.WeaponBody:D4}";
+        }
+
         public ItemRowWeapon( Item item, string imcPath = "" ) : base( item ) {
             OverrideImcPath = imcPath;
-            HasSubModel = SecondaryIds.Id1 != 0;
-            ModelString = "w" + Ids.Id.ToString().PadLeft( 4, '0' );
-            BodyString = "b" + Ids.WeaponBody.ToString().PadLeft( 4, '0' );
+            ModelString = $"w{Ids.Id:D4}";
+            BodyString = $"b{Ids.WeaponBody:D4}";
 
             // ======================================
 
@@ -31,22 +37,19 @@ namespace VfxEditor.Select.Tabs.Items {
             var category = item.ItemUICategory.Value.RowId;
             var doubleHand = ( category == 1 || category == 84 || category == 107 ); // MNK, NIN, DNC weapons
 
-            var subItem = new Item {
-                Name = new Lumina.Text.SeString( Encoding.UTF8.GetBytes( Name + " / Offhand" ) ),
-                Icon = item.Icon,
-                EquipRestriction = item.EquipRestriction,
-                EquipSlotCategory = item.EquipSlotCategory,
-                ItemSearchCategory = item.ItemSearchCategory,
-                ItemSortCategory = item.ItemSortCategory,
-                ClassJobCategory = item.ClassJobCategory,
-                ItemUICategory = item.ItemUICategory,
-                // not sure why this requires it. sometimes the +50 model isn't in the submodel
-                ModelMain = doubleHand ? ItemIds.ToLong( Ids.Id1 + 50, Ids.Id2, Ids.Id3, Ids.Id4 ) : item.ModelSub,
-                ModelSub = 0
-            };
-            SubItem = new ItemRowWeapon( subItem, doubleHand ? ImcPath : null );
+            SubItem = new ItemRowWeapon(
+                $"{Name} (Offhand)",
+                item.RowId,
+                Icon,
+                doubleHand ? Ids with { Id1 = Ids.Id1 + 50 } : SecondaryIds,
+                new( 0 ),
+                item.EquipSlotCategory.Value,
+                doubleHand ? ImcPath : null );
         }
 
-        public string GetMtrlPath( int id, string suffix ) => $"chara/weapon/{ModelString}/obj/body/{BodyString}/material/v" + id.ToString().PadLeft( 4, '0' ) + $"/mt_{ModelString}{BodyString}_{suffix}.mtrl";
+        public string GetMtrlPath( int id, string suffix ) => $"chara/weapon/{ModelString}/obj/body/{BodyString}/material/v{id:D4}/mt_{ModelString}{BodyString}_{suffix}.mtrl";
+
+        // chara/weapon/w0101/animation/s0002/body/material.pap
+        public string GetMaterialPap( int id ) => $"chara/weapon/{ModelString}/animation/s{id:D4}/body/material.pap";
     }
 }

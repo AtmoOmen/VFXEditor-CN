@@ -11,7 +11,7 @@ namespace VfxEditor.PapFormat.Motion {
     public unsafe class PapMotions : HavokData {
         public readonly PapFile File;
         public readonly string SklbTempPath;
-        private readonly List<PapMotion> Motions = new();
+        private readonly List<PapMotion> Motions = [];
 
         public HavokData Bones;
         public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
@@ -56,6 +56,8 @@ namespace VfxEditor.PapFormat.Motion {
                 return $"chara/human/{charaType}/skeleton/face/{faceType}/skl_{charaType}{faceType}.sklb";
             }
 
+            if( File.IsMaterial ) return "chara/common/animation/skl_material.sklb";
+
             var format = modelType switch {
                 SkeletonType.Monster => "chara/monster/m{0:D4}/skeleton/base/b{1:D4}/skl_m{0:D4}b{1:D4}.sklb",
                 SkeletonType.DemiHuman => "chara/demihuman/d{0:D4}/skeleton/base/b{1:D4}/skl_d{0:D4}b{1:D4}.sklb",
@@ -68,8 +70,13 @@ namespace VfxEditor.PapFormat.Motion {
         }
 
         public void Draw( int havokIndex ) {
-            Selector.Draw();
-            Motions[havokIndex].Draw( havokIndex );
+            if( File.IsMaterial ) {
+                Selector.Init();
+            }
+            else {
+                Selector.Draw();
+            }
+            Motions[havokIndex].DrawPreview( havokIndex );
         }
 
         public void DrawExportAll() {

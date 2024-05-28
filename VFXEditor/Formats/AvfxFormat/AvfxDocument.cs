@@ -29,18 +29,18 @@ namespace VfxEditor.AvfxFormat {
             base.CheckKeybinds();
 
             if( Plugin.Configuration.SpawnOnSelfKeybind.KeyPressed() ) {
-                VfxSpawn.Remove();
+                VfxSpawn.Clear();
                 if( !SpawnDisabled ) VfxSpawn.OnSelf( SpawnPath, true );
             }
 
             if( Plugin.Configuration.SpawnOnGroundKeybind.KeyPressed() ) {
-                VfxSpawn.Remove();
+                VfxSpawn.Clear();
                 if( !SpawnDisabled ) VfxSpawn.OnGround( SpawnPath, true );
 
             }
 
             if( Plugin.Configuration.SpawnOnTargetKeybind.KeyPressed() ) {
-                VfxSpawn.Remove();
+                VfxSpawn.Clear();
                 if( !SpawnDisabled ) VfxSpawn.OnTarget( SpawnPath, true );
             }
         }
@@ -70,8 +70,8 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawExtraColumn() {
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
-                if( VfxSpawn.Active ) {
-                    if( ImGui.Button( "移除", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
+                if( VfxSpawn.IsActive ) {
+                    if( ImGui.Button( "移除", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Clear();
                 }
                 else {
                     using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled );
@@ -129,7 +129,7 @@ namespace VfxEditor.AvfxFormat {
                         Plugin.AddModal( new ImportMissingTexturesModal( paths ) );
                     }
                 }
-                UiUtils.Tooltip( "Import missing textures" );
+                UiUtils.Tooltip( "导入缺失材质" );
             }
         }
     }

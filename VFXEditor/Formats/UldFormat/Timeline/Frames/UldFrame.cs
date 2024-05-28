@@ -9,12 +9,12 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldFrame : IUiItem {
         public readonly ParsedUInt StartFrame = new( "起始帧" );
         public readonly ParsedUInt EndFrame = new( "结束帧" );
-        public readonly List<UldKeyGroup> KeyGroups = new();
+        public readonly List<UldKeyGroup> KeyGroups = [];
 
         public readonly CommandSplitView<UldKeyGroup> KeyGroupView;
 
         public UldFrame() {
-            KeyGroupView = new( "Key Group", KeyGroups, true, null, () => new UldKeyGroup() );
+            KeyGroupView = new( "Key Group", KeyGroups, true, ( UldKeyGroup item, int idx ) => $"{item.Usage.Value}", () => new UldKeyGroup() );
         }
 
         public UldFrame( BinaryReader reader ) : this() {

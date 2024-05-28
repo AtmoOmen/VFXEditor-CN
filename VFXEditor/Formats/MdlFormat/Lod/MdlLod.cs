@@ -30,19 +30,19 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly ushort _VerticalFogMeshIndex;
         private readonly ushort _VerticalFogMeshCount;
 
-        private readonly List<MdlMesh> Meshes = new();
+        private readonly List<MdlMesh> Meshes = [];
         private readonly UiDropdown<MdlMesh> MeshView;
 
-        private readonly List<MdlTerrainShadowMesh> TerrainShadows = new();
+        private readonly List<MdlTerrainShadowMesh> TerrainShadows = [];
         private readonly UiDropdown<MdlTerrainShadowMesh> TerrainShadowView;
 
-        private readonly List<MdlMesh> WaterMeshes = new();
+        private readonly List<MdlMesh> WaterMeshes = [];
         private readonly UiDropdown<MdlMesh> WaterMeshView;
 
-        private readonly List<MdlMesh> ShadowMeshes = new();
+        private readonly List<MdlMesh> ShadowMeshes = [];
         private readonly UiDropdown<MdlMesh> ShadowMeshView;
 
-        private readonly List<MdlMesh> VerticalFogMeshes = new();
+        private readonly List<MdlMesh> VerticalFogMeshes = [];
         private readonly UiDropdown<MdlMesh> VerticalFogMeshView;
 
         public MdlLod( MdlFile file, BinaryReader reader ) {
@@ -65,6 +65,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             var edgeGeometryOffset = reader.ReadUInt32(); // equal to `vertexBufferOffset + vertexBufferSize` if `edgeGeometrySize = 0`
             var polygonCount = reader.ReadUInt32();
             var unknown = reader.ReadUInt32();
+
             reader.ReadUInt32(); // vertex buffer size, same as MdlFile
             reader.ReadUInt32(); // index buffer size
             reader.ReadUInt32(); // vertex data offset
@@ -72,7 +73,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
 
             // https://github.com/xivdev/Xande/blob/8fc75ce5192edcdabc4d55ac93ca0199eee18bc9/Xande.GltfImporter/MdlFileBuilder.cs#L558
             if( edgeGeometrySize != 0 || polygonCount != 0 || unknown != 0 ) {
-                Dalamud.Error( $"LoD: {edgeGeometrySize}/{edgeGeometryOffset} {polygonCount} {unknown}" );
+                Dalamud.Error( $"LoD: {edgeGeometrySize:X4} {edgeGeometryOffset:X4} {polygonCount:X4} {unknown:X4}" );
             }
 
             // ========= VIEWS ==============
@@ -117,11 +118,20 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-            Meshes.AddRange( data.Meshes.GetRange( _MeshIndex, _MeshCount ) );
-            TerrainShadows.AddRange( data.TerrainShadowMeshes.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
-            WaterMeshes.AddRange( data.Meshes.GetRange( _WaterMeshIndex, _WaterMeshCount ) );
-            ShadowMeshes.AddRange( data.Meshes.GetRange( _ShadowMeshIndex, _ShadowMeshCount ) );
-            VerticalFogMeshes.AddRange( data.Meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
+            if( _MeshIndex < data.Meshes.Count )
+                Meshes.AddRange( data.Meshes.GetRange( _MeshIndex, _MeshCount ) );
+
+            if( _TerrainShadowMeshIndex < data.Meshes.Count )
+                TerrainShadows.AddRange( data.TerrainShadowMeshes.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
+
+            if( _WaterMeshIndex < data.Meshes.Count )
+                WaterMeshes.AddRange( data.Meshes.GetRange( _WaterMeshIndex, _WaterMeshCount ) );
+
+            if( _ShadowMeshIndex < data.Meshes.Count )
+                ShadowMeshes.AddRange( data.Meshes.GetRange( _ShadowMeshIndex, _ShadowMeshCount ) );
+
+            if( _VerticalFogMeshIndex < data.Meshes.Count )
+                VerticalFogMeshes.AddRange( data.Meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
 
             var allMeshes = new List<MdlMeshDrawable>();
             allMeshes.AddRange( Meshes );

@@ -12,15 +12,15 @@ namespace VfxEditor.Select.Tabs.Items {
     }
 
     public class ItemTabMtrl : ItemTab<SelectedMtrl> {
-        public ItemTabMtrl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mtrl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Acc ) { }
+        public ItemTabMtrl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mtrl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Accessory ) { }
 
         // ===== LOADING =====
 
         public override void LoadSelection( ItemRow item, out SelectedMtrl loaded ) {
             loaded = new() {
                 IsWeapon = false,
-                WeaponPaths = new(),
-                ArmorPaths = new(),
+                WeaponPaths = [],
+                ArmorPaths = [],
             };
 
             var imcPath = item.ImcPath;
@@ -65,20 +65,20 @@ namespace VfxEditor.Select.Tabs.Items {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             ImGui.Text( $"Variant: {Selected.Variant}" );
 
             if( string.IsNullOrEmpty( Selected.ImcPath ) ) return;
-
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.ImcPath );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             if( Loaded.IsWeapon ) {
-                DrawPaths( Loaded.WeaponPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.WeaponPaths, Selected.Name, SelectResultType.GameItem );
             }
             else {
-                DrawPaths( Loaded.ArmorPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.ArmorPaths, Selected.Name, SelectResultType.GameItem );
             }
         }
 

@@ -1,12 +1,12 @@
 ﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.JournalCutscene {
     public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, List<ParsedPaths>> {
-        public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "JournalCutscene", SelectResultType.GameCutscene ) { }
+        public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "JournalCutscene" ) { }
 
         // ===== LOADING =====
 
@@ -23,13 +23,11 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
             for( var idx = 0; idx < Loaded.Count; idx++ ) {
                 using var _ = ImRaii.PushId( idx );
 
-                if( ImGui.CollapsingHeader( $"Cutscene {idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"过场剧情 {idx}" ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaths( "视效", Loaded[idx].Paths, $"{Selected.Name} {idx}" );
+                    Dialog.DrawPaths( Loaded[idx].Paths, $"{Selected.Name} {idx}", SelectResultType.GameCutscene );
                 }
             }
         }
-
-        protected override string GetName( JournalCutsceneRow item ) => item.Name;
     }
 }

@@ -25,7 +25,7 @@ namespace VfxEditor.Select {
 
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
-        public static readonly List<RacialData> CharacterRaces = new() {
+        public static readonly List<RacialData> CharacterRaces = [
             new RacialData( "中原之民男性", "c0101", 1 ),
             new RacialData( "中原之民女性","c0201", 101 ),
             new RacialData( "高地之民男性", "c0301", 201 ),
@@ -44,9 +44,9 @@ namespace VfxEditor.Select {
             // 1601 coming soon (tm) - 25
             new RacialData( "维埃拉族男性", "c1701", 1601 ),
             new RacialData( "维埃拉族女性", "c1801", 1701 )
-        };
+        ];
 
-        public static readonly Dictionary<string, string> JobAnimationIds = new() {
+        public static readonly Dictionary<string, string> JobAnimationIds = [
             { "战士", "bt_2ax_emp" },
             { "骑士", "bt_swd_sld" },
             { "绝枪战士", "bt_2gb_emp" },
@@ -67,20 +67,20 @@ namespace VfxEditor.Select {
             { "黑魔法师", "bt_jst_sld" },
             { "召唤师", "bt_2bk_emp" },
             { "青魔法师", "bt_rod_emp" },
-        };
+        ];
 
-        public static readonly Dictionary<string, string> JobMovementOverride = new() {
+        public static readonly Dictionary<string, string> JobMovementOverride = [
             { "黑魔法师", "bt_stf_sld" },
             { "忍者", "bt_nin_nin" },
-        };
+        ];
 
-        public static readonly Dictionary<string, string> JobDrawOverride = new() {
+        public static readonly Dictionary<string, string> JobDrawOverride = [
             { "黑魔法师", "bt_stf_sld" }
-        };
+        ];
 
-        public static readonly Dictionary<string, string> JobAutoOverride = new() {
+        public static readonly Dictionary<string, string> JobAutoOverride = [
             { "黑魔法师", "bt_stf_sld" }
-        };
+        ];
 
         public static readonly int MaxChangePoses = 6;
 
@@ -89,28 +89,8 @@ namespace VfxEditor.Select {
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new();
+            if( string.IsNullOrEmpty( path ) ) return [];
             return CharacterRaces.ToDictionary( x => x.Name, x => GetSkeletonPath( x.Id, path ) );
         }
-
-        public static Dictionary<string, string> GetAllJobPaps( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
-
-        public static Dictionary<string, Dictionary<string, string>> GetAllJobPaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new();
-            return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
-        }
-
-        public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new();
-            Dictionary<string, Dictionary<string, string>> ret = new();
-            foreach( var item in CharacterRaces ) {
-                ret[item.Name] = item.FaceOptions.ToDictionary( x => $"Face {x}", x => $"chara/human/{item.Id}/animation/f{x:D4}/nonresident/{path}.pap" );
-            }
-            return ret;
-        }
-
-        public static string ToTmbPath( string key ) => ( string.IsNullOrEmpty( key ) || key.Contains( "[SKL_ID]" ) ) ? string.Empty : $"chara/action/{key}.tmb";
-
-        public static string ToVfxPath( string key ) => string.IsNullOrEmpty( key ) ? string.Empty : $"vfx/common/eff/{key}.avfx";
     }
 }

@@ -1,7 +1,7 @@
 ﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffectorDataPointLight : AvfxData {
+    public class AvfxEffectorDataPointLight : AvfxDataWithParameters {
         public readonly AvfxCurveColor Color = new( "颜色" );
         public readonly AvfxCurve DistanceScale = new( "距离缩放", "DstS" );
         public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle );
@@ -14,10 +14,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat ShadowCreateDistanceNear = new( "创建近距离效果", "SCDN" );
         public readonly AvfxFloat ShadowCreateDistanceFar = new( "创建远距离效果", "SCDF" );
 
-        public readonly UiDisplayList Display;
-
         public AvfxEffectorDataPointLight() : base() {
-            Parsed = new() {
+            Parsed = [
                 Color,
                 DistanceScale,
                 Rotation,
@@ -29,21 +27,20 @@ namespace VfxEditor.AvfxFormat {
                 EnableMoveShadow,
                 ShadowCreateDistanceNear,
                 ShadowCreateDistanceFar
-            };
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( PointLightAttenuationType );
-            Display.Add( EnableShadow );
-            Display.Add( EnableCharShadow );
-            Display.Add( EnableMapShadow );
-            Display.Add( EnableMoveShadow );
-            Display.Add( ShadowCreateDistanceNear );
-            Display.Add( ShadowCreateDistanceFar );
+            ParameterTab.Add( PointLightAttenuationType );
+            ParameterTab.Add( EnableShadow );
+            ParameterTab.Add( EnableCharShadow );
+            ParameterTab.Add( EnableMapShadow );
+            ParameterTab.Add( EnableMoveShadow );
+            ParameterTab.Add( ShadowCreateDistanceNear );
+            ParameterTab.Add( ShadowCreateDistanceFar );
 
-            DisplayTabs.Add( Color );
-            DisplayTabs.Add( DistanceScale );
-            DisplayTabs.Add( Rotation );
-            DisplayTabs.Add( Position );
+            Tabs.Add( Color );
+            Tabs.Add( DistanceScale );
+            Tabs.Add( Rotation );
+            Tabs.Add( Position );
         }
     }
 }

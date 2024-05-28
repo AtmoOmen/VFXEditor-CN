@@ -6,6 +6,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Export;
@@ -18,10 +19,11 @@ namespace VfxEditor {
         public static GameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
         public static GameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
 
-        private static readonly List<string> ModalsToOpen = new();
-        public static readonly Dictionary<string, Modal> Modals = new();
+        private static readonly List<string> ModalsToOpen = [];
+        public static readonly Dictionary<string, Modal> Modals = [];
 
         public static void Draw() {
+            IsImguiSafe = true;
             if( CheckLoadState() ) return;
 
             CheckWorkspaceKeybinds();
@@ -50,21 +52,21 @@ namespace VfxEditor {
             if( ImGui.BeginMenu( "文件" ) ) {
                 if( ImGui.MenuItem( "新建" ) ) NewWorkspace();
                 if( ImGui.MenuItem( "打开" ) ) OpenWorkspace( true );
-                if( ImGui.BeginMenu( "Open Recent" ) ) {
+                if( ImGui.BeginMenu( "打开最近" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
                         if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
                             if( File.Exists( recent.Item2 ) ) {
                                 OpenWorkspaceAsync( recent.Item2, true );
                             }
                             else {
-                                Dalamud.Error( $"{recent.Item2} does not exist" );
+                                Dalamud.Error( $"{recent.Item2} 不存在" );
                             }
                             break;
                         }
                     }
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Append" ) ) OpenWorkspace( false );
+                if( ImGui.MenuItem( "新增" ) ) OpenWorkspace( false );
                 if( ImGui.MenuItem( "保存" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "另存为" ) ) SaveAsWorkspace();
 
@@ -91,44 +93,61 @@ namespace VfxEditor {
         public static void DrawManagersMenu( IFileManager currentManager ) {
             using var _ = ImRaii.PushId( "Menu" );
 
-            if( ImGui.MenuItem( "材质" ) ) TextureManager.Show();
-            ImGui.Separator();
-
             // Manually specify the order since it's different than the load order
-            var managers = new IFileManager[] {
-                AvfxManager,
-                TmbManager,
-                PapManager,
-                ScdManager,
-                UldManager,
-                SklbManager,
-                SkpManager,
-                PhybManager,
-                EidManager,
-                AtchManager,
-                MdlManager,
-                ShpkManager,
-                ShcdManager,
-                MtrlManager,
+            var categories = new List<IFileManager[]> {
+                new IFileManager[]{
+                    AvfxManager,
+                    TextureManager
+                },
+                new IFileManager[]{
+                    TmbManager,
+                    PapManager,
+                },
+                new IFileManager[]{
+                    ScdManager
+                },
+                new IFileManager[]{
+                    UldManager
+                },
+                new IFileManager[]{
+                    SklbManager,
+                    SkpManager,
+                    PhybManager,
+                    EidManager,
+                    AtchManager,
+                    KdbManager,
+                },
+                new IFileManager[]{
+                    MdlManager,
+                    MtrlManager,
+                    ShpkManager,
+                    ShcdManager
+                }
             };
 
             var dropdown = false;
+            var managerCount = categories.Sum( x => x.Length );
+            var managerIdx = 0;
 
-            for( var i = 0; i < managers.Length; i++ ) {
-                var manager = managers[i];
+            foreach( var (category, categoryIdx) in categories.WithIndex() ) {
+                foreach( var manager in category ) {
+                    if( !dropdown && managerIdx < ( managerCount - 1 ) ) { // no need for a dropdown for the last one
+                        var width = ImGui.CalcTextSize( manager.GetName() ).X + ( 2 * ImGui.GetStyle().ItemSpacing.X ) + 10;
 
-                if( !dropdown && i < ( managers.Length - 1 ) ) { // no need for a dropdown for the last one
-                    var width = ImGui.CalcTextSize( manager.GetId() ).X + ( 2 * ImGui.GetStyle().ItemSpacing.X ) + 10;
-
-                    if( width > ImGui.GetContentRegionAvail().X ) {
-                        dropdown = true;
-                        using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                        if( !ImGui.BeginMenu( FontAwesomeIcon.EllipsisH.ToIconString() ) ) return; // Menu hidden, just skip the rest
+                        if( width > ImGui.GetContentRegionAvail().X ) {
+                            dropdown = true;
+                            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                            if( !ImGui.BeginMenu( FontAwesomeIcon.EllipsisH.ToIconString() ) ) return; // Menu hidden, just skip the rest
+                        }
                     }
+
+                    using var disabled = ImRaii.Disabled( manager == currentManager );
+                    if( ImGui.MenuItem( manager.GetName() ) ) manager.Show();
+
+                    managerIdx++;
                 }
 
-                using var disabled = ImRaii.Disabled( manager == currentManager );
-                if( ImGui.MenuItem( manager.GetId() ) ) manager.Show();
+                if( categoryIdx < categories.Count - 1 ) ImGui.Separator();
             }
 
             if( dropdown ) ImGui.EndMenu();

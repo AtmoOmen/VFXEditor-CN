@@ -40,7 +40,7 @@ namespace VfxEditor.Library {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
-                    var newFolder = new LibraryFolder( NodeRoot, "新建文件夹", UiUtils.RandomString( 12 ), new() );
+                    var newFolder = new LibraryFolder( NodeRoot, "新建文件夹", UiUtils.RandomString( 12 ), [] );
                     LastDrawnRoot.Add( newFolder );
                     Save();
                 }
@@ -55,7 +55,7 @@ namespace VfxEditor.Library {
                 ImGui.SameLine();
                 ImGui.TextDisabled( FontAwesomeIcon.InfoCircle.ToIconString() );
             }
-            UiUtils.Tooltip( "Import and edit items by right-clicking them" );
+            UiUtils.Tooltip( "右键以导入或编辑" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 

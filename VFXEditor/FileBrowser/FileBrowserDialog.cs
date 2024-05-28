@@ -45,10 +45,10 @@ namespace VfxEditor.FileBrowser {
         private string FileNameInput = "";
 
         private FileBrowserFile Selected;
-        private readonly List<FileBrowserFile> Files = new();
-        private readonly List<FileBrowserFile> SearchedFiles = new();
+        private readonly List<FileBrowserFile> Files = [];
+        private readonly List<FileBrowserFile> SearchedFiles = [];
         private SortingField CurrentSortingField = SortingField.FileName;
-        private readonly bool[] SortDescending = new bool[] { false, false, false, false };
+        private readonly bool[] SortDescending = [false, false, false, false];
 
         // ========================
 
@@ -56,7 +56,7 @@ namespace VfxEditor.FileBrowser {
         private string CurrentPath;
         private readonly UndoRedoStack<(string, string)> PathHistory = new( 25 );
 
-        private readonly List<string> PathParts = new();
+        private readonly List<string> PathParts = [];
         private bool JustDrive => PathParts.Count == 1;
         private bool PathEditing = false;
         private string PathInput = "";
@@ -74,7 +74,6 @@ namespace VfxEditor.FileBrowser {
             string currentPath,
             string defaultFileName,
             string defaultExtension,
-            List<FileBrowserSidebarItem> recent,
             CommandManager command
         ) {
             Id = id;
@@ -89,7 +88,7 @@ namespace VfxEditor.FileBrowser {
             FileNameInput = DefaultFileName;
             Command = command;
 
-            SideBar = new( this, recent );
+            SideBar = new( this );
             Filters = new( this, filters );
             Preview = new();
 
@@ -183,7 +182,7 @@ namespace VfxEditor.FileBrowser {
             SearchedFiles.Clear();
 
             foreach( var file in Files ) {
-                if( !string.IsNullOrEmpty( SearchInput ) && !file.FileName.ToLower().Contains( SearchInput.ToLower() ) ) continue;
+                if( !string.IsNullOrEmpty( SearchInput ) && !file.FileName.Contains( SearchInput, StringComparison.CurrentCultureIgnoreCase ) ) continue;
                 if( FolderDialog && file.Type != FilePickerFileType.Directory ) continue;
 
                 SearchedFiles.Add( file );
@@ -198,7 +197,7 @@ namespace VfxEditor.FileBrowser {
                 }
                 return drivePath;
             }
-            return Path.Combine( parts.ToArray() );
+            return Path.Combine( [.. parts] );
         }
 
         public void Dispose() => Preview.Dispose();

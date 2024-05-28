@@ -4,9 +4,9 @@ using VfxEditor.UldFormat;
 namespace VfxEditor.Select.Formats {
     public class UldSelectDialog : SelectDialog {
         public UldSelectDialog( string id, UldManager manager, bool isSourceDialog ) : base( id, "uld", manager, isSourceDialog ) {
-            GameTabs.AddRange( new SelectTab[]{
-                new CommonTabUld( this, "通常" ),
-            } );
+            GameTabs.AddRange( [
+                new CommonTabUld( this, "一般" ),
+            ] );
         }
     }
 }

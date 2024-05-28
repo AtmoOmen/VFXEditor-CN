@@ -15,7 +15,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
     public class UldNodeComponentData : UldGenericData {
         public UldNodeComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedInt( "索引", size: 1 ),
                 new ParsedInt( "上", size: 1 ),
                 new ParsedInt( "下", size: 1 ),
@@ -26,7 +26,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
                 new ParsedInt( "未知", size: 1 ),
                 new ParsedShort( "X 轴偏移" ),
                 new ParsedShort( "Y 轴偏移" )
-            } );
+            ] );
         }
     }
 }

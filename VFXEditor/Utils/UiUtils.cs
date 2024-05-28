@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Text;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 
@@ -30,8 +32,6 @@ namespace VfxEditor.Utils {
         public static readonly Vector4 RED_COLOR = new( 0.89098039216f, 0.30549019608f, 0.28980392157f, 1.0f );
 
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
-
-        public static readonly Vector4 YELLOW_COLOR = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
 
         public static readonly Vector4 DARK_GRAY = new( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 );
 
@@ -137,31 +137,17 @@ namespace VfxEditor.Utils {
 
         public static void WikiButton( string url ) {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), YELLOW_COLOR ) ) OpenUrl( url );
+                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), DALAMUD_ORANGE ) ) OpenUrl( url );
             }
             Tooltip( "点击以在 VFXEditor Wiki 上了解更多信息(英文)" );
         }
-
-#nullable enable
-        public static void OkNotification( string content, string? title = "VFXEditor" ) {
-            Dalamud.PluginInterface.UiBuilder.AddNotification( content, title, global::Dalamud.Interface.Internal.Notifications.NotificationType.Success );
-        }
-
-        public static void ErrorNotification( string content, string? title = "VFXEditor" ) {
-            Dalamud.PluginInterface.UiBuilder.AddNotification( content, title, global::Dalamud.Interface.Internal.Notifications.NotificationType.Error );
-        }
-
-        public static void WarningNotification( string content, string? title = "VFXEditor" ) {
-            Dalamud.PluginInterface.UiBuilder.AddNotification( content, title, global::Dalamud.Interface.Internal.Notifications.NotificationType.Warning );
-        }
-#nullable disable
 
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
             var color = verified switch {
                 VerifiedStatus.OK => GREEN_COLOR,
                 VerifiedStatus.ERROR => RED_COLOR,
                 VerifiedStatus.WORKSPACE => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f ),
-                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => YELLOW_COLOR,
+                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => DALAMUD_ORANGE,
                 _ => new Vector4( 1 )
             };
 
@@ -278,29 +264,22 @@ namespace VfxEditor.Utils {
             return buttonClicked;
         }
 
-        public static bool DrawRadians( string name, float oldValue, out float newValue ) {
+        private delegate bool DrawRadiansInputDelegate<T>( string label, ref T value );
+
+        public static bool DrawRadians( string name, float oldValue, out float newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ImGui.InputFloat );
+
+        public static bool DrawRadians3( string name, Vector3 oldValue, out Vector3 newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ImGui.InputFloat3 );
+
+        public static bool DrawRadians4( string name, Vector4 oldValue, out Vector4 newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ImGui.InputFloat4 );
+
+        private static bool DrawRadians<T>( string name, T oldValue, out T newValue, Func<T, T> toDegrees, Func<T, T> toRadians, DrawRadiansInputDelegate<T> input ) {
             newValue = oldValue;
             var needToConvert = Plugin.Configuration.UseDegreesForAngles;
-            var value = needToConvert ? ToDegrees( oldValue ) : oldValue;
+            var value = needToConvert ? toDegrees( oldValue ) : oldValue;
 
             ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
-            if( ImGui.InputFloat( "##Input", ref value ) ) {
-                newValue = needToConvert ? ToRadians( value ) : value;
-                return true;
-            }
-
-            DrawAngleToggle( name );
-            return false;
-        }
-
-        public static bool DrawRadians3( string name, Vector3 oldValue, out Vector3 newValue ) {
-            newValue = oldValue;
-            var needToConvert = Plugin.Configuration.UseDegreesForAngles;
-            var value = needToConvert ? ToDegrees( oldValue ) : oldValue;
-
-            ImGui.SetNextItemWidth( GetOffsetInputSize( 15 + ImGui.GetStyle().ItemInnerSpacing.X ) );
-            if( ImGui.InputFloat3( "##Input", ref value ) ) {
-                newValue = needToConvert ? ToRadians( value ) : value;
+            if( input( "##Input", ref value ) ) {
+                newValue = needToConvert ? toRadians( value ) : value;
                 return true;
             }
 
@@ -337,13 +316,17 @@ namespace VfxEditor.Utils {
             ImGui.Text( name );
         }
 
-        public static Vector3 ToRadians( Vector3 value ) => new( ToRadians( value.X ), ToRadians( value.Y ), ToRadians( value.Z ) );
-
         public static float ToRadians( float value ) => ( float )( ( Math.PI / 180 ) * value );
+
+        public static float ToDegrees( float value ) => ( float )( ( 180 / Math.PI ) * value );
+
+        public static Vector3 ToRadians( Vector3 value ) => new( ToRadians( value.X ), ToRadians( value.Y ), ToRadians( value.Z ) );
 
         public static Vector3 ToDegrees( Vector3 value ) => new( ToDegrees( value.X ), ToDegrees( value.Y ), ToDegrees( value.Z ) );
 
-        public static float ToDegrees( float value ) => ( float )( ( 180 / Math.PI ) * value );
+        public static Vector4 ToRadians( Vector4 value ) => new( ToRadians( value.X ), ToRadians( value.Y ), ToRadians( value.Z ), ToRadians( value.W ) );
+
+        public static Vector4 ToDegrees( Vector4 value ) => new( ToDegrees( value.X ), ToDegrees( value.Y ), ToDegrees( value.Z ), ToDegrees( value.W ) );
 
         public static bool MouseOver( Vector2 start, Vector2 end ) => Contains( start, end, ImGui.GetIO().MousePos );
 
@@ -398,5 +381,18 @@ namespace VfxEditor.Utils {
         }
 
         public static float AngleUpDownSize => 17 + ImGui.GetStyle().ItemSpacing.Y;
+
+        public static readonly HashSet<Type> ForceOpenTabs = [];
+
+        public static unsafe bool BeginTabItem<T>( string label ) {
+            var labelBytes = Encoding.UTF8.GetBytes( label );
+            var labelRef = stackalloc byte[labelBytes.Length + 1];
+            Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );
+
+            var type = typeof( T );
+            var forceOpen = ForceOpenTabs.Contains( type );
+            if( forceOpen ) ForceOpenTabs.Remove( type );
+            return ImGuiNative.igBeginTabItem( labelRef, null, forceOpen ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None ) == 1;
+        }
     }
 }

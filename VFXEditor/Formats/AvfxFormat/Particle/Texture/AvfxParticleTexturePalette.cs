@@ -19,13 +19,13 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 TextureFilter,
                 TextureBorder,
                 TextureIdx,
                 Offset
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( TextureFilter );
@@ -61,8 +61,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "材质调色";
 
-        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+        public override List<AvfxNodeSelect> GetNodeSelects() => [
             new AvfxNodeSelect<AvfxTexture>( Particle, "材质", Particle.NodeGroups.Textures, TextureIdx )
-        };
+        ];
     }
 }

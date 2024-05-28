@@ -1,4 +1,4 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Tabs.Items;
@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         private readonly string Prefix;
         private readonly string Extension;
 
-        public SkeletonTabArmor( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor", SelectResultType.GameItem ) {
+        public SkeletonTabArmor( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor" ) {
             Prefix = prefix;
             Extension = extension;
         }
@@ -32,13 +32,10 @@ namespace VfxEditor.Select.Tabs.Skeleton {
             loaded = SelectDataUtils.FileExistsFilter( paths );
         }
 
-        protected override string GetName( ItemRowArmor item ) => item.Name;
-
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameItem );
         }
     }
 }

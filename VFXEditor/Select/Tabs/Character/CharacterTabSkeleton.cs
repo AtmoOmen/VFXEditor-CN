@@ -6,8 +6,8 @@ using System.Linq;
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedSkeleton {
         public string BodyPath;
-        public Dictionary<string, string> FacePaths;
-        public Dictionary<(string, uint), string> HairPaths;
+        public List<(string, uint, string)> FacePaths;
+        public List<(string, uint, string)> HairPaths;
     }
 
     public class CharacterTabSkeleton : SelectTab<CharacterRow, SelectedSkeleton> {
@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Character {
         private readonly string Extension;
         private readonly bool HairFace;
 
-        public CharacterTabSkeleton( SelectDialog dialog, string name, string prefix, string extension, bool hairFace ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) {
+        public CharacterTabSkeleton( SelectDialog dialog, string name, string prefix, string extension, bool hairFace ) : base( dialog, name, "Character" ) {
             Prefix = prefix;
             Extension = extension;
             HairFace = hairFace;
@@ -32,21 +32,14 @@ namespace VfxEditor.Select.Tabs.Character {
 
             if( !HairFace ) return;
 
-            loaded.FacePaths = item.Data.FaceOptions
-                .Select( face => (face, $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}") )
-                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .ToDictionary( x => $"Face {x.Item1}", x => x.Item2 );
-
-            loaded.HairPaths = item.Data.HairOptions
-                .Select( hair => (hair, $"chara/human/{item.SkeletonId}/skeleton/hair/h{hair:D4}/{Prefix}_{item.SkeletonId}h{hair:D4}.{Extension}") )
-                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .ToDictionary( x => ($"Hair {x.Item1}", item.Data.HairToIcon.TryGetValue( x.Item1, out var icon ) ? icon : 0), x => x.Item2 );
+            loaded.FacePaths = GetPaths( item, item.Data.FaceOptions, "face", "Face", item.Data.FaceToIcon );
+            loaded.HairPaths = GetPaths( item, item.Data.HairOptions, "hair", "Hair", item.Data.HairToIcon );
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "身体", Loaded.BodyPath, Selected.Name );
+            Dialog.DrawPaths( Loaded.BodyPath, $"{Selected.Name} 身体", SelectResultType.GameCharacter );
 
             if( !HairFace ) return;
 
@@ -56,16 +49,22 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "发型" ) ) {
-                DrawPaths( Loaded.HairPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.HairPaths, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
 
-            if( ImGui.BeginTabItem( "脸型" ) ) {
-                DrawPaths( Loaded.FacePaths, Selected.Name );
+            if( ImGui.BeginTabItem( "面部" ) ) {
+                Dialog.DrawPaths( Loaded.FacePaths, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
         }
 
-        protected override string GetName( CharacterRow item ) => item.Name;
+        private List<(string, uint, string)> GetPaths( CharacterRow item, IEnumerable<int> ids, string part, string name, Dictionary<int, uint> iconMap ) {
+            return ids
+                .Select( id => (id, $"chara/human/{item.SkeletonId}/skeleton/{part}/{part[0]}{id:D4}/{Prefix}_{item.SkeletonId}{part[0]}{id:D4}.{Extension}") )
+                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+                .ToList();
+        }
     }
 }

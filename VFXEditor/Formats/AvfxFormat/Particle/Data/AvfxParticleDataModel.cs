@@ -1,7 +1,7 @@
 ﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataModel : AvfxData {
+    public class AvfxParticleDataModel : AvfxDataWithParameters {
         public readonly AvfxInt ModelNumberRandomValue = new( "随机模型编号", "MNRv" );
         public readonly AvfxEnum<RandomType> ModelNumberRandomType = new( "随机模型编号类型", "MNRt" );
         public readonly AvfxInt ModelNumberRandomInterval = new( "随机模型编号间隔", "MNRi" );
@@ -19,10 +19,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveColor ColorEnd = new( name: "结束颜色", "ColE" );
 
         public readonly AvfxNodeSelectList<AvfxModel> ModelSelect;
-        public readonly UiDisplayList Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
-            Parsed = new() {
+            Parsed = [
                 ModelNumberRandomValue,
                 ModelNumberRandomType,
                 ModelNumberRandomInterval,
@@ -38,25 +37,24 @@ namespace VfxEditor.AvfxFormat {
                 FresnelRotation,
                 ColorBegin,
                 ColorEnd
-            };
+            ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "参数" ) );
-            Display.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "模型", particle.NodeGroups.Models, ModelIdx ) );
-            Display.Add( ModelNumberRandomValue );
-            Display.Add( ModelNumberRandomType );
-            Display.Add( ModelNumberRandomInterval );
-            Display.Add( FresnelType );
-            Display.Add( DirectionalLightType );
-            Display.Add( PointLightType );
-            Display.Add( IsLightning );
-            Display.Add( IsMorph );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "模型", particle.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( ModelNumberRandomValue );
+            ParameterTab.Add( ModelNumberRandomType );
+            ParameterTab.Add( ModelNumberRandomInterval );
+            ParameterTab.Add( FresnelType );
+            ParameterTab.Add( DirectionalLightType );
+            ParameterTab.Add( PointLightType );
+            ParameterTab.Add( IsLightning );
+            ParameterTab.Add( IsMorph );
 
-            DisplayTabs.Add( Morph );
-            DisplayTabs.Add( FresnelCurve );
-            DisplayTabs.Add( FresnelRotation );
-            DisplayTabs.Add( ColorBegin );
-            DisplayTabs.Add( ColorEnd );
-            DisplayTabs.Add( AnimationNumber );
+            Tabs.Add( Morph );
+            Tabs.Add( FresnelCurve );
+            Tabs.Add( FresnelRotation );
+            Tabs.Add( ColorBegin );
+            Tabs.Add( ColorEnd );
+            Tabs.Add( AnimationNumber );
         }
 
         public override void Enable() => ModelSelect.Enable();

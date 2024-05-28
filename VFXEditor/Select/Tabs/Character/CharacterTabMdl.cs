@@ -5,15 +5,15 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedMdl {
-        public Dictionary<string, string> Faces;
-        public Dictionary<string, string> Bodies;
-        public Dictionary<(string, uint), string> Hairs;
-        public Dictionary<string, string> Ears;
-        public Dictionary<string, string> Tails;
+        public List<(string, uint, string)> Faces;
+        public List<(string, string)> Bodies;
+        public List<(string, uint, string)> Hairs;
+        public List<(string, uint, string)> Ears;
+        public List<(string, uint, string)> Tails;
     }
 
     public class CharacterTabMdl : SelectTab<CharacterRow, SelectedMdl> {
-        public CharacterTabMdl( SelectDialog dialog, string name ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) { }
+        public CharacterTabMdl( SelectDialog dialog, string name ) : base( dialog, name, "Character" ) { }
 
         // ===== LOADING =====
 
@@ -21,11 +21,11 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMdl loaded ) {
             loaded = new() {
-                Faces = GetPart( "脸型", CharacterPart.Face, item, item.Data.FaceOptions ),
+                Faces = GetPart( "面部", CharacterPart.Face, item, item.Data.FaceOptions, item.Data.FaceToIcon ),
                 Bodies = GetPart( "身体", CharacterPart.Body, item, item.Data.BodyOptions ),
-                Hairs = GetPart( "发型", CharacterPart.Hair, item, item.Data.HairOptions, item.Data.HairToIcon ),
-                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions ),
-                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions )
+                Hairs = GetPart( "头发", CharacterPart.Hair, item, item.Data.HairOptions, item.Data.HairToIcon ),
+                Ears = GetPart( "耳朵", CharacterPart.Ear, item, item.Data.EarOptions, item.Data.FeatureToIcon ),
+                Tails = GetPart( "尾巴", CharacterPart.Tail, item, item.Data.TailOptions, item.Data.FeatureToIcon )
             };
         }
 
@@ -35,40 +35,39 @@ namespace VfxEditor.Select.Tabs.Character {
             using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Faces" ) ) {
-                DrawPaths( Loaded.Faces, Selected.Name );
+            if( ImGui.BeginTabItem( "面部" ) ) {
+                Dialog.DrawPaths( Loaded.Faces, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Bodies" ) ) {
-                DrawPaths( Loaded.Bodies, Selected.Name );
+            if( ImGui.BeginTabItem( "身体" ) ) {
+                Dialog.DrawPaths( Loaded.Bodies, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Hairs" ) ) {
-                DrawPaths( Loaded.Hairs, Selected.Name );
+            if( ImGui.BeginTabItem( "头发" ) ) {
+                Dialog.DrawPaths( Loaded.Hairs, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Ears" ) ) {
-                DrawPaths( Loaded.Ears, Selected.Name );
+            if( ImGui.BeginTabItem( "耳朵" ) ) {
+                Dialog.DrawPaths( Loaded.Ears, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Tails" ) ) {
-                DrawPaths( Loaded.Tails, Selected.Name );
+            if( ImGui.BeginTabItem( "尾巴" ) ) {
+                Dialog.DrawPaths( Loaded.Tails, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
         }
 
-        protected override string GetName( CharacterRow item ) => item.Name;
-
-        private static Dictionary<string, string> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids ) =>
+        private static List<(string, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids ) =>
             ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .ToDictionary( x => $"{name} {x.id}", x => x.Item2 );
+            .Select( x => ($"{name} {x.id}", x.Item2) ).ToList();
 
-        private static Dictionary<(string, uint), string> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, Dictionary<int, uint> iconMap ) =>
+        private static List<(string, uint, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, Dictionary<int, uint> iconMap ) =>
             ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .ToDictionary( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0), x => x.Item2 );
+            .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+            .ToList();
     }
 }

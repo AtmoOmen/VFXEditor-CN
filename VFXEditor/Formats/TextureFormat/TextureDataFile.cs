@@ -1,4 +1,5 @@
-﻿using Lumina.Data;
+using BCnEncoder.Decoder;
+using Lumina.Data;
 using Lumina.Data.Parsing.Tex;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.FileBrowser;
-using VfxEditor.Utils;
+using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
 
 namespace VfxEditor.Formats.TextureFormat {
     public enum Attribute : uint {
@@ -29,8 +30,9 @@ namespace VfxEditor.Formats.TextureFormat {
         TextureType1D = 0x400000,
         TextureType2D = 0x800000,
         TextureType3D = 0x1000000,
+        TextureType2DArray = 0x10000000,
         TextureTypeCube = 0x2000000,
-        TextureTypeMask = 0x3C00000,
+        TextureTypeMask = 0x13C00000,
         TextureSwizzle = 0x4000000,
         TextureNoTiled = 0x8000000,
         TextureNoSwizzle = 0x80000000,
@@ -69,6 +71,8 @@ namespace VfxEditor.Formats.TextureFormat {
         Null = 0x5100,
         Shadow16 = 0x5140,
         Shadow24 = 0x5150,
+        BC5 = 0x6230,
+        BC7 = 0x6432,
     }
 
     public class TextureDataFile : FileResource {
@@ -79,11 +83,23 @@ namespace VfxEditor.Formats.TextureFormat {
             public ushort Width;
             public ushort Height;
             public ushort Depth;
-            public ushort MipLevels;
+            public byte MipLevelsCount;
+            public byte ArraySize;
             [MarshalAs( UnmanagedType.ByValArray, SizeConst = 3 )]
             public uint[] LodOffset;
             [MarshalAs( UnmanagedType.ByValArray, SizeConst = 13 )]
             public uint[] OffsetToSurface;
+
+            public readonly DXGIFormat DXGIFormat => Format switch {
+                TextureFormat.DXT1 => DXGIFormat.BC1_UNorm,
+                TextureFormat.DXT5 => DXGIFormat.BC3_UNorm,
+                TextureFormat.BC5 => DXGIFormat.BC5_UNorm,
+                TextureFormat.BC7 => DXGIFormat.BC7_UNorm,
+                TextureFormat.A8R8G8B8 => DXGIFormat.R8G8B8A8_UNorm,
+                TextureFormat.R4G4B4A4 => DXGIFormat.B4G4R4A4_UNorm,
+                TextureFormat.R5G5B5A1 => DXGIFormat.B5G5R5A1_UNorm,
+                _ => DXGIFormat.R8G8B8A8_UNorm
+            };
         };
 
         public TexHeader Header { get; private set; }
@@ -115,19 +131,27 @@ namespace VfxEditor.Formats.TextureFormat {
         public void LoadFile( byte[] localData ) {
             LocalData = localData;
             using var ms = new MemoryStream( LocalData );
-            using var br = new BinaryReader( ms );
+            using var reader = new BinaryReader( ms );
 
             Local = true;
-            br.BaseStream.Position = 0;
+            reader.BaseStream.Position = 0;
 
-            var buffer = br.ReadBytes( HeaderLength );
+            var headerBuffer = reader.ReadBytes( HeaderLength );
             var handle = Marshal.AllocHGlobal( HeaderLength );
-            Marshal.Copy( buffer, 0, handle, HeaderLength );
+            Marshal.Copy( headerBuffer, 0, handle, HeaderLength );
             Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
             Marshal.FreeHGlobal( handle );
 
-            DdsData = br.ReadBytes( localData.Length - HeaderLength );
-            Layers = Convert( DdsData, Header.Format, Header.Width, Header.Height, Header.Depth );
+            DdsData = reader.ReadBytes( localData.Length - HeaderLength );
+
+            Layers = Convert(
+                DdsData,
+                Header.Format,
+                Header.Width,
+                Header.Height,
+                Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth
+            );
+
             ValidFormat = ImageData.Length > 0;
         }
 
@@ -164,9 +188,18 @@ namespace VfxEditor.Formats.TextureFormat {
                 case TextureFormat.A8:
                     DecompressA8( data, writer, width, height * layers );
                     break;
+                case TextureFormat.BC5:
+                    DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc5 );
+                    break;
+                case TextureFormat.BC7:
+                    DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc7 );
+                    break;
                 default:
-                    return new() { Array.Empty<byte>() };
+                    Dalamud.Log( $"未知格式 {format}" );
+                    return [[]];
             }
+
+            // TODO: R16G16B16A16F -> https://github.com/NotAdam/Lumina/blob/56a057f78ea8ee442f61f9dec3d4fb6fd109486a/src/Lumina/Data/Parsing/Tex/Buffers/R16G16B16A16FTextureBuffer.cs#L9
 
             var output = ms.ToArray();
             var size = width * height * 4;
@@ -189,6 +222,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 DXGIFormat.BC1_UNorm => TextureFormat.DXT1,
                 DXGIFormat.BC2_UNorm => TextureFormat.DXT3,
                 DXGIFormat.BC3_UNorm => TextureFormat.DXT5,
+                DXGIFormat.BC7_UNorm => TextureFormat.BC7,
                 DXGIFormat.B8G8R8A8_UNorm => TextureFormat.A8R8G8B8,
                 DXGIFormat.B4G4R4A4_UNorm => TextureFormat.R4G4B4A4,
                 DXGIFormat.B5G5R5A1_UNorm => TextureFormat.R5G5B5A1,
@@ -201,9 +235,11 @@ namespace VfxEditor.Formats.TextureFormat {
                 TextureFormat.DXT1 => CompressionFormat.BC1a,
                 TextureFormat.DXT3 => CompressionFormat.BC2,
                 TextureFormat.DXT5 => CompressionFormat.BC3,
+                TextureFormat.BC5 => CompressionFormat.BC5,
+                TextureFormat.BC7 => CompressionFormat.BC7,
                 TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.A8 or TextureFormat.R5G5B5A1 => CompressionFormat.BGRA,
                 _ => CompressionFormat.ETC1,
-            };
+            }; ;
         }
 
         public static byte[] CompressA8( byte[] data ) {
@@ -234,6 +270,21 @@ namespace VfxEditor.Formats.TextureFormat {
 
         private static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
             writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
+        }
+
+        private static void DecompressBc( byte[] data, BinaryWriter writer, int width, int height, BCnEncoder.Shared.CompressionFormat format ) {
+            var decoder = new BcDecoder();
+            var output = decoder.DecodeRaw2D( data, width, height, format ).ToArray();
+
+            for( var i = 0; i < height; i++ ) {
+                for( var j = 0; j < width; j++ ) {
+                    var pixel = output[i, j];
+                    writer.Write( pixel.b );
+                    writer.Write( pixel.g );
+                    writer.Write( pixel.r );
+                    writer.Write( pixel.a );
+                }
+            }
         }
 
         private static void Read4444( byte[] src, BinaryWriter writer, int width, int height ) {
@@ -316,12 +367,16 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SaveAsDds( string path ) {
-            var header = TextureUtils.CreateDdsHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
-            var data = GetDdsData();
-            var writeData = new byte[header.Length + data.Length];
-            Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
-            Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
-            File.WriteAllBytes( path, writeData );
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            using var buffer = new StreamTransferBuffer();
+            CustomDDSFile.WriteHeader( ms, buffer, TextureDimension.Two,
+                Header.DXGIFormat, Header.Width, Header.Height, Header.Depth, Header.ArraySize, Header.MipLevelsCount, DDSFlags.None );
+
+            writer.BaseStream.Position = ms.Length;
+            writer.Write( GetDdsData() );
+            File.WriteAllBytes( path, ms.ToArray() );
         }
 
         public void SavePngDialog() {

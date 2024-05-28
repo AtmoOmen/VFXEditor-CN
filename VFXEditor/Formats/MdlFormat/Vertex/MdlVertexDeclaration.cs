@@ -8,9 +8,15 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         Single3 = 2,
         Single4 = 3,
         UInt = 5,
+        Short2 = 6,
+        Short4 = 7,
         ByteFloat4 = 8,
+        Short2n = 9,
+        Short4n = 10,
         Half2 = 13,
-        Half4 = 14
+        Half4 = 14,
+        UShort2 = 16,
+        UShort4 = 17
     }
 
     public enum VertexUsage : byte {
@@ -27,36 +33,21 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
     // https://github.com/xivdev/Xande/blob/8fc75ce5192edcdabc4d55ac93ca0199eee18bc9/Xande.GltfImporter/MdlFileBuilder.cs#L127
 
     public class MdlVertexDeclaration {
-        public readonly List<MdlVertexElement> Elements = new();
+        public readonly List<MdlVertexElement> Elements = [];
 
         public MdlVertexDeclaration( BinaryReader reader ) {
-            var endPos = reader.BaseStream.Position + ( 8 * 17 );
-
             for( var i = 0; i < 17; i++ ) {
-                var element = new MdlVertexElement( reader );
-                if( element.End ) break;
-                Elements.Add( element );
+                Elements.Add( new MdlVertexElement( reader ) );
             }
-
-            reader.BaseStream.Position = endPos;
         }
 
         public void Write( BinaryWriter writer ) {
             foreach( var element in Elements ) element.Write( writer );
-            writer.Write( ( byte )255 );
-            for( var i = 0; i < 7 + 8 * ( 17 - Elements.Count - 1 ); i++ ) writer.Write( ( byte )0 );
         }
 
-        public int GetStride( int stream ) {
-            var elements = GetElements( stream );
-            if( elements.Count == 0 ) return 0;
+        private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => !x.NoData && x.Stream == stream ).ToList();
 
-            return elements.Last().EndOffset;
-        }
-
-        private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => x.Stream == stream ).ToList();
-
-        public Vector4[] GetData( byte[] rawIndex, List<byte[]> vertexStreams, int indexCount, int vertexCount ) {
+        public Vector4[] GetData( byte[] rawIndex, List<byte[]> vertexStreams, int indexCount, int vertexCount, byte[] strides ) {
             var data = new List<Vector4>();
 
             var positions = new List<Vector4>();
@@ -67,6 +58,8 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
 
             for( var i = 0; i < vertexStreams.Count; i++ ) {
                 var streamData = vertexStreams[i];
+                var stride = strides[i];
+
                 var elements = GetElements( i ).OrderBy( x => x.Offset ).ToList();
                 if( elements.Count == 0 ) continue;
 
@@ -74,15 +67,21 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                 using var reader = new BinaryReader( ms );
 
                 for( var j = 0; j < vertexCount; j++ ) {
+                    var startPos = reader.BaseStream.Position;
+                    var colorFound = false;
                     foreach( var element in elements ) {
                         var item = element.Read( reader );
 
                         if( element.Usage == VertexUsage.Position ) positions.Add( item );
-                        else if( element.Usage == VertexUsage.Tangent1 ) tangents.Add( item );
+                        else if( element.Usage == VertexUsage.Tangent1 ) tangents.Add( Vector4.Normalize( item - new Vector4( 0.5f, 0.5f, 0.5f, 0f ) ) );
                         else if( element.Usage == VertexUsage.UV ) uvs.Add( item );
                         else if( element.Usage == VertexUsage.Normal ) normals.Add( item );
-                        else if( element.Usage == VertexUsage.Color ) colors.Add( item / 255f );
+                        else if( element.Usage == VertexUsage.Color && !colorFound ) {
+                            colors.Add( item );
+                            colorFound = true;
+                        }
                     }
+                    reader.BaseStream.Position = startPos + stride;
                 }
             }
 
@@ -90,8 +89,6 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
 
             using var iMs = new MemoryStream( rawIndex );
             using var iReader = new BinaryReader( iMs );
-
-            var a = new HashSet<short>();
 
             for( var i = 0; i < indexCount; i++ ) {
                 var index = iReader.ReadInt16();
@@ -103,7 +100,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                 data.Add( colors.Count == 0 ? new( 0 ) : colors[index] );
             }
 
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

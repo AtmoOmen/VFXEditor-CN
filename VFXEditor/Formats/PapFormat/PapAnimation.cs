@@ -13,7 +13,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
-        private readonly List<string> Prefixes = new() {
+        private readonly List<string> Prefixes = [
             "cbfp",
             "cbfa",
             "cbep",
@@ -39,7 +39,7 @@ namespace VfxEditor.PapFormat {
             "cbfm",
             "cbfw",
             "cfxb",
-        };
+        ];
 
         public readonly PapFile File;
 
@@ -140,7 +140,7 @@ namespace VfxEditor.PapFormat {
                     FileBrowserManager.OpenFileDialog( "选择文件", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
                             CommandManager.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
-                            UiUtils.OkNotification( "Tmb data imported" );
+                            Dalamud.OkNotification( "Tmb data imported" );
                         }
                     } );
                 }

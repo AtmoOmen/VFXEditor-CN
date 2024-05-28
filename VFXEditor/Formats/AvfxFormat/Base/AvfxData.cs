@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxData : AvfxItem, IData {
         protected List<AvfxBase> Parsed;
 
-        public readonly List<AvfxItem> DisplayTabs = new();
-        public readonly AvfxDisplaySplitView<AvfxItem> SplitView;
+        public readonly bool Optional;
+        public readonly List<AvfxItem> Tabs = [];
 
-        public AvfxData() : base( "Data" ) {
-            SplitView = new AvfxDisplaySplitView<AvfxItem>( "Data", DisplayTabs );
+        private readonly AvfxDisplaySplitView<AvfxItem> SplitView;
+
+        public AvfxData( bool optional = false ) : base( "Data" ) {
+            Optional = optional;
+            SplitView = new AvfxDisplaySplitView<AvfxItem>( "Data", Tabs );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
@@ -23,10 +29,24 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "数据";
 
-        public override void Draw() => SplitView.Draw();
+        public override void Draw() {
+            if( Tabs.Count == 1 ) {
+                using var child = ImRaii.Child( "Child" );
+                Tabs[0].Draw();
+            }
+            else SplitView.Draw();
+        }
 
         public virtual void Enable() { }
 
         public virtual void Disable() { }
+
+        public void DrawEnableCheckbox() {
+            if( !Optional ) return;
+            var assigned = Assigned;
+            if( ImGui.Checkbox( "启用数据", ref assigned ) ) {
+                CommandManager.Add( new AvfxAssignCommand( this, assigned ) );
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 using VfxEditor.Select.Tabs.BgmQuest;
 
@@ -8,12 +8,12 @@ namespace VfxEditor.Select.Tabs.Instance {
     }
 
     public class InstanceTab : SelectTab<InstanceRow, SelectedInstance> {
-        public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Instance", SelectResultType.GameMusic ) { }
+        public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Instance" ) { }
 
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content > 0 && x.ContentLinkType == 1 );
+            var sheet = Dalamud.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content.Row > 0 && x.ContentLinkType == 1 );
             foreach( var item in sheet ) Items.Add( new InstanceRow( item ) );
         }
 
@@ -28,9 +28,7 @@ namespace VfxEditor.Select.Tabs.Instance {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Image );
-            DrawBgmSituation( Selected.Name, Loaded.Situation );
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameMusic );
         }
-
-        protected override string GetName( InstanceRow item ) => item.Name;
     }
 }

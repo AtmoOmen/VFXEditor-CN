@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -9,6 +9,7 @@ namespace VfxEditor.FileBrowser {
         private bool IsOk = false;
         private bool WantsToQuit = false;
         private bool WaitingForConfirmation;
+        private bool DrawnBefore = false;
 
         public bool Draw() {
             if( !Visible ) return false;
@@ -29,6 +30,11 @@ namespace VfxEditor.FileBrowser {
                 }
             }
             else {
+                if( !DrawnBefore ) {
+                    ImGui.SetNextWindowFocus();
+                    ImGui.SetNextWindowCollapsed( false );
+                    DrawnBefore = true;
+                }
                 if( ImGui.Begin( name, ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoDocking ) ) {
                     done = DrawContents();
                     ImGui.End();
@@ -69,12 +75,12 @@ namespace VfxEditor.FileBrowser {
                 var confirmed = false;
                 var open = true;
 
-                var name = "Overwrite This File?";
+                var name = "要覆盖当前文件吗?";
                 ImGui.OpenPopup( name );
                 if( ImGui.BeginPopupModal( name, ref open, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove ) ) {
-                    if( ImGui.Checkbox( "Never ask me again", ref Plugin.Configuration.FileBrowserOverwriteDontAsk ) ) Plugin.Configuration.Save();
+                    if( ImGui.Checkbox( "记住我的选择", ref Plugin.Configuration.FileBrowserOverwriteDontAsk ) ) Plugin.Configuration.Save();
 
-                    if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
+                    if( ImGui.Button( "确认", new Vector2( 120, 0 ) ) ) {
                         WaitingForConfirmation = false;
                         IsOk = true;
                         confirmed = true;

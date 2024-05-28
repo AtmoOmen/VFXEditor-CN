@@ -13,9 +13,9 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
     public class ScdAudioMarker {
         private ScdAudioEntry Entry;
 
-        public readonly ParsedPaddedString Id = new( "Id", 4, 0x00 );
-        public readonly ParsedFloat LoopStart = new( "Loop Start" );
-        public readonly ParsedFloat LoopEnd = new( "Loop End" );
+        public readonly ParsedPaddedString Id = new( "ID", 4, 0x00 );
+        public readonly ParsedFloat LoopStart = new( "循环开始" );
+        public readonly ParsedFloat LoopEnd = new( "循环结束" );
 
         public readonly List<ParsedDouble> Markers = [];
         private readonly CommandListView<ParsedDouble> MarkerView;

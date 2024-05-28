@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -100,7 +100,7 @@ namespace VfxEditor.ScdFormat {
 
                 ImGui.TextDisabled( "音频播放器设置。不会影响 .scd 文件" );
                 if( ImGui.Checkbox( "循环音乐", ref Plugin.Configuration.LoopMusic ) ) Plugin.Configuration.Save();
-                if( ImGui.Checkbox( "Loop Sound Effects", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "循环音效", ref Plugin.Configuration.LoopSoundEffects ) ) Plugin.Configuration.Save();
                 if( ImGui.Checkbox( "模拟循环开始/结束", ref Plugin.Configuration.SimulateScdLoop ) ) Plugin.Configuration.Save();
                 ImGui.SetNextItemWidth( 50 );
                 if( ImGui.InputFloat( "音量", ref Plugin.Configuration.ScdVolume ) ) {

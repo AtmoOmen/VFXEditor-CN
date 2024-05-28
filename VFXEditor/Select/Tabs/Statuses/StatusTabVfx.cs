@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
             };
 
             foreach( var (path, idx) in Selected.LoopPaths.WithIndex() ) {
-                paths[$"Loop {idx + 1}"] = path;
+                paths[$"循环 {idx + 1}"] = path;
             }
 
             Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );

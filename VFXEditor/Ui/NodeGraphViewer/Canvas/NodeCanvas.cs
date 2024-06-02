@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -33,12 +34,13 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         public const float StepScale = 0.1f;
     }
 
-    public class NodeCanvas<T> where T : Node {
+    public class NodeCanvas<T, S> where T : Node<S> where S : Slot {
         public readonly NodeMap Map = new();
         public readonly OccupiedRegion<T> Region = new();
         public readonly List<T> Nodes = [];
-        public readonly HashSet<T> SelectedNodes = [];
         public readonly LinkedList<T> NodeOrder = new();
+
+        public readonly HashSet<T> SelectedNodes = [];
 
         private NodeCanvasConfig Config { get; set; } = new();
 
@@ -47,13 +49,13 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         private Node SnappingNode = null;
         private Vector2? LastSnapDelta = null;
+        private Vector2? SelectAreaPosition = null;
 
         private FirstClickType FirstClickInDrag = FirstClickType.None;
         private bool IsFirstFrameAfterLmbDown = true;      // specifically for Draw()
 
-        private Vector2? SelectAreaPosition = null;
-
         private Slot PendingConnection;
+        private (Slot, Slot) SlotPopup = (null, null);
 
         public NodeCanvas() { }
 
@@ -65,7 +67,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         private void AddNode( T node, Vector2 position, bool record ) {
             if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
-            var command = new NodeAddCommand<T>( this, node, position );
+            var command = new NodeAddCommand<T, S>( this, node, position );
             if( record ) CommandManager.Add( command );
         }
 
@@ -82,35 +84,36 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public IEnumerable<Node> GetChildren( T node ) => Nodes.Where( x => x.ChildOf( node ) );
 
-        public void AddNodeAdjacent( T node, T parent, bool record, Vector2? pOffset = null ) {
-            Vector2 relativePosition;
-            float? chosenY = null;
-            Node chosenNode = null;
-
-            foreach( var child in GetChildren( parent ) ) {
-                var childPos = Map.GetNodeRelaPos( child );
-                if( !childPos.HasValue ) continue;
-                if( !chosenY.HasValue || childPos.Value.Y > chosenY ) {
-                    chosenY = childPos.Value.Y;
-                    chosenNode = child ?? chosenNode;
-                }
-            }
-
-            // Calc final draw pos
-            if( chosenNode == null ) relativePosition = ( Map.GetNodeRelaPos( parent ) ?? Vector2.One ) + new Vector2( parent.Style.GetSize().X, 0 ) + ( pOffset ?? Vector2.One );
-            else {
-                relativePosition = new(
-                        ( ( Map.GetNodeRelaPos( parent ) ?? Vector2.One ) + new Vector2( parent.Style.GetSize().X, 0 ) + ( pOffset ?? Vector2.One ) ).X,
-                        ( Map.GetNodeRelaPos( chosenNode ) ?? Map.GetNodeRelaPos( parent ) ?? Vector2.One ).Y + chosenNode.Style.GetSize().Y + ( pOffset ?? Vector2.One ).Y
-                    );
-            }
-
-            AddNode( node, relativePosition, record );
-        }
-
         public void RemoveNode( T node ) {
             if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
-            CommandManager.Add( new NodeRemoveCommand<T>( this, node ) );
+            CommandManager.Add( new NodeRemoveCommand<T, S>( this, node ) );
+        }
+
+        public void Organize() {
+            if( Nodes.Count == 0 ) return;
+
+            var stepCache = new Dictionary<Node, int>();
+            foreach( var node in Nodes ) GetStepsToRoot( node, stepCache );
+
+            var levels = stepCache.GroupBy( x => x.Value, y => y.Key ).ToDictionary( x => x.Key, x => x.ToList() );
+
+            var x = 0f;
+            foreach( var (level, nodes) in levels ) {
+                var y = 0f;
+                foreach( var node in nodes ) {
+                    Map.SetNodePosition( node, new( x, y ) );
+                    y += 100f + node.Style.GetSize().Y;
+                }
+                x += 100f + nodes[0].Style.GetSize().X;
+            }
+        }
+
+        private static int GetStepsToRoot( Node node, Dictionary<Node, int> cache ) {
+            if( cache.TryGetValue( node, out var _value ) ) return _value;
+
+            var parents = node.GetParents();
+            cache[node] = parents.Count == 0 ? 0 : parents.Select( x => GetStepsToRoot( x, cache ) ).Max() + 1;
+            return cache[node];
         }
 
         public bool FocusOnNode( Node node, Vector2? pExtraOfs = null ) => Map.FocusOnNode( node, ( pExtraOfs ?? new Vector2( -90, -90 ) ) * GetScaling() );
@@ -203,8 +206,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 SnappingNode = null;
             }
 
-            if( tIsCursorWithin ) tCDFRes |= CanvasDrawFlags.NoCanvasZooming;
-
             NodeInputProcessResult tRes = new() {
                 IsNodeHandleClicked = tIsNodeHandleClicked,
                 ReadClicks = pReadClicks,
@@ -251,15 +252,16 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         }
 
         public CanvasDrawFlags Draw(
-            Vector2 pBaseOSP,               // Base isn't necessarily Viewer. In this case, Base is a point in the center of Viewer.
-            Vector2 pViewerOSP,         // Viewer OSP.
+            Vector2 pBaseOSP,
+            Vector2 pViewerOSP,
             Vector2 pViewerSize,
             Vector2 pInitBaseOffset,
             float pGridSnapProximity,
             InputPayload pInputPayload,
-            ImDrawListPtr pDrawList,
+            ImDrawListPtr drawList,
             GridSnapData pSnapData = null,
             CanvasDrawFlags pCanvasDrawFlag = CanvasDrawFlags.None ) {
+
             var tIsAnyNodeHandleClicked = false;
             var tIsReadingClicksOnNode = true;
             var tIsAnyNodeClicked = false;
@@ -317,33 +319,34 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 }
             }
 
-            // =====================
-            // Draw
-            // =====================
             var tFirstClickScanRes = FirstClickType.None;
 
             // Draw edges
-
             foreach( var node in Nodes ) {
                 var nodePosition = Map.GetNodeScreenPos( node, tCanvasOSP, Config.Scaling );
                 if( !nodePosition.HasValue ) continue;
 
-                foreach( var (slot, idx) in node.Slots.WithIndex() ) {
-                    if( slot.Connected == null ) continue;
-                    var parentPosition = Map.GetNodeScreenPos( slot.Connected, tCanvasOSP, Config.Scaling );
-                    if( !parentPosition.HasValue ) continue;
+                foreach( var slot in node.Inputs ) {
+                    var connections = slot.GetConnections();
+                    if( connections == null || connections.Count == 0 ) continue;
+                    foreach( var connection in connections ) {
+                        var parentNode = connection.Node;
+                        var parentPosition = Map.GetNodeScreenPos( parentNode, tCanvasOSP, Config.Scaling );
+                        if( !parentPosition.HasValue ) continue;
 
-                    if( !NodeUtils.IsLineIntersectRect( nodePosition.Value, parentPosition.Value, new( pViewerOSP, pViewerSize ) ) ) continue;
+                        if( !NodeUtils.IsLineIntersectRect( nodePosition.Value, parentPosition.Value, new( pViewerOSP, pViewerSize ) ) ) continue;
 
-                    node.DrawEdge(
-                        pDrawList,
-                        node.GetInputPosition( nodePosition.Value, idx, Config.Scaling ),
-                        slot.Connected.GetOutputPosition( parentPosition.Value, Config.Scaling ),
-                        slot.Connected,
-                        idx,
-                        SelectedNodes.Contains( slot.Connected ),
-                        SelectedNodes.Contains( node )
-                    );
+                        node.DrawEdge(
+                            drawList,
+                            slot.GetSlotPosition( nodePosition.Value, Config.Scaling ),
+                            connection.GetSlotPosition( parentPosition.Value, Config.Scaling ),
+                            slot,
+                            connection,
+                            SelectedNodes.Contains( parentNode ),
+                            SelectedNodes.Contains( node ),
+                            ref SlotPopup
+                        );
+                    }
                 }
             }
 
@@ -356,7 +359,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             for( var znode = NodeOrder.First; znode != null; znode = znode?.Next ) {
                 if( znode == null ) break;
                 var node = znode.Value;
-                // Get NodeOSP
                 var nodePosition = Map.GetNodeScreenPos( node, tCanvasOSP, Config.Scaling );
                 if( nodePosition == null ) continue;
 
@@ -372,70 +374,57 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 if( !pCanvasDrawFlag.HasFlag( CanvasDrawFlags.NoInteract ) ) {
                     // Process input on node    (tIsNodeHandleClicked, pReadClicks, tIsNodeClicked, tFirstClick)
                     var t = ProcessInputOnNode( node, nodePosition.Value, pInputPayload, tIsReadingClicksOnNode );
-                    {
-                        if( t.FirstClick != FirstClickType.None ) {
-                            tFirstClickScanRes = ( t.FirstClick == FirstClickType.Body && SelectedNodes.Contains( node ) )
-                                                 ? FirstClickType.BodySelected
-                                                 : t.FirstClick;
+                    if( t.FirstClick != FirstClickType.None ) {
+                        tFirstClickScanRes = ( t.FirstClick == FirstClickType.Body && SelectedNodes.Contains( node ) )
+                                                ? FirstClickType.BodySelected
+                                                : t.FirstClick;
+                    }
+                    if( t.IsEscapingMultiselect ) tIsEscapingMultiselect = true;
+                    if( t.IsNodeHandleClicked ) {
+                        tIsAnyNodeHandleClicked = t.IsNodeHandleClicked;
+                    }
+                    if( t.IsNodeHandleClicked && pInputPayload.IsMouseLmbDown ) {
+                        // Queue the focus nodes
+                        if( znode != null ) {
+                            tNodeToFocus.Push( znode );
                         }
-                        if( t.IsEscapingMultiselect ) tIsEscapingMultiselect = true;
-                        if( t.IsNodeHandleClicked ) {
-                            tIsAnyNodeHandleClicked = t.IsNodeHandleClicked;
-                        }
-                        if( t.IsNodeHandleClicked && pInputPayload.IsMouseLmbDown ) {
-                            // Queue the focus nodes
-                            if( znode != null ) {
-                                tNodeToFocus.Push( znode );
-                            }
-                        }
-                        else if( pInputPayload.IsMouseLmbDown && t.IsWithin && !t.IsWithinHandle )     // if an upper node's body covers the previously chosen nodes, discard the focus/selection queue.
-                        {
-                            tNodeToFocus.Clear();
-                            tNodeToSelect.Clear();
-                            tFirstClickScanRes = tFirstClickScanRes == FirstClickType.BodySelected
-                                                 ? FirstClickType.BodySelected
-                                                 : FirstClickType.Body;
-                        }
-                        tIsReadingClicksOnNode = t.ReadClicks;
-                        if( t.IsNodeClicked ) {
-                            tIsAnyNodeClicked = true;
-                            if( SelectedNodes.Contains( node ) ) tIsAnySelectedNodeInteracted = true;
-                        }
-                        pCanvasDrawFlag |= t.CDFRes;
+                    }
+                    else if( pInputPayload.IsMouseLmbDown && t.IsWithin && !t.IsWithinHandle ) {
+                        tNodeToFocus.Clear();
+                        tNodeToSelect.Clear();
+                        tFirstClickScanRes = tFirstClickScanRes == FirstClickType.BodySelected
+                                                ? FirstClickType.BodySelected
+                                                : FirstClickType.Body;
+                    }
+                    tIsReadingClicksOnNode = t.ReadClicks;
+                    if( t.IsNodeClicked ) {
+                        tIsAnyNodeClicked = true;
+                        if( SelectedNodes.Contains( node ) ) tIsAnySelectedNodeInteracted = true;
+                    }
+                    pCanvasDrawFlag |= t.CDFRes;
 
-                        if( t.IsMarkedForSelect )                                       // Process node adding
-                                                                                        // prevent marking multiple handles with a single lmbDown. Get the uppest node.
-                        {
-                            if( pInputPayload.IsMouseLmbDown )      // this one is for lmbDown. General use.
-                            {
-                                if( pInputPayload.IsKeyCtrl || tNodeToSelect.Count == 0 ) tNodeToSelect.Push( node );
-                                else if( tNodeToSelect.Count != 0 ) {
-                                    tNodeToSelect.Pop();
-                                    tNodeToSelect.Push( node );
-                                }
-                            }
-                            else if( pInputPayload.IsMouseLmb && t.IsEscapingMultiselect )     // this one is for lmbClick. Used for when the node is marked at lmb is lift up.
-                            {
-                                tNodeToSelect.TryPop( out var _ );
+                    if( t.IsMarkedForSelect ) {
+                        if( pInputPayload.IsMouseLmbDown ) {
+                            if( pInputPayload.IsKeyCtrl || tNodeToSelect.Count == 0 ) tNodeToSelect.Push( node );
+                            else if( tNodeToSelect.Count != 0 ) {
+                                tNodeToSelect.Pop();
                                 tNodeToSelect.Push( node );
                             }
                         }
-                        if( t.IsMarkedForDeselect ) {
-                            tNodeToDeselect.Add( node );
+                        else if( pInputPayload.IsMouseLmb && t.IsEscapingMultiselect ) {
+                            tNodeToSelect.TryPop( out var _ );
+                            tNodeToSelect.Push( node );
                         }
-                        if( t.IsReqqingClearSelect ) tNodesReqqingClearSelect.Add( node );
                     }
+                    if( t.IsMarkedForDeselect ) {
+                        tNodeToDeselect.Add( node );
+                    }
+                    if( t.IsReqqingClearSelect ) tNodesReqqingClearSelect.Add( node );
 
-                    if( node.Style.CheckPosWithin( nodePosition.Value, GetScaling(), pInputPayload.MousePos )
-                        && pInputPayload.MouseWheelValue != 0
-                        && SelectedNodes.Contains( node ) ) {
-                        pCanvasDrawFlag |= CanvasDrawFlags.NoCanvasZooming;
-                    }
                     // Select using selectArea
                     if( tSelectScreenArea != null && !NodeBeingDragged && FirstClickInDrag != FirstClickType.Handle ) {
                         if( node.Style.CheckAreaIntersect( nodePosition.Value, Config.Scaling, tSelectScreenArea ) ) {
-                            if( SelectedNodes.Add( node ) && znode != null )
-                                tNodeToFocus.Push( znode );
+                            if( SelectedNodes.Add( node ) && znode != null ) tNodeToFocus.Push( znode );
                         }
                     }
                 }
@@ -451,23 +440,19 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 var tNodeRelaPos = Map.GetNodeRelaPos( node );
                 if( NodeBeingDragged && SelectedNodes.Contains( node ) && tNodeRelaPos.HasValue )
                     ImGui.GetWindowDrawList().AddText(
-                        nodePosition.Value + new Vector2( 0, -30 ) * GetScaling()
-                        , ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ),
+                        nodePosition.Value + new Vector2( 0, -30 ) * GetScaling(),
+                        ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ),
                         $"({tNodeRelaPos.Value.X / 10:F1}, {tNodeRelaPos.Value.Y / 2:F1})" );
 
                 // Draw conn tether to cursor
                 if( PendingConnection?.Node == node ) {
-                    var startPos = PendingConnection.IsInput ?
-                        node.GetInputPosition( nodePosition.Value, PendingConnection.Index, Config.Scaling ) :
-                        node.GetOutputPosition( nodePosition.Value, Config.Scaling );
+                    var startPos = PendingConnection.GetSlotPosition( nodePosition.Value, Config.Scaling );
                     var endPos = pInputPayload.MousePos;
                     var midPos = startPos + ( endPos - startPos ) / 2f;
-
-                    pDrawList.AddBezierCubic( startPos, new( midPos.X, startPos.Y ), new( midPos.X, endPos.Y ), endPos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeFg ), 1f );
+                    drawList.AddBezierCubic( startPos, new( midPos.X, startPos.Y ), new( midPos.X, endPos.Y ), endPos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeFg ), 1f );
                 }
-
-
             }
+
             // Node interaction z-order process (order of op: clearing > selecting > deselecting)
             if( tNodeToSelect.Count != 0 ) pCanvasDrawFlag |= CanvasDrawFlags.NoCanvasDrag;
             if( tNodeToFocus.TryPeek( out var topF ) && tNodesReqqingClearSelect.Contains( topF.Value )
@@ -504,7 +489,9 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
             // Draw selectArea
             if( !pCanvasDrawFlag.HasFlag( CanvasDrawFlags.NoInteract ) && tSelectScreenArea != null ) {
-                ImGui.GetForegroundDrawList().AddRectFilled( tSelectScreenArea.Start, tSelectScreenArea.End, ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( NodeUtils.Colors.NodeFg, 0.5f ) ) );
+                ImGui.GetForegroundDrawList().AddRectFilled(
+                    tSelectScreenArea.Start, tSelectScreenArea.End,
+                    ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( NodeUtils.Colors.NodeFg, 0.5f ) ) );
             }
 
             if( !pCanvasDrawFlag.HasFlag( CanvasDrawFlags.NoInteract ) ) {
@@ -542,6 +529,14 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     && SelectAreaPosition == null ) {
                     pCanvasDrawFlag |= ProcessInputOnCanvas( pInputPayload, pCanvasDrawFlag );
                 }
+            }
+
+            if( SlotPopup.Item1 != null && SlotPopup.Item2 != null ) {
+                using var popup = ImRaii.Popup( "SlotPopup" );
+                if( popup ) {
+                    SlotPopup.Item1.DrawPopup( SlotPopup.Item2 );
+                }
+                else SlotPopup = (null, null);
             }
 
             // First frame after lmb down. Leave this at the bottom (end of frame drawing).

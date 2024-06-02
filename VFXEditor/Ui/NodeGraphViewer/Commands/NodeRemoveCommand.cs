@@ -6,21 +6,21 @@ using VfxEditor.Ui.NodeGraphViewer.Canvas;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Commands {
-    public class NodeRemoveCommand<T> : ListRemoveCommand<T> where T : Node {
-        private readonly NodeCanvas<T> Canvas;
+    public class NodeRemoveCommand<T, S> : ListRemoveCommand<T> where T : Node<S> where S : Slot {
+        private readonly NodeCanvas<T, S> Canvas;
         private readonly Vector2 Position;
-        private readonly List<Slot> Slots;
+        private readonly List<(S, List<Slot>)> Slots;
 
-        public NodeRemoveCommand( NodeCanvas<T> canvas, T node ) : base( canvas.Nodes, node ) {
+        public NodeRemoveCommand( NodeCanvas<T, S> canvas, T node ) : base( canvas.Nodes, node ) {
             Canvas = canvas;
             Position = Canvas.Map.GetNodeRelaPos( Item ).Value;
-            Slots = Canvas.Nodes.SelectMany( x => x.Slots.Where( y => y.Connected == Item ) ).ToList();
+            Slots = Canvas.Nodes.SelectMany( node => node.Inputs.Where( slot => slot.IsConnectedTo( Item ) ).Select( slot => (slot, slot.GetConnections()) ) ).ToList();
             // ==================
             Canvas.Map.RemoveNode( Item );
             Canvas.SelectedNodes.Remove( Item );
             Canvas.NodeOrder.Remove( Item );
             Canvas.Region.Update( Canvas.Nodes, Canvas.Map );
-            foreach( var slot in Slots ) slot.ConnectTo( null );
+            foreach( var (slot, _) in Slots ) slot.Unconnect( Item );
         }
 
         public override void Undo() {
@@ -28,7 +28,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Commands {
             Canvas.Map.AddNode( Item, Position );
             Canvas.NodeOrder.AddLast( Item );
             Canvas.Region.Update( Canvas.Nodes, Canvas.Map );
-            foreach( var slot in Slots ) slot.ConnectTo( Item );
+            foreach( var (slot, connected) in Slots ) slot.SetConnections( connected );
         }
 
         public override void Redo() {
@@ -37,7 +37,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Commands {
             Canvas.SelectedNodes.Remove( Item );
             Canvas.NodeOrder.Remove( Item );
             Canvas.Region.Update( Canvas.Nodes, Canvas.Map );
-            foreach( var slot in Slots ) slot.ConnectTo( null );
+            foreach( var (slot, _) in Slots ) slot.Unconnect( Item );
         }
     }
 }

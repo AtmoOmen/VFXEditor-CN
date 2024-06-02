@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -72,15 +72,15 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool GlobalFogEnabled = new( "全局烟雾效果", "bGFE" );
         public readonly AvfxFloat GlobalFogInfluence = new( "全局雾效影响", "GFIM" );
         public readonly AvfxBool LTSEnabled = new( "启用 LTS", "bLTS" );
-        public readonly AvfxBool AGSEnabled = new( "AGS Enabled", "bAGS" );
+        public readonly AvfxBool AGSEnabled = new( "启用 AGS", "bAGS" );
 
         // New to dawntrail
         public readonly AvfxInt APRi = new( "APri", "APri" );
         public readonly AvfxInt DPri = new( "DPri", "DPri" );
-        public readonly AvfxBool SABEnabled = new( "SAB Enabled", "bSAB" );
-        public readonly AvfxBool SBVEnabled = new( "SBV Enabled", "bSBV" );
+        public readonly AvfxBool SABEnabled = new( "启用 SAB", "bSAB" );
+        public readonly AvfxBool SBVEnabled = new( "启用 SBV", "bSBV" );
         public readonly AvfxFloat SBVa = new( "SBVa", "SBVa" );
-        public readonly AvfxBool SSVEnabled = new( "SSV Enabled", "bSSV" );
+        public readonly AvfxBool SSVEnabled = new( "启用 SSV", "bSSV" );
         public readonly AvfxFloat SSVa = new( "SSVa", "SSVa" );
 
         public readonly AvfxNodeGroupSet NodeGroupSet;

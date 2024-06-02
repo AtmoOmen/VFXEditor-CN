@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +51,7 @@ namespace VfxEditor.Select.Tabs.Character {
                 Dialog.DrawPaths( Loaded.Ears, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Tails" ) ) {
+            if( ImGui.BeginTabItem( "尾巴" ) ) {
                 Dialog.DrawPaths( Loaded.Tails, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }

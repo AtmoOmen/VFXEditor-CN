@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System;
 using System.Numerics;
 
@@ -27,10 +27,10 @@ namespace VfxEditor.DirectX.Lights {
         public bool Draw() {
             var updated = false;
 
-            updated |= ImGui.InputFloat3( "Light Position", ref Position );
-            updated |= ImGui.ColorEdit3( "Light Color", ref Color );
-            updated |= ImGui.InputFloat( "Light Radius", ref Radius );
-            updated |= ImGui.InputFloat( "Light Falloff", ref Falloff );
+            updated |= ImGui.InputFloat3( "光照位置", ref Position );
+            updated |= ImGui.ColorEdit3( "光照颜色", ref Color );
+            updated |= ImGui.InputFloat( "光照半径", ref Radius );
+            updated |= ImGui.InputFloat( "光照衰减", ref Falloff );
 
             return updated;
         }

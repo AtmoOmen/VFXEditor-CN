@@ -1,8 +1,10 @@
 using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
-namespace VfxEditor.Select.Tabs.Actions {
-    public class ActionRowPap : ISelectItemWithIcon {
+namespace VfxEditor.Select.Tabs.Actions
+{
+    public class ActionRowPap : ISelectItemWithIcon
+    {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
@@ -11,7 +13,8 @@ namespace VfxEditor.Select.Tabs.Actions {
         public readonly string EndPath;
         public readonly string HitPath;
 
-        public ActionRowPap( Action action ) {
+        public ActionRowPap( Action action )
+        {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
             Icon = action.Icon;
@@ -29,14 +32,16 @@ namespace VfxEditor.Select.Tabs.Actions {
         // chara/human/c0101/animation/a0001/bt_common/limitbreak/lbk_dancer_start.pap
         // timline -> loadType = 1 (not in action.pap)
 
-        private static string ToPap( ActionTimeline timeline ) {
+        private static string ToPap( ActionTimeline timeline )
+        {
             if( timeline == null ) return "";
             var key = timeline?.Key.ToString();
             if( string.IsNullOrEmpty( key ) ) return "";
             if( key.Contains( "[SKL_ID]" ) ) return "";
 
             var loadType = timeline.LoadType;
-            if( loadType == 2 && key.StartsWith( "ws" ) ) {
+            if( loadType == 2 && key.StartsWith( "ws" ) )
+            {
                 // human_sp/c0501/human_sp103
                 // emote/b_pose01_loop
                 // ws/bt_2sw_emp/ws_s02

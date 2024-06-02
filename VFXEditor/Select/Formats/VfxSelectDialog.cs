@@ -21,7 +21,7 @@ namespace VfxEditor.Select.Formats {
         public VfxSelectDialog( string id, AvfxManager manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
             GameTabs.AddRange( [
                 new ItemTabVfx( this, "物品" ),
-                new ItemTabVfxAccessory( this, "装饰"),
+                new ItemTabVfxAccessory( this, "时尚配饰"),
                 new StatusTabVfx( this, "状态" ),
                 new ActionTabVfx( this, "技能" ),
                 new ActionTabVfxNonPlayer( this, "NPC 技能" ),

@@ -27,22 +27,22 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         public readonly ParsedHalf3Color Emissive = new( "Emissive" );
         public readonly ParsedHalf3Color UnknownColor = new( "Unknown Color", Vector3.One );
 
-        public readonly ParsedHalf Unknown1 = new( "Unknown 1" );
-        public readonly ParsedHalf Unknown2 = new( "Unknown 2" );
-        public readonly ParsedHalf Unknown3 = new( "Unknown 3" );
-        public readonly ParsedHalf Unknown4 = new( "Unknown 4" );
-        public readonly ParsedHalf Unknown5 = new( "Unknown 5" );
-        public readonly ParsedHalf Unknown6 = new( "Unknown 6" );
+        public readonly ParsedHalf Unknown1 = new( "未知 1" );
+        public readonly ParsedHalf Unknown2 = new( "未知 2" );
+        public readonly ParsedHalf Unknown3 = new( "未知 3" );
+        public readonly ParsedHalf Unknown4 = new( "未知 4" );
+        public readonly ParsedHalf Unknown5 = new( "未知 5" );
+        public readonly ParsedHalf Unknown6 = new( "未知 6" );
 
-        public readonly ParsedHalf BlendingAnisotropy = new( "Blending Anisotrophy" );
-        public readonly ParsedHalf SpmIndex = new( "SPM Index" ); // TODO
-        public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
-        public readonly ParsedHalf NormalScale = new( "Normal Scale" );
+        public readonly ParsedHalf BlendingAnisotropy = new( "各向异性混合" );
+        public readonly ParsedHalf SpmIndex = new( "SPM 索引" ); // TODO
+        public readonly ParsedTileMaterial TileMaterial = new( "拼贴材质" );
+        public readonly ParsedHalf NormalScale = new( "常规缩放" );
 
-        public readonly ParsedHalf TileNormalScale = new( "Normal Scale" );
-        public readonly ParsedHalf TileRepeatX = new( "Repeat X", 16f );
-        public readonly ParsedHalf2 TileSkew = new( "Skew" );
-        public readonly ParsedHalf TileRepeatY = new( "Repeat Y", 16f );
+        public readonly ParsedHalf TileNormalScale = new( "常规缩放" );
+        public readonly ParsedHalf TileRepeatX = new( "X 轴重复", 16f );
+        public readonly ParsedHalf2 TileSkew = new( "偏斜" );
+        public readonly ParsedHalf TileRepeatY = new( "Y 轴重复", 16f );
 
         public MtrlColorTableRow( MtrlTables tables ) {
             Tables = tables;
@@ -116,7 +116,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         private void DrawTabs() {
             if( DrawTabsLegacy() ) return;
 
-            using( var tab = ImRaii.TabItem( "Color" ) ) {
+            using( var tab = ImRaii.TabItem( "颜色" ) ) {
                 if( tab ) {
                     Diffuse.Draw();
                     SpecularStrength.Draw();
@@ -127,7 +127,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
                 }
             }
 
-            using( var tab = ImRaii.TabItem( "Unknown" ) ) {
+            using( var tab = ImRaii.TabItem( "未知" ) ) {
                 if( tab ) {
                     Unknown1.Draw();
                     Unknown2.Draw();
@@ -139,7 +139,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
                 }
             }
 
-            using( var tab = ImRaii.TabItem( "Tiling" ) ) {
+            using( var tab = ImRaii.TabItem( "拼贴" ) ) {
                 if( tab ) {
                     TileMaterial.Draw();
                     SpmIndex.Draw();
@@ -160,14 +160,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             DrawTabs();
 
             using( var disabled = ImRaii.Disabled( !Tables.File.DyeTableEnabled ) )
-            using( var tab = ImRaii.TabItem( "Dye" ) ) {
+            using( var tab = ImRaii.TabItem( "染色" ) ) {
                 if( tab ) DyeRow.Draw();
             }
 
             if( Stain != null ) {
                 using var child = ImRaii.Child( "Child", new( -1, ImGui.GetFrameHeight() + ImGui.GetStyle().WindowPadding.Y * 2 ), true );
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-                if( StainTemplate == null ) ImGui.TextDisabled( "[NO DYE VALUE]" );
+                if( StainTemplate == null ) ImGui.TextDisabled( "[无染色值]" );
                 else StainTemplate.Draw();
             }
 

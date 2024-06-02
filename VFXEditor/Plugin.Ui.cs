@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
@@ -66,7 +66,7 @@ namespace VfxEditor {
                     }
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "新增" ) ) OpenWorkspace( false );
+                if( ImGui.MenuItem( "追加" ) ) OpenWorkspace( false );
                 if( ImGui.MenuItem( "保存" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "另存为" ) ) SaveAsWorkspace();
 

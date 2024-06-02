@@ -1,8 +1,10 @@
 using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
-namespace VfxEditor.Select.Tabs.Actions {
-    public class ActionRow : ISelectItemWithIcon {
+namespace VfxEditor.Select.Tabs.Actions
+{
+    public class ActionRow : ISelectItemWithIcon
+    {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
@@ -19,7 +21,8 @@ namespace VfxEditor.Select.Tabs.Actions {
         public readonly bool EndMotion;
         public readonly bool HitMotion;
 
-        public ActionRow( Action action ) {
+        public ActionRow( Action action )
+        {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
             Icon = action.Icon;

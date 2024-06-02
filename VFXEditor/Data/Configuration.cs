@@ -437,21 +437,21 @@ namespace VfxEditor {
         }
 
         public void DrawDirectXSkeleton() {
-            if( ImGui.ColorEdit4( "Bone Name Color", ref SkeletonBoneNameColor ) ) Save();
-            if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
+            if( ImGui.ColorEdit4( "骨骼名称颜色", ref SkeletonBoneNameColor ) ) Save();
+            if( ImGui.ColorEdit4( "连接线颜色", ref SkeletonBoneLineColor ) ) Save();
         }
 
         public void DrawDirectXMaterials() {
             var updated = false;
-            updated |= ImGui.ColorEdit3( "Ambient Color", ref MaterialAmbientColor );
+            updated |= ImGui.ColorEdit3( "背景颜色", ref MaterialAmbientColor );
 
-            if( ImGui.CollapsingHeader( "Light 1" ) ) {
+            if( ImGui.CollapsingHeader( "光照 1" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
                 using var __ = ImRaii.PushId( "Light1" );
                 updated |= Light1.Draw();
             }
 
-            if( ImGui.CollapsingHeader( "Light 2" ) ) {
+            if( ImGui.CollapsingHeader( "光照 2" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
                 using var __ = ImRaii.PushId( "Light2" );
                 updated |= Light2.Draw();
@@ -464,7 +464,7 @@ namespace VfxEditor {
         }
 
         public void DrawDirectXVfx() {
-            if( ImGui.InputFloat2( "Preview Pyramid Size", ref ModelEmittersSize ) ) {
+            if( ImGui.InputFloat2( "预览金字塔大小", ref ModelEmittersSize ) ) {
                 Save();
                 Plugin.DirectXManager.ModelPreview.UpdatePyramidMesh();
                 Plugin.DirectXManager.ModelPreview.Draw();
@@ -480,7 +480,7 @@ namespace VfxEditor {
                 if( ImGui.CollapsingHeader( config.Key ) ) {
                     using var indent = ImRaii.PushIndent( 5f );
 
-                    ImGui.Checkbox( "Use Custom Window Color", ref config.Value.UseCustomWindowColor );
+                    ImGui.Checkbox( "使用自定义窗口颜色", ref config.Value.UseCustomWindowColor );
                     if( config.Value.UseCustomWindowColor ) {
                         if( ImGui.ColorEdit4( "背景色", ref config.Value.TitleBg ) ) Save();
                         if( ImGui.ColorEdit4( "激活时的颜色", ref config.Value.TitleBgActive ) ) Save();

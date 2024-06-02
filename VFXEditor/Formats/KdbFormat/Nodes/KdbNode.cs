@@ -36,9 +36,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
     public abstract class KdbNode : Node<KdbSlot> { // TODO: body stuff
         public readonly KdbNodeType Type;
-        public readonly ParsedByte Unknown1 = new( "Unknown 1" );
-        public readonly ParsedUInt Unknown2 = new( "Unknown 2" );
-        public readonly ParsedUInt Unknown3 = new( "Unknown 3" );
+        public readonly ParsedByte Unknown1 = new( "未知 1" );
+        public readonly ParsedUInt Unknown2 = new( "未知 2" );
+        public readonly ParsedUInt Unknown3 = new( "未知 3" );
         public readonly ParsedFnvHash NameHash = new( "Name" );
 
         public KdbNode( KdbNodeType type ) : base( $"{type}" ) { // TODO

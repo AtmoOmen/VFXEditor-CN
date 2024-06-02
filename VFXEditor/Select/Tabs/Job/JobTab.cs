@@ -53,8 +53,8 @@ namespace VfxEditor.Select.Tabs.Job {
 
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
                     poses.Add( race.Name, new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
+                        { "开始", start },
+                        { "循环", loop }
                     } );
                 }
 

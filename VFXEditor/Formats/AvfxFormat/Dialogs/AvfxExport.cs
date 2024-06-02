@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
@@ -37,7 +37,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
             ImGui.SameLine();
             if( ImGui.Button( "导出" ) ) SaveDialog();
 
-            using var child = ImRaii.Child( "子级", new( -1, -1 ), true );
+            using var child = ImRaii.Child( "Child", new( -1, -1 ), true );
             Categories.ForEach( cat => cat.Draw() );
         }
 

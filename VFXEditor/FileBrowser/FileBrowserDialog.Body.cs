@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Numerics;
@@ -12,7 +12,7 @@ namespace VfxEditor.FileBrowser {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             style.Push( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
             style.Push( ImGuiStyleVar.CellPadding, new Vector2( 0, 0 ) );
-            using var child = ImRaii.Child( "子级", size );
+            using var child = ImRaii.Child( "Child", size );
             using var table = ImRaii.Table( "Table", 4, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoPadOuterX | ImGuiTableFlags.Hideable );
             style.Dispose();
 
@@ -55,7 +55,7 @@ namespace VfxEditor.FileBrowser {
 
             ImGui.TableSetupColumn( "  Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
             ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, 100, 1 );
-            ImGui.TableSetupColumn( "大小", ImGuiTableColumnFlags.WidthFixed, 75, 2 );
+            ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed, 75, 2 );
             ImGui.TableSetupColumn( "Date  ", ImGuiTableColumnFlags.WidthFixed, -1, 3 );
 
             ImGui.TableNextRow( ImGuiTableRowFlags.Headers );

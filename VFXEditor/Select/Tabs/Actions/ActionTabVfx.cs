@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Actions {
                 loaded = new ParsedPaths();
                 return;
             }
-
+            Dalamud.Log($"测试测试: {item.CastVfxPath} \n {item.TmbPath}");
             ParsedPaths.ReadFile( item.TmbPath, SelectDataUtils.AvfxRegex, out loaded );
         }
 

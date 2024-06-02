@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 
@@ -40,10 +40,10 @@ namespace VfxEditor.Select.Tabs.Job {
                 var drawPath = SelectDataUtils.GetSkeletonPath( skeleton, $"{drawJobId}/resident/sub.pap" );
 
                 var raceGeneral = new Dictionary<string, string>();
-                if( Dalamud.DataManager.FileExists( idlePath ) ) raceGeneral.Add( "闲置动作", idlePath );
-                if( Dalamud.DataManager.FileExists( movePathA ) ) raceGeneral.Add( "移动动作 A", movePathA );
-                if( Dalamud.DataManager.FileExists( movePathB ) ) raceGeneral.Add( "移动动作 B", movePathB );
-                if( Dalamud.DataManager.FileExists( drawPath ) ) raceGeneral.Add( "绘制武器", drawPath );
+                if( Dalamud.DataManager.FileExists( idlePath ) ) raceGeneral.Add( "Idle", idlePath );
+                if( Dalamud.DataManager.FileExists( movePathA ) ) raceGeneral.Add( "Move A", movePathA );
+                if( Dalamud.DataManager.FileExists( movePathB ) ) raceGeneral.Add( "Move B", movePathB );
+                if( Dalamud.DataManager.FileExists( drawPath ) ) raceGeneral.Add( "Draw Weapon", drawPath );
                 general.Add( race.Name, raceGeneral );
 
                 // Pose
@@ -53,8 +53,8 @@ namespace VfxEditor.Select.Tabs.Job {
 
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
                     poses.Add( race.Name, new Dictionary<string, string>() {
-                        { "开始", start },
-                        { "循环", loop }
+                        { "Start", start },
+                        { "Loop", loop }
                     } );
                 }
 
@@ -71,7 +71,7 @@ namespace VfxEditor.Select.Tabs.Job {
 
                 var raceAutos = new Dictionary<string, string>();
                 for( var i = 0; i < autoPaths.Count; i++ ) {
-                    raceAutos.Add( $"自动攻击 {i + 1}", autoPaths[i] );
+                    raceAutos.Add( $"Auto-Attack {i + 1}", autoPaths[i] );
                 }
 
                 autoAttack.Add( race.Name, raceAutos );

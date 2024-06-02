@@ -20,11 +20,11 @@ namespace VfxEditor.Select.Tabs.Statuses {
 
         protected override void DrawSelected() {
             var paths = new Dictionary<string, string>() {
-                { "受击", Selected.HitPath },
+                { "Hit", Selected.HitPath },
             };
 
             foreach( var (path, idx) in Selected.LoopPaths.WithIndex() ) {
-                paths[$"循环 {idx + 1}"] = path;
+                paths[$"Loop {idx + 1}"] = path;
             }
 
             Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );

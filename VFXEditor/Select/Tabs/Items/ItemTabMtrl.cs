@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ namespace VfxEditor.Select.Tabs.Items {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            ImGui.Text( $"Variant: {Selected.Variant}" );
+            ImGui.Text( $"变量: {Selected.Variant}" );
 
             if( string.IsNullOrEmpty( Selected.ImcPath ) ) return;
             ImGui.Text( "IMC: " );

@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -250,7 +250,7 @@ namespace VfxEditor {
 
             CustomPathBackups[gamePath.ToLower()] = localPath;
             if( Configuration?.LogDebug == true ) {
-                Dalamud.Log( "[CUSTOM]" );
+                Dalamud.Log( "[自定义]" );
                 foreach( var (game, local) in CustomPathBackups ) Dalamud.Log( $" {game} -> {local}" );
             }
         }

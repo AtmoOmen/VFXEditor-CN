@@ -30,18 +30,18 @@ namespace VfxEditor.Select.Tabs.Character {
             var idlePath = item.GetPap( "resident/idle" );
             var movePathA = item.GetPap( "resident/move_a" );
             var movePathB = item.GetPap( "resident/move_b" );
-            if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "闲置动作", idlePath );
-            if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "移动动作 A", movePathA );
-            if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "移动动作 B", movePathB );
+            if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
+            if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
+            if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
 
             var poses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
                 var start = item.GetStartPap( i, "" );
                 var loop = item.GetLoopPap( i, "" );
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    poses.Add( $"姿势 {i}", new Dictionary<string, string>() {
-                        { "开始", start },
-                        { "循环", loop }
+                    poses.Add( $"Pose {i}", new Dictionary<string, string>() {
+                        { "Start", start },
+                        { "Loop", loop }
                     } );
                 }
             }
@@ -52,8 +52,8 @@ namespace VfxEditor.Select.Tabs.Character {
                 var loop = item.GetLoopPap( i, "j_" );
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
                     sitPoses.Add( $"Sit Pose {i}", new Dictionary<string, string>() {
-                        { "开始", start },
-                        { "循环", loop }
+                        { "Start", start },
+                        { "Loop", loop }
                     } );
                 }
             }
@@ -93,7 +93,7 @@ namespace VfxEditor.Select.Tabs.Character {
             }
             if( ImGui.BeginTabItem( "坐姿" ) ) {
                 Dialog.DrawPaths( new Dictionary<string, string>() {
-                    { "开始坐下", Loaded.GroundStart },
+                    { "Ground Start", Loaded.GroundStart },
                     { "Jmn", Loaded.Jmn },
                 }, Selected.Name, SelectResultType.GameCharacter );
 

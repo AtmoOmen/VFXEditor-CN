@@ -62,6 +62,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt CreateIntervalRandom = new( "随机创建间隔", "CrIR" );
         public readonly AvfxInt CreateIntervalCount = new( "创建间隔数", "CrIC" );
         public readonly AvfxInt CreateIntervalLife = new( "创建间隔生命周期", "CrIL" );
+        public readonly AvfxInt CrLR = new( "CrLR", "CrLR" );
         public readonly AvfxInt CreateNewAfterDelete = new( "死亡后创建新对象", "bCrN", size: 1 );
         public readonly AvfxInt UvReverse = new( "平面坐标反转", "bRUV", size: 1 );
         public readonly AvfxInt ScaleRandomLink = new( "随机缩放关联", "bSRL", size: 1 );
@@ -138,6 +139,7 @@ namespace VfxEditor.AvfxFormat {
                 CreateIntervalRandom,
                 CreateIntervalCount,
                 CreateIntervalLife,
+                CrLR,
                 CreateNewAfterDelete,
                 UvReverse,
                 ScaleRandomLink,
@@ -164,6 +166,7 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( CreateIntervalRandom );
             Display.Add( CreateIntervalCount );
             Display.Add( CreateIntervalLife );
+            Display.Add( CrLR );
             Display.Add( CreateNewAfterDelete );
 
             DisplayTabs.Add( AnimationDisplay = new UiDisplayList( "动画" ) );

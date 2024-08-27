@@ -53,11 +53,13 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     File.Copy( importPath, WriteLocation, true );
                 }
                 else if( importFileExtension == ".png" ) {
+                    var pngFormat = Plugin.Configuration.PngFormat;
+
                     using var surface = Surface.LoadFromFile( importPath );
                     surface.FlipVertically();
 
                     using var compressor = new Compressor();
-                    var compFormat = TextureDataFile.TextureToCompressionFormat( Plugin.Configuration.PngFormat );
+                    var compFormat = TextureDataFile.TextureToCompressionFormat( pngFormat );
                     // use ETC1 to signify "NULL" because I'm not going to be using it
                     if( compFormat == CompressionFormat.ETC1 ) return;
 
@@ -82,14 +84,14 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     var ddsData = ms.ToArray();
 
                     using( var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) ) ) {
-                        var postConversion = Plugin.Configuration.PngFormat switch {
+                        var postConversion = pngFormat switch {
                             TextureFormat.A8 => PostConversion.A8,
                             TextureFormat.R4G4B4A4 => PostConversion.R4444,
                             TextureFormat.R5G5B5A1 => PostConversion.R5551,
                             _ => PostConversion.None
                         };
 
-                        DdsToAtex( Plugin.Configuration.PngFormat, container, ddsData, writer, postConversion );
+                        DdsToAtex( pngFormat, container, ddsData, writer, postConversion );
                     }
                     container.Dispose();
                 }

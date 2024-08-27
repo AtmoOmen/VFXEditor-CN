@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Tabs.Npc {
             using var ms = new MemoryStream( file.Data );
             using var reader = new BinaryReader( ms );
 
-            var count = reader.ReadUInt16() + 1;
+            var count = reader.ReadUInt16();
             var offsetsExist = new HashSet<ushort>();
             for( var i = 0; i < count; i++ ) offsetsExist.Add( reader.ReadUInt16() );
 

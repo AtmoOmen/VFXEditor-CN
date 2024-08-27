@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Object;
 using HelixToolkit.SharpDX.Core.Animations;
 using SharpDX;
 using System.Collections.Generic;
@@ -10,7 +11,9 @@ namespace VfxEditor.Interop.Havok {
         public List<Bone> BoneList = [];
         public hkaSkeleton* Skeleton { get; private set; }
 
-        protected static int BONE_ID = 0;
+        private static int BONE_ID = 0;
+        public static int NEW_BONE_ID => BONE_ID++;
+
         public readonly List<SklbBone> Bones = [];
 
         public HavokBones( string havokPath, bool init ) : base( havokPath, init ) { }
@@ -45,11 +48,11 @@ namespace VfxEditor.Interop.Havok {
                 var rot = bone.Rot;
                 var scl = bone.Scl;
 
-                var matrix = HavokUtils.CleanMatrix( Matrix.AffineTransformation(
+                var matrix = Matrix.AffineTransformation(
                     scl.X,
-                    new Quaternion( rot.X, rot.Y, rot.Z, rot.W ),
+                    new Quaternion( ( float )rot.X, ( float )rot.Y, ( float )rot.Z, ( float )rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )
-                ) );
+                );
 
                 parents.Add( ParentIdx( bone ) );
                 refPoses.Add( matrix );

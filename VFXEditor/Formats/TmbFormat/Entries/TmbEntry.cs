@@ -94,18 +94,15 @@ namespace VfxEditor.TmbFormat.Entries {
 
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
-
             tmbWriter.WriteTo( writer );
             tmbWriter.Dispose();
-
             return ms.ToArray();
         }
 
-        private void SaveDialog() {
+        private void SaveDialog() =>
             FileBrowserManager.SaveFileDialog( "选择保存位置", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
             } );
-        }
 
         public static bool DoColor( DangerLevel level, out Vector4 color ) {
             color = new( 1 );

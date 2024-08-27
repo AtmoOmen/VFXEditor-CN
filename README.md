@@ -61,6 +61,13 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
+- [ ] Add gizmo to `.sklb` bones
+- [ ] Copy/paste `.atch` entry
+- [ ] `.uld` node type 10
+- [ ] Fix `.scd` looping issues?
+- [ ] DT stain files (https://github.com/Ottermandias/Penumbra.GameData/commit/fad2671d70df79e6b46668b5f6ac4aee35e1e078#diff-1675af0b153a065f21e2fd58777f8e294ade4a25eeee737a894fb804ab08a99c)
+- [ ] DT color table (https://github.com/Ottermandias/Penumbra.GameData/commit/ffa624936a1de13a64c6fa6a5f899e41375d58b1)
+- [ ] F Hrothgar icons in select dialog
 - [ ] New `.pap` animation from gLTF (currently can only replace)
 - [ ] Hex editor for replacing arbitrary files
 - [ ] More investigation into `.pap` _Type_ and animation names
@@ -77,6 +84,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Update "try on" preview
 
 ```
+chara/xls/charadb/equipmentdeformerparameter/c0101.eqdp
+
 .kdlb
 .bklb
 .kdb (kinedriver)
@@ -176,4 +185,9 @@ chara/xls/animation/animation_work_table-weapon.awt
 chara/xls/animation_extension/animext.anxb
 chara/xls/charadb/extra_met.est
 chara/xls/charadb/hairskeletontemplate.est
+
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/FileTypes/PDB.cs#L331
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/Helpers/ModelModifiers.cs#L1207
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/Helpers/ModelModifiers.cs#L1145
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/Helpers/ModelModifiers.cs#L1145
 ```

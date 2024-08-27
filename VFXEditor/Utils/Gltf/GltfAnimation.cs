@@ -1,4 +1,8 @@
-﻿using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Animation;
+using FFXIVClientStructs.Havok.Animation.Motion;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Types;
 using SharpGLTF.Animations;
 using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;
@@ -85,7 +89,7 @@ namespace VfxEditor.Utils.Gltf {
                     if( skipUnanimated ) {
                         var idx = names.IndexOf( node.Name );
                         if( unanimated.Contains( idx ) ) {
-                            Dalamud.Log( $"Skipping unanimated node {node.Name} in animation {animationName}" );
+                            Dalamud.Log( $"正在跳过 {animationName} 中的无动画节点 {node.Name}" );
                             continue;
                         }
                     }
@@ -98,7 +102,7 @@ namespace VfxEditor.Utils.Gltf {
             }
 
             model.SaveGLTF( path );
-            Dalamud.Log( $"Saved GLTF to: {path}" );
+            Dalamud.Log( $"已保存 GLTF 至: {path}" );
         }
 
         private static void ExportKeys( Dictionary<string, AnimationKeys> nameToKeys, List<string> names, PapMotion motion, float time ) {
@@ -169,7 +173,7 @@ namespace VfxEditor.Utils.Gltf {
             foreach( var node in nodes ) {
                 if( string.IsNullOrEmpty( node.Name ) ) continue;
                 if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated || skipBones.Contains( node.Name ) ) {
-                    Dalamud.Log( $"Skipped gLTF node: {node.Name}" );
+                    Dalamud.Log( $"已跳过 gLTF 节点: {node.Name}" );
                     continue;
                 }
 
@@ -177,7 +181,7 @@ namespace VfxEditor.Utils.Gltf {
             }
 
             if( animations.Count == 0 ) {
-                Dalamud.Error( "File has no animations" );
+                Dalamud.Error( "文件无任何动画" );
                 return;
             }
 
@@ -255,13 +259,15 @@ namespace VfxEditor.Utils.Gltf {
             var currentBinding = motion.AnimationControl->Binding;
             var currentAnim = currentBinding.ptr->Animation;
 
-            var anim = ( hkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaInterleavedUncompressedAnimation ) ) );
+            var anim = ( HkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaInterleavedUncompressedAnimation ) ) );
             handles.Add( ( nint )anim );
-            anim->Animation.hkReferencedObject.hkBaseObject.vfptr = ( hkBaseObject.hkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
+
+            ( ( HkBaseObject* )anim )->vfptr = ( HkBaseObject.HkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
 
             var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationBinding ) ) );
             handles.Add( ( nint )binding );
-            binding->hkReferencedObject.hkBaseObject.vfptr = currentBinding.ptr->hkReferencedObject.hkBaseObject.vfptr;
+
+            ( ( HkBaseObject* )binding )->vfptr = ( ( HkBaseObject* )currentBinding.ptr )->vfptr;
 
             // Set up binding
             binding->OriginalSkeletonName = currentBinding.ptr->OriginalSkeletonName;
@@ -287,9 +293,9 @@ namespace VfxEditor.Utils.Gltf {
             var finalAnim = ( hkaAnimation* )anim;
 
             if( compress ) {
-                Dalamud.Log( "Compressing animation..." );
+                Dalamud.Log( "正在压缩动画..." );
 
-                var spline = ( hkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaSplineCompressedAnimation ) ) );
+                var spline = ( HkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaSplineCompressedAnimation ) ) );
                 handles.Add( ( nint )spline );
                 Plugin.ResourceLoader.HavokSplineCtor( spline, anim );
                 finalAnim = ( hkaAnimation* )spline;

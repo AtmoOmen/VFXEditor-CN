@@ -7,6 +7,7 @@ namespace VfxEditor.Select.Tabs.Items {
         SubWeapon = 0x02,
         Armor = 0x04,
         Accessory = 0x08,
+        Glasses = 0x10
     }
 
     public abstract class ItemTab<T> : SelectTab<ItemRow, T> where T : class {
@@ -16,8 +17,7 @@ namespace VfxEditor.Select.Tabs.Items {
             Filter = filter;
         }
 
-        protected override bool CheckMatch( ItemRow item, string searchInput ) =>
-            SelectUiUtils.Matches( item.Name, searchInput ) || SelectUiUtils.Matches( item.ModelString, searchInput );
+        protected override bool CheckMatch( ItemRow item, string searchInput ) => item.CheckMatch( searchInput );
 
         // ======== LOADING =========
 
@@ -55,6 +55,13 @@ namespace VfxEditor.Select.Tabs.Items {
                     if( !Filter.HasFlag( ItemTabFilter.Accessory ) ) continue;
                     var armor = new ItemRowArmor( row );
                     if( armor.HasModel ) Items.Add( armor );
+                }
+            }
+
+            if( Filter.HasFlag( ItemTabFilter.Glasses ) ) {
+                foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Glasses>() ) {
+                    var glasses = new ItemRowArmor( row );
+                    if( glasses.HasModel ) Items.Add( glasses );
                 }
             }
         }

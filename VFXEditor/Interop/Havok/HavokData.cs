@@ -1,4 +1,10 @@
-﻿using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation;
+using FFXIVClientStructs.Havok.Common.Base.Container.Array;
+using FFXIVClientStructs.Havok.Common.Base.Object;
+using FFXIVClientStructs.Havok.Common.Base.System.IO.OStream;
+using FFXIVClientStructs.Havok.Common.Base.Types;
+using FFXIVClientStructs.Havok.Common.Serialize.Resource;
+using FFXIVClientStructs.Havok.Common.Serialize.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -12,8 +18,9 @@ namespace VfxEditor.Interop.Havok {
 
         public HavokData( string havokPath, bool init ) {
             Path = havokPath;
+
             if( init ) Init();
-            else Plugin.OnMainThread += Init;
+            else Dalamud.Framework.RunOnFrameworkThread( Init );
         }
 
         public virtual void Init() {
@@ -30,7 +37,7 @@ namespace VfxEditor.Interop.Havok {
                 Resource = hkSerializeUtil.LoadFromFile( ( byte* )path, null, loadOptions );
 
                 if( Resource == null ) {
-                    Dalamud.Error( $"Could not read file: {Path}" );
+                    Dalamud.Error( $"无法读取文件: {Path}" );
                     return;
                 }
 
@@ -47,7 +54,7 @@ namespace VfxEditor.Interop.Havok {
                 Marshal.FreeHGlobal( path );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Could not read file: {Path}" );
+                Dalamud.Error( e, $"无法读取文件: {Path}" );
             }
         }
 
@@ -61,7 +68,7 @@ namespace VfxEditor.Interop.Havok {
 
                     var className = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry()->GetClassByName( n1 );
 
-                    Dalamud.Log( $"Writing Havok to {Path}" );
+                    Dalamud.Log( $"正在为 {Path} 写入 Havok 数据" );
 
                     var oStream = stackalloc hkOstream[1];
                     oStream->Ctor( Path );
@@ -78,7 +85,7 @@ namespace VfxEditor.Interop.Havok {
                 }
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Could not export to: {Path}" );
+                Dalamud.Error( e, $"无法导出至: {Path}" );
             }
         }
 

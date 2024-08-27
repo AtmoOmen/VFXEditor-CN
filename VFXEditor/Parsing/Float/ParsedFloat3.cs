@@ -8,6 +8,7 @@ namespace VfxEditor.Parsing {
 
         public ParsedFloat3( string name ) : base( name ) { }
 
+
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
 
         public override void Read( BinaryReader reader, int _ ) {
@@ -24,9 +25,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value;
-            if( ImGui.InputFloat3( Name, ref value ) ) {
-                Update( value );
-            }
+            if( ImGui.InputFloat3( Name, ref value ) ) Update( value );
         }
     }
 }

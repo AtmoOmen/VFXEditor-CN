@@ -3,6 +3,12 @@ using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
+    public enum FreezePositionType {
+        Target_0,
+        Target_1,
+        Return
+    }
+
     public class C142 : TmbEntry {
         public const string MAGIC = "C142";
         public const string DISPLAY_NAME = "冻结位置";
@@ -15,7 +21,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "持续时间" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
         private readonly ParsedInt Position = new( "位置" );
-        private readonly ParsedInt Unk4 = new( "未知 4" );
+        private readonly ParsedEnum<FreezePositionType> FreezeLocation = new( "冻结位置" );
 
         public C142( TmbFile file ) : base( file ) { }
 
@@ -25,7 +31,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Duration,
             Unk2,
             Position,
-            Unk4
+            FreezeLocation
         ];
     }
 }

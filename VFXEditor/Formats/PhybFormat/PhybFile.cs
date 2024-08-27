@@ -34,7 +34,7 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
-        private PhybExtended Extended;
+        public readonly PhybExtended Extended;
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
@@ -47,15 +47,25 @@ namespace VfxEditor.PhybFormat {
             reader.BaseStream.Position = collisionOffset;
             Collision = new( this, reader, collisionOffset == simOffset );
 
-            reader.BaseStream.Position = simOffset;
-            Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
+            // New to Dawntrail
+            List<(int, int)> ignoreRange = null;
+            var diff = 0;
+            var ephbPos = reader.BaseStream.Length;
 
-            // New to dawntrail
-            if( reader.BaseStream.Position != reader.BaseStream.Length ) {
-                Extended = new( reader ); // TODO: can be optionally assigned
+            reader.BaseStream.Position = reader.BaseStream.Length <= 0x18 ? 0 : reader.BaseStream.Length - 0x18;
+            if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
+                Extended = new( reader, out ephbPos, out var ephbSize );
+                ignoreRange = [(( int )ephbPos, ( int )reader.BaseStream.Length)];
+                diff = ephbSize - Extended.Table.Export().SerializeToBinary().Length;
             }
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            reader.BaseStream.Position = simOffset;
+            Simulation = new( this, reader, simOffset == ephbPos );
+
+            if( verify ) {
+                Verified = FileUtils.Verify( reader, ToBytes(), ignoreRange, diff );
+                if( Verified == VerifiedStatus.VERIFIED && Extended != null ) Verified = VerifiedStatus.PARTIAL;
+            }
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
@@ -84,13 +94,12 @@ namespace VfxEditor.PhybFormat {
             var simWriter = new SimulationWriter();
             Simulation.Write( simWriter );
             simWriter.WriteTo( writer );
-            var endPos = writer.BaseStream.Position;
 
             writer.BaseStream.Position = offsetPos;
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
 
-            writer.BaseStream.Position = endPos;
+            writer.BaseStream.Position = writer.BaseStream.Length;
             Extended?.Write( writer );
         }
 
@@ -104,8 +113,6 @@ namespace VfxEditor.PhybFormat {
             using( var child = ImRaii.Child( "子级", size, false ) ) {
                 Version.Draw();
                 DataType.Draw();
-                var extended = Extended != null;
-                if( ImGui.Checkbox( "Extended", ref extended ) ) Extended = extended ? new() : null;
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
@@ -127,6 +134,11 @@ namespace VfxEditor.PhybFormat {
                         Skeleton.Draw();
                         SkeletonTabOpen = true;
                     }
+                }
+
+                if( Extended != null ) {
+                    using var tab = ImRaii.TabItem( "Extended" );
+                    if( tab ) Extended.Draw();
                 }
             }
 

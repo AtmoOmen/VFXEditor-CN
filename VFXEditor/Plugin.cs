@@ -3,6 +3,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
+using ImGuizmoNET;
 using ImPlotNET;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
@@ -14,6 +15,7 @@ using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Formats.KdbFormat;
 using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MtrlFormat;
+using VfxEditor.Formats.PbdFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SkpFormat;
@@ -63,7 +65,8 @@ namespace VfxEditor {
             ShcdManager,
             MtrlManager,
             MdlManager,
-            KdbManager
+            KdbManager,
+            PbdManager,
         ];
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -82,6 +85,7 @@ namespace VfxEditor {
         public static MtrlManager MtrlManager { get; private set; }
         public static MdlManager MdlManager { get; private set; }
         public static KdbManager KdbManager { get; private set; }
+        public static PbdManager PbdManager { get; private set; }
 
         public static string RootLocation { get; private set; }
 #if BETA
@@ -91,9 +95,9 @@ namespace VfxEditor {
 #endif
 
         private static bool ClearKeyState = false;
-        public static bool IsImguiSafe = false;
+        public static bool IsImguiSafe { get; set; } = false;
 
-        public Plugin( DalamudPluginInterface pluginInterface ) {
+        public Plugin( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
             Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "打开主界面" } );
@@ -102,6 +106,7 @@ namespace VfxEditor {
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
+            ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
 
             WindowSystem = new();
 
@@ -126,6 +131,7 @@ namespace VfxEditor {
             MtrlManager = new();
             MdlManager = new();
             KdbManager = new();
+            PbdManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();

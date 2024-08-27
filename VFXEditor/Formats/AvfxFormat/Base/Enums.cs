@@ -55,8 +55,8 @@ namespace VfxEditor.AvfxFormat {
             DecalRing = 11,
             Disc = 12,
             LightModel = 13,
-            Unknown_14 = 14,
-            Unknown_15 = 15,
+            ModelSkin = 14,
+            Dissolve = 15,
         }
         public enum RotationDirectionBase {
             X = 0,
@@ -300,6 +300,13 @@ namespace VfxEditor.AvfxFormat {
             Z_XY = 7,
             Z_X = 8,
             Z_Y = 9
+        }
+
+        [Flags]
+        public enum AuraFilter {
+            Character = 0x01,
+            Weapon = 0x02,
+            Off_Hand = 0x04
         }
     }
 }

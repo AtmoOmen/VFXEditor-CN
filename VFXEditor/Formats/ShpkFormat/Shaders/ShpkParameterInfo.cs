@@ -15,8 +15,9 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly ParsedString Value = new( "值" );
         private readonly int TempStringOffset;
 
-        public readonly ParsedShort Slot = new( "栏" );
-        public readonly ParsedShort Size = new( "Registers" );
+        public readonly ParsedBool IsTexture = new( "材质?", size: 2 );
+        public readonly ParsedShort Slot = new( "槽" );
+        public readonly ParsedShort Size = new( "记录" );
 
         public ShpkParameterInfo( ShaderFileType type ) {
             Type = type;
@@ -25,7 +26,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public ShpkParameterInfo( BinaryReader reader, ShaderFileType type ) : this( type ) {
             TempId = reader.ReadUInt32(); // Id
             TempStringOffset = reader.ReadInt32();
-            reader.ReadInt32(); // string size
+            reader.ReadUInt16(); // string size
+            IsTexture.Read( reader );
             Slot.Read( reader );
             Size.Read( reader );
         }
@@ -33,7 +35,6 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public void Read( BinaryReader reader, uint parameterOffset ) {
             reader.BaseStream.Position = parameterOffset + TempStringOffset;
             Value.Read( reader );
-
             if( TempId != Id ) Dalamud.Error( "ID 不符" );
         }
 
@@ -41,13 +42,15 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             writer.Write( Id );
             stringPositions.Add( (writer.BaseStream.Position, Value.Value) );
             writer.Write( 0 ); // placeholder
-            writer.Write( Value.Value.Length );
+            writer.Write( ( ushort )Value.Value.Length );
+            IsTexture.Write( writer );
             Slot.Write( writer );
             Size.Write( writer );
         }
 
         public void Draw() {
             Value.Draw();
+            IsTexture.Draw();
             Slot.Draw();
             Size.Draw();
         }

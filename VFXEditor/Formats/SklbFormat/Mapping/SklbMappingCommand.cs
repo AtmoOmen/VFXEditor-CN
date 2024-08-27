@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
 using VfxEditor.Interop.Structs.Animation;
 
 namespace VfxEditor.Formats.SklbFormat.Mapping {

@@ -1,8 +1,9 @@
-﻿using Dalamud.Interface;
-using ImGuiNET;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Library.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library.Node {

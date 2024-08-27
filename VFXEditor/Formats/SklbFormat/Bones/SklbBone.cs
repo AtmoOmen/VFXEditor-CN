@@ -1,6 +1,10 @@
-﻿using FFXIVClientStructs.Havok;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Container.String;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
+using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -13,13 +17,13 @@ namespace VfxEditor.SklbFormat.Bones {
         public readonly int Id;
 
         public readonly ParsedString Name = new( "名称" );
-        public readonly ParsedFloat4 Position = new( "位置", new( 0, 0, 0, 1 ) );
-        public readonly ParsedQuat Rotation = new( "旋转", new( 0 ) );
-        public readonly ParsedFloat4 Scale = new( "缩放", new( 1, 1, 1, 1 ) );
-        public readonly ParsedInt LockTranslation = new( "锁定平移" );
+        public readonly ParsedFloat4 Position = new( "未知", new Vector4( 0, 0, 0, 1 ) );
+        public readonly ParsedQuat Rotation = new( "旋转" );
+        public readonly ParsedFloat4 Scale = new( "缩放", new Vector4( 1, 1, 1, 1 ) );
+        public readonly ParsedInt LockTranslation = new( "平移锁定" );
 
         public Vector4 Pos => Position.Value;
-        public Quaternion Rot => Rotation.Quat;
+        public Quaternion Rot => Rotation.Quaternion;
         public Vector4 Scl => Scale.Value;
 
         public SklbBone( int id ) {
@@ -32,7 +36,7 @@ namespace VfxEditor.SklbFormat.Bones {
             var rot = pose.Rotation;
             var scl = pose.Scale;
             Position.Value = new( pos.X, pos.Y, pos.Z, pos.W );
-            Rotation.Quat = new( rot.X, rot.Y, rot.Z, rot.W );
+            Rotation.Quaternion = new( rot.X, rot.Y, rot.Z, rot.W );
             Scale.Value = new( scl.X, scl.Y, scl.Z, scl.W );
             LockTranslation.Value = bone.LockTranslation;
         }
@@ -73,12 +77,12 @@ namespace VfxEditor.SklbFormat.Bones {
             };
             pose.Translation = pos;
 
-            var quat = Rotation.Quat;
+            var quat = Rotation.Quaternion;
             var rot = new hkQuaternionf {
-                X = quat.X,
-                Y = quat.Y,
-                Z = quat.Z,
-                W = quat.W
+                X = ( float )quat.X,
+                Y = ( float )quat.Y,
+                Z = ( float )quat.Z,
+                W = ( float )quat.W
             };
             pose.Rotation = rot;
 

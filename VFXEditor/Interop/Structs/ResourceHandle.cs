@@ -1,9 +1,9 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.System.Resource;
 using Penumbra.String;
 using Penumbra.String.Classes;
-using System;
 using System.Runtime.InteropServices;
 using VfxEditor.Interop;
+using CsHandle = FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 
 namespace VfxEditor.Structs {
     public enum LoadState : byte {
@@ -28,25 +28,14 @@ namespace VfxEditor.Structs {
             public ulong DataLength;
         }
 
-        public const int SsoSize = 15;
+        public readonly CiByteString FileName()
+            => CiByteString.FromSpanUnsafe( CsHandle.FileName.AsSpan(), true );
 
-        public byte* FileNamePtr() {
-            if( FileNameLength > SsoSize )
-                return FileNameData;
+        public readonly bool GamePath( out Utf8GamePath path )
+            => Utf8GamePath.FromSpan( CsHandle.FileName.AsSpan(), MetaDataComputation.All, out path );
 
-            fixed( byte** name = &FileNameData ) {
-                return ( byte* )name;
-            }
-        }
-
-        public ByteString FileName()
-            => ByteString.FromByteStringUnsafe( FileNamePtr(), FileNameLength, true );
-
-        public ReadOnlySpan<byte> FileNameAsSpan()
-            => new( FileNamePtr(), FileNameLength );
-
-        public bool GamePath( out Utf8GamePath path )
-            => Utf8GamePath.FromSpan( FileNameAsSpan(), out path );
+        [FieldOffset( 0x00 )]
+        public CsHandle.ResourceHandle CsHandle;
 
         [FieldOffset( 0x00 )]
         public void** VTable;
@@ -57,17 +46,8 @@ namespace VfxEditor.Structs {
         [FieldOffset( 0x0C )]
         public ResourceType FileType;
 
-        [FieldOffset( 0x10 )]
-        public uint Id;
-
         [FieldOffset( 0x28 )]
         public uint FileSize;
-
-        [FieldOffset( 0x2C )]
-        public uint FileSize2;
-
-        [FieldOffset( 0x34 )]
-        public uint FileSize3;
 
         [FieldOffset( 0x48 )]
         public byte* FileNameData;
@@ -81,13 +61,6 @@ namespace VfxEditor.Structs {
         [FieldOffset( 0xAC )]
         public uint RefCount;
 
-        // May return null.
-        public static byte* GetData( ResourceHandle* handle )
-            => ( ( delegate* unmanaged< ResourceHandle*, byte* > )handle->VTable[Constants.ResourceHandleGetDataVfunc] )( handle );
-
-        public static ulong GetLength( ResourceHandle* handle )
-            => ( ( delegate* unmanaged< ResourceHandle*, ulong > )handle->VTable[Constants.ResourceHandleGetLengthVfunc] )( handle );
-
 
         // Only use these if you know what you are doing.
         // Those are actually only sure to be accessible for DefaultResourceHandles.
@@ -97,12 +70,12 @@ namespace VfxEditor.Structs {
         [FieldOffset( 0xB8 )]
         public uint DataLength;
 
-        public (IntPtr Data, int Length) GetData()
+        public (nint Data, int Length) GetData()
             => Data != null
-                ? (( IntPtr )Data->DataPtr, ( int )Data->DataLength)
-                : (IntPtr.Zero, 0);
+                ? (( nint )Data->DataPtr, ( int )Data->DataLength)
+                : (nint.Zero, 0);
 
-        public bool SetData( IntPtr data, int length ) {
+        public bool SetData( nint data, int length ) {
             if( Data == null )
                 return false;
 
@@ -111,5 +84,20 @@ namespace VfxEditor.Structs {
             DataLength = ( uint )length;
             return true;
         }
+    }
+
+    [StructLayout( LayoutKind.Explicit )]
+    public unsafe struct TextureResourceHandle {
+        [FieldOffset( 0x0 )]
+        public ResourceHandle Handle;
+
+        [FieldOffset( 0x0 )]
+        public CsHandle.TextureResourceHandle CsHandle;
+
+        [FieldOffset( 0x104 )]
+        public byte SomeLodFlag;
+
+        public readonly bool ChangeLod
+            => ( SomeLodFlag & 1 ) != 0;
     }
 }

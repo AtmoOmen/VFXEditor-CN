@@ -4,7 +4,7 @@ namespace VfxEditor.Select.Tabs.Items {
     public class ItemRowWeapon : ItemRow {
         public readonly ItemRowWeapon SubItem;
         public readonly string OverrideImcPath = null;
-        private readonly string BodyString;
+        public readonly string BodyString;
 
         public bool HasSubModel => SecondaryIds.Id1 != 0;
 
@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public string MdlPath => $"chara/weapon/{ModelString}/obj/body/{BodyString}/model/{ModelString}{BodyString}.mdl";
 
-        public ItemRowWeapon( string name, uint rowId, ushort icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category, string imcPath = "" ) :
+        public ItemRowWeapon( string name, uint rowId, uint icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category, string imcPath = "" ) :
             base( name, rowId, icon, ids, secondaryIds, category ) {
 
             OverrideImcPath = imcPath;

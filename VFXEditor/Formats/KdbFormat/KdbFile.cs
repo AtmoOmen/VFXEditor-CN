@@ -6,11 +6,18 @@ using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.KdbFormat.Nodes;
-using VfxEditor.Formats.KdbFormat.Nodes.Types;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Effector;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint;
+using VfxEditor.Formats.KdbFormat.UnknownB;
+using VfxEditor.Formats.KdbFormat.UnknownF;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Ui.Components.SplitViews;
+using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat {
@@ -23,7 +30,13 @@ namespace VfxEditor.Formats.KdbFormat {
         F, // size = 0x08, actually has values
     }
 
+    /*
+     * HUGE THANKS TO WINTER FOR FIGURING OUT MOST OF THIS
+     */
+
     public unsafe class KdbFile : FileManagerFile {
+        public static List<(int, int)> VerifyIgnore { get; private set; } = null;
+
         public static string SklbTempPath => Path.Combine( Plugin.RootLocation, "Files", "kb_havok.hkx" );
         private readonly SkeletonSelector Selector;
         public readonly List<string> BoneList = [];
@@ -35,16 +48,33 @@ namespace VfxEditor.Formats.KdbFormat {
 
         private readonly ParsedFnvHash FileName = new( "File Name" );
 
+        private readonly ParsedUInt Unknown1 = new( "Unknown 1" );
+        private readonly ParsedUInt Unknown2 = new( "Unknown 2" );
+
+        public readonly List<UnknownBItem> ItemsB = [];
+        private readonly CommandSplitView<UnknownBItem> SplitViewB;
+
+        public readonly List<UnknownFItem> ItemsF = [];
+        private readonly CommandTable<UnknownFItem> TableViewF;
+
         private readonly ParsedDouble UnknownOperation = new( "Unknown Operation" );
-        private readonly ParsedUInt UnknownB1 = new( "Unknown B1" );
-        private readonly ParsedUInt UnknownB2 = new( "Unknown B2" );
 
         public readonly KdbNodeGraphViewer NodeGraph = new();
+        public List<KdbNode> Nodes => NodeGraph.Canvas.Nodes;
 
         public KdbFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Selector = new( GetSklbPath( sourcePath ), UpdateSkeleton );
+            TableViewF = new( "Rows", true, false, ItemsF, [
+                ( "Index", ImGuiTableColumnFlags.None, -1 ),
+                ( "X", ImGuiTableColumnFlags.None, -1 ),
+                ( "Y", ImGuiTableColumnFlags.None, -1 ),
+            ], () => new() );
+
+            SplitViewB = new( "Item", ItemsB, false, null, () => new( Nodes ) );
 
             // ==========================
+
+            VerifyIgnore = [];
 
             MajorVersion = reader.ReadUInt32();
             MinorVersion = reader.ReadUInt32();
@@ -53,8 +83,6 @@ namespace VfxEditor.Formats.KdbFormat {
             reader.ReadUInt32(); // file size
 
             FileName.Read( reader, sourcePath.Split( '\\' )[^1].Split( '.' )[0] ); // encoded like kdi_c0101t0778
-            reader.ReadUInt16(); // name offset, 0
-            reader.ReadUInt16(); // padding
 
             var dataArrayCount = reader.ReadUInt32();
             if( dataArrayCount != 5 ) Dalamud.Error( $"Data array count is {dataArrayCount}" );
@@ -70,6 +98,9 @@ namespace VfxEditor.Formats.KdbFormat {
                 if( unknown != 1 ) Dalamud.Error( $"Value is {unknown}" );
                 dataArrayPositions.Add( (type, reader.BaseStream.Position + reader.ReadUInt32()) ); // add offset
             }
+
+            Unknown1.Read( reader );
+            Unknown2.Read( reader );
 
             foreach( var (type, position) in dataArrayPositions ) {
                 reader.BaseStream.Position = position;
@@ -89,16 +120,15 @@ namespace VfxEditor.Formats.KdbFormat {
                             KdbNodeType.EffectorExpr => new KdbNodeEffectorExpr( reader ),
                             KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
                             KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
-                            KdbNodeType.SourceOther => new KdbNodeSourceOther( reader ),
                             KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
                             KdbNodeType.SourceTranslate => new KdbNodeSourceTranslate( reader ),
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
-                            KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
-                            KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
                             KdbNodeType.TargetBendRoll => new KdbNodeTargetBendRoll( reader ),
-                            KdbNodeType.TargetOrientationConstraint => new KdbNodeTargetOrientationConstraint( reader ),
-                            KdbNodeType.TargetPosContraint => new KdbTargetPosConstraint( reader ),
+                            KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
                             KdbNodeType.TargetScale => new KdbNodeTargetScale( reader ),
+                            KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
+                            KdbNodeType.TargetPosContraint => new KdbNodeTargetPosConstraint( reader ),
+                            KdbNodeType.TargetOrientationConstraint => new KdbNodeTargetOrientationConstraint( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null
@@ -107,6 +137,10 @@ namespace VfxEditor.Formats.KdbFormat {
                         if( newNode == null ) Dalamud.Error( $"Unknown node type {nodeType}" );
                         else nodes.Add( newNode );
                     }
+
+                    var ignoreStart = ( int )reader.BaseStream.Position;
+                    FileUtils.PadTo( reader, 8 );
+                    VerifyIgnore.Add( (ignoreStart, ( int )reader.BaseStream.Position) );
 
                     foreach( var node in nodes.Where( x => x is not KdbConnection ) ) NodeGraph.AddToCanvas( node, false );
                     foreach( var node in nodes ) {
@@ -127,19 +161,27 @@ namespace VfxEditor.Formats.KdbFormat {
                         if( !targetSlot.AcceptMultiple && targetSlot.GetConnections().Count > 0 ) {
                             Dalamud.Error( $"{connection.TargetType} for {targetNode.Type} should accept multiple inputs" );
                         }
-                        targetSlot.Connect( sourceSlot, connection.Coeff, connection.Unknown );
+                        targetSlot.Connect( sourceSlot, node.NameHash, connection.Coeff, connection.Unknown );
                     }
 
                     NodeGraph.Canvas.Organize();
                 }
                 else if( type == ArrayType.B ) {
-                    UnknownB1.Read( reader );
-                    UnknownB2.Read( reader );
+                    var bCount = reader.ReadUInt32();
+                    var bArrayPosition = reader.BaseStream.Position + reader.ReadUInt32();
+                    reader.BaseStream.Position = bArrayPosition;
+                    for( var i = 0; i < bCount; i++ ) ItemsB.Add( new( reader, Nodes ) );
+                }
+                else if( type == ArrayType.F ) {
                     reader.BaseStream.Position = arrayPosition;
-
-                    // TODO
+                    for( var i = 0; i < count; i++ ) ItemsF.Add( new( reader ) );
+                }
+                else if( count > 0 ) {
+                    Dalamud.Error( $"{type} >>> {count} {reader.BaseStream.Position:X8}" );
                 }
             }
+
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), VerifyIgnore );
         }
 
         public unsafe void UpdateSkeleton( SimpleSklb sklbFile ) {
@@ -148,26 +190,161 @@ namespace VfxEditor.Formats.KdbFormat {
             BoneList.Clear();
             var skeleton = bones.AnimationContainer->Skeletons[0].ptr;
             for( var i = 0; i < skeleton->Bones.Length; i++ ) BoneList.Add( skeleton->Bones[i].Name.String );
-            foreach( var node in NodeGraph.Canvas.Nodes ) node.UpdateBones( BoneList );
+            foreach( var node in Nodes ) node.UpdateBones( BoneList );
             bones.RemoveReference();
         }
 
         public override void Write( BinaryWriter writer ) {
+            writer.Write( MajorVersion );
+            writer.Write( MinorVersion );
+            writer.Write( PatchVersion );
+            writer.Write( CheckFileSize );
+            var fileSizePlaceholder = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
 
+            FileName.Write( writer );
+            writer.Write( 5 ); // data array count
+            var dataArrayPositionPlaceholder = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
+
+            for( var i = 0; i < 7; i++ ) writer.Write( 0 ); // reserved
+
+            UpdatePlaceholder( dataArrayPositionPlaceholder, writer.BaseStream.Position, writer );
+            var operationsDataPlaceholder = WriteDataArrayOffset( ArrayType.Operations, writer );
+            var bDataPlaceholder = WriteDataArrayOffset( ArrayType.B, writer );
+            var cDataPlaceholder = WriteDataArrayOffset( ArrayType.C, writer );
+            var eDataPlaceholder = WriteDataArrayOffset( ArrayType.E, writer );
+            var fDataPlaceholder = WriteDataArrayOffset( ArrayType.F, writer );
+
+            Unknown1.Write( writer );
+            Unknown2.Write( writer );
+            var operationsPlaceholder = WriterDataArrayHeader( Nodes.Count +
+                Nodes.Select( x => x.Inputs.Select( y => y.GetConnections().Count ).Sum() ).Sum(), writer );
+            UnknownOperation.Write( writer );
+            var bPlaceholder = WriterDataArrayHeader( 0, writer );
+
+            writer.Write( ItemsB.Count );
+            var bPlaceholder2 = writer.BaseStream.Position;
+            writer.Write( 0 );
+
+            var cPlaceholder = WriterDataArrayHeader( 0, writer );
+            var ePlaceholder = WriterDataArrayHeader( 0, writer );
+            var fPlaceholder = WriterDataArrayHeader( ItemsF.Count, writer );
+
+            UpdatePlaceholder( operationsDataPlaceholder, operationsPlaceholder.Item1, writer );
+            UpdatePlaceholder( bDataPlaceholder, bPlaceholder.Item1, writer );
+            UpdatePlaceholder( cDataPlaceholder, cPlaceholder.Item1, writer );
+            UpdatePlaceholder( eDataPlaceholder, ePlaceholder.Item1, writer );
+            UpdatePlaceholder( fDataPlaceholder, fPlaceholder.Item1, writer );
+
+            // ===== OPERATIONS =======
+
+            UpdatePlaceholder( operationsPlaceholder.Item2, writer.BaseStream.Position, writer );
+
+            var allNodes = new List<KdbNode>();
+            var connections = new List<KdbConnection>();
+
+            foreach( var node in Nodes ) {
+                foreach( var slot in node.Inputs ) {
+                    foreach( var (_connectedSlot, idx) in slot.GetConnections().WithIndex() ) {
+                        var connectedSlot = ( KdbSlot )_connectedSlot;
+                        var data = slot.Data.TryGetValue( connectedSlot, out var _data ) ? _data : new();
+                        var connection = new KdbConnection(
+                            data.Name, ( KdbNode )connectedSlot.Node, ( KdbNode )slot.Node,
+                            idx, connectedSlot.Type, slot.Type, data.Coeff.Value, data.Unknown.Value );
+                        allNodes.Add( connection );
+                        connections.Add( connection );
+                    }
+                }
+                allNodes.Add( node );
+            }
+
+            foreach( var connection in connections ) connection.UpdateIndexes( allNodes );
+
+            var nodePositions = new Dictionary<KdbNode, long>();
+            foreach( var (node, idx) in allNodes.WithIndex() ) {
+                writer.Write( idx );
+                writer.Write( ( byte )node.Type );
+                node.Write( writer, nodePositions );
+            }
+
+            FileUtils.PadTo( writer, 8 );
+
+            foreach( var node in allNodes ) {
+                UpdatePlaceholder( nodePositions[node], writer.BaseStream.Position, writer );
+                node.WriteBody( writer );
+            }
+
+            // ==== B =======
+
+            if( ItemsB.Count > 0 ) {
+                UpdatePlaceholder( bPlaceholder2, writer.BaseStream.Position, writer );
+                foreach( var item in ItemsB ) item.Write( writer );
+            }
+
+            // ==== F =======
+
+            if( ItemsF.Count > 0 ) {
+                UpdatePlaceholder( fPlaceholder.Item2, writer.BaseStream.Position, writer );
+                foreach( var item in ItemsF ) item.Write( writer );
+            }
+
+            // ===== FILE SIZE ========
+
+            writer.BaseStream.Position = fileSizePlaceholder;
+            writer.Write( ( uint )writer.BaseStream.Length );
+        }
+
+        private static long WriteDataArrayOffset( ArrayType type, BinaryWriter writer ) {
+            writer.Write( ( ushort )type );
+            writer.Write( ( ushort )1 );
+            var res = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
+            return res;
+        }
+
+        private static (long, long) WriterDataArrayHeader( int count, BinaryWriter writer ) {
+            var pos = writer.BaseStream.Position;
+            writer.Write( count );
+            var res = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
+            return (pos, res);
+        }
+
+        private static void UpdatePlaceholder( long offsetPos, long dataPos, BinaryWriter writer ) {
+            var savePos = writer.BaseStream.Position;
+            writer.BaseStream.Position = offsetPos;
+            writer.Write( ( uint )( dataPos - offsetPos ) );
+            writer.BaseStream.Position = savePos;
         }
 
         public override void Draw() {
             ImGui.Separator();
 
-            ImGui.TextDisabled( $"Version: {MajorVersion}.{MinorVersion}.{PatchVersion}" );
-            FileName.Draw();
-            UnknownOperation.Draw();
-            UnknownB1.Draw();
-            UnknownB2.Draw();
-
-            ImGui.Separator();
             Selector.Draw();
-            ImGui.Separator();
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Nodes" ) ) {
+                if( tab ) { DrawNodes(); }
+            }
+
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) { DrawParameters(); }
+            }
+
+            using( var tab = ImRaii.TabItem( "Unknown B" ) ) {
+                if( tab ) { DrawB(); }
+            }
+
+            using( var tab = ImRaii.TabItem( "Unknown F" ) ) {
+                if( tab ) { DrawF(); }
+            }
+        }
+
+        private void DrawNodes() {
+            UnknownOperation.Draw();
 
             using( var graphChild = ImRaii.Child( "GraphChild", new( -1, ImGui.GetContentRegionAvail().Y / 2f ) ) ) {
                 NodeGraph.Draw();
@@ -182,7 +359,26 @@ namespace VfxEditor.Formats.KdbFormat {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) NodeGraph.Canvas.RemoveNode( node );
             }
-            node.Draw();
+            node.Draw( BoneList );
+        }
+
+        private void DrawParameters() {
+            using var _ = ImRaii.PushId( "Parameters" );
+            using var child = ImRaii.Child( "Child" );
+
+            FileName.Draw();
+            Unknown1.Draw();
+            Unknown2.Draw();
+        }
+
+        private void DrawB() {
+            using var _ = ImRaii.PushId( "B" );
+            SplitViewB.Draw();
+        }
+
+        private void DrawF() {
+            using var _ = ImRaii.PushId( "F" );
+            TableViewF.Draw();
         }
 
         private static string GetSklbPath( string sourcePath ) {

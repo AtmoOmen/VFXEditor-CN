@@ -19,8 +19,8 @@ namespace VfxEditor.Select.Tabs.Statuses
         {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
-            Icon = status.Icon;
-            
+            Icon = ( uint )status.Icon;
+
             HitPath = GetVfxPath( status.HitEffect.Value?.Location.Value?.Location );
             
             var loopVfxs = status.VFX.Value?.VFX;

@@ -8,3 +8,5 @@ scripts/CurrentPathList
 scripts/hashlist.db
 scripts/delta.txt
 scripts/npc_files.json
+flatc.exe
+/.idea

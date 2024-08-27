@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Numerics;
 using VfxEditor.FileBrowser;
@@ -14,7 +14,7 @@ namespace VfxEditor.Ui.Tools {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.TextDisabled( "解压原始游戏文件" );
 
-            using( var indent = ImRaii.PushIndent() )
+            using( ImRaii.PushIndent() )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) ) ) {
                 ImGui.InputTextWithHint( "##Extract", "游戏路径", ref ExtractPath, 255 );
 
@@ -43,7 +43,7 @@ namespace VfxEditor.Ui.Tools {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.TextDisabled( "图像转换" );
 
-            using var indent2 = ImRaii.PushIndent();
+            using var _ = ImRaii.PushIndent();
 
             if( ImGui.Button( ".atex 转 PNG" ) ) {
                 FileBrowserManager.OpenFileDialog( "选择文件", ".atex,.*", ( ok, res ) => {

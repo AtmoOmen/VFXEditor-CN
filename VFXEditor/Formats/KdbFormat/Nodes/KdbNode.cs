@@ -1,8 +1,6 @@
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.NodeGraphViewer;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
@@ -35,50 +33,58 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
     }
 
     public abstract class KdbNode : Node<KdbSlot> { // TODO: body stuff
-        public readonly KdbNodeType Type;
-        public readonly ParsedByte Unknown1 = new( "未知 1" );
-        public readonly ParsedUInt Unknown2 = new( "未知 2" );
-        public readonly ParsedUInt Unknown3 = new( "未知 3" );
+        public abstract KdbNodeType Type { get; }
         public readonly ParsedFnvHash NameHash = new( "Name" );
 
-        public KdbNode( KdbNodeType type ) : base( $"{type}" ) { // TODO
-            Type = type;
+        public KdbNode() : base() { // TODO
+            Name = $"{Type}";
+            InitName();
             Style.ColorUnique = NodeUtils.Colors.NormalBar_Grey; // TODO
         }
 
-        public KdbNode( KdbNodeType type, BinaryReader reader ) : this( type ) {
+        protected void ReaderHeader( BinaryReader reader ) {
+            // var a = reader.BaseStream.Position;
             reader.ReadByte(); // padding
-            Unknown1.Read( reader );
+            reader.ReadByte(); // 0x01
             reader.ReadByte(); // padding
 
             NameHash.Read( reader );
-            reader.ReadUInt16(); // offset
-            reader.ReadUInt16(); // padding
 
-            Unknown2.Read( reader );
-            Unknown3.Read( reader );
+            reader.ReadUInt32(); // 0
+            reader.ReadUInt32(); // 0
 
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
-            Dalamud.Log( $">>> {type} {reader.BaseStream.Position:X4}" );
             ReadBody( reader );
+            // Dalamud.Log( $">>> {Type} / {a:X4} [{bodyPosition:X4} -> {reader.BaseStream.Position:X4}]" );
             reader.BaseStream.Position = savePosition;
+        }
+
+        public void Write( BinaryWriter writer, Dictionary<KdbNode, long> positions ) {
+            writer.Write( ( byte )0 );
+            writer.Write( ( byte )0x01 );
+            writer.Write( ( byte )0 );
+
+            NameHash.Write( writer );
+
+            writer.Write( 0 );
+            writer.Write( 0 );
+
+            positions[this] = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
         }
 
         public abstract void ReadBody( BinaryReader reader );
 
-        public void Draw() {
-            ImGui.SameLine();
-            ImGui.TextDisabled( $"[ID]: {Id}" );
+        public abstract void WriteBody( BinaryWriter writer );
 
+        public void Draw( List<string> bones ) {
             NameHash.Draw();
-            Unknown1.Draw();
-            Unknown2.Draw();
-            Unknown3.Draw();
-
-            // TODO
+            DrawBody( bones );
         }
+
+        protected abstract void DrawBody( List<string> bones );
 
         private static KdbSlot FindSlot( List<KdbSlot> slots, ConnectionType type ) => slots.FirstOrDefault( x => x.Type == type, null );
 

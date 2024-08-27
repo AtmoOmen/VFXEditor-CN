@@ -1,6 +1,8 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Object;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
-using static FFXIVClientStructs.Havok.hkRootLevelContainer;
+using static FFXIVClientStructs.Havok.Common.Serialize.Util.hkRootLevelContainer;
 
 namespace VfxEditor.SklbFormat.Bones {
     public enum BoneDisplay {
@@ -173,7 +175,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     // New bone
                     using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                         if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                            var newId = BONE_ID++;
+                            var newId = NEW_BONE_ID;
                             var newBone = new SklbBone( newId );
                             newBone.Name.Value = $"bone_{newId}";
                             CommandManager.Add( new ListAddCommand<SklbBone>( Bones, newBone ) );
@@ -290,7 +292,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( ImGui.BeginPopupContextItem() ) {
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "创建子骨骼" ) ) {
-                    var newId = BONE_ID++;
+                    var newId = NEW_BONE_ID;
                     var newBone = new SklbBone( newId );
                     newBone.Name.Value = $"bone_{newId}";
                     var commands = new List<ICommand> {
@@ -324,7 +326,7 @@ namespace VfxEditor.SklbFormat.Bones {
             if( string.IsNullOrEmpty( SearchText ) ) return null;
             var searchSet = new HashSet<SklbBone>();
 
-            var validBones = Bones.Where( x => x.Name.Value.ToLower().Contains( SearchText.ToLower() ) ).ToList();
+            var validBones = Bones.Where( x => x.Name.Value.Contains( SearchText, StringComparison.CurrentCultureIgnoreCase ) ).ToList();
             validBones.ForEach( x => PopulateSearchSet( searchSet, x ) );
 
             return searchSet;
@@ -362,7 +364,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( DraggingBone != destination ) {
                 if( destination != null && destination.IsChildOf( DraggingBone ) ) {
-                    Dalamud.Log( "Tried to put bone into itself" );
+                    Dalamud.Log( "尝试将骨骼置于其自身" );
                 }
                 else {
                     CommandManager.Add( new SklbBoneParentCommand( DraggingBone, destination ) );

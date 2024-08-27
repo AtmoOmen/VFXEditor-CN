@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
     public enum ConnectionType {
@@ -38,8 +39,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         Scale
     }
 
-    public class KdbConnection : KdbNode { // placeholder for edges and stuff
+    public class KdbConnection : KdbNode {
+        // Really jank placeholder for connections stuff
+
         // https://github.com/Irastris/ValkyrieUproject/blob/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public/SQEX_KineDriverConnectEquals.h
+
+        public override KdbNodeType Type => KdbNodeType.Connection;
 
         public int SourceIdx { get; private set; }
         public int TargetIdx { get; private set; }
@@ -50,9 +55,34 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public ConnectionType SourceType { get; private set; }
         public ConnectionType TargetType { get; private set; }
 
-        public KdbConnection() : base( KdbNodeType.Connection ) { }
+        // jank stuff for writing stuff
+        private readonly KdbNode SourceNode;
+        private readonly KdbNode TargetNode;
+        private readonly int ConnectionIdx;
 
-        public KdbConnection( BinaryReader reader ) : base( KdbNodeType.Connection, reader ) { }
+        public KdbConnection(
+            ParsedFnvHash name, KdbNode sourceNode, KdbNode targetNode,
+            int connectionIdx, ConnectionType sourceType, ConnectionType targetType, double coeff, uint unknown ) {
+            NameHash.Value = name.Value;
+            NameHash.NameOffset = name.NameOffset;
+
+            SourceNode = sourceNode;
+            TargetNode = targetNode;
+            ConnectionIdx = connectionIdx;
+            SourceType = sourceType;
+            TargetType = targetType;
+            Coeff = coeff;
+            Unknown = unknown;
+        }
+
+        public void UpdateIndexes( List<KdbNode> nodes ) {
+            SourceIdx = nodes.IndexOf( SourceNode );
+            TargetIdx = nodes.IndexOf( TargetNode );
+        }
+
+        public KdbConnection() : base() { }
+
+        public KdbConnection( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         public override void ReadBody( BinaryReader reader ) {
             reader.ReadUInt32(); // hash
@@ -78,8 +108,30 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             reader.ReadUInt32(); // 0
         }
 
-        protected override List<KdbSlot> GetInputSlots() => [];
+        public override void WriteBody( BinaryWriter writer ) {
+            SourceNode.NameHash.Write( writer );
+            writer.Write( SourceIdx );
+            writer.Write( ( uint )SourceType );
 
+            writer.Write( 0 );
+
+            TargetNode.NameHash.Write( writer );
+            writer.Write( TargetIdx );
+            writer.Write( ( uint )TargetType );
+
+            writer.Write( ConnectionIdx );
+
+            writer.Write( 0 );
+            writer.Write( 0 );
+
+            writer.Write( Coeff );
+            writer.Write( Unknown );
+
+            writer.Write( 0 );
+        }
+
+        protected override List<KdbSlot> GetInputSlots() => [];
         protected override List<KdbSlot> GetOutputSlots() => [];
+        protected override void DrawBody( List<string> bones ) { }
     }
 }

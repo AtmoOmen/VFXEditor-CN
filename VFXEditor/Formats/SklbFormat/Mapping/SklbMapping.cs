@@ -1,5 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
-using FFXIVClientStructs.Havok;
+using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.Havok.Animation.Rig;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +15,7 @@ using VfxEditor.SklbFormat.Bones;
 
 namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbMapping {
-        public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
+        public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, "temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
 
         public readonly ParsedString Name = new( "名称" );
         public readonly ParsedFloat4 Position = new( "平移" );
@@ -39,7 +39,7 @@ namespace VfxEditor.SklbFormat.Mapping {
 
             var transform = mapper->Mapping.ExtractedMotionMapping;
             Position.Value = new( transform.Translation.X, transform.Translation.Y, transform.Translation.Z, transform.Translation.W );
-            Rotation.Value = ParsedQuat.ToEuler( new( transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W ) );
+            Rotation.Quaternion = new( transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W );
             Scale.Value = new( transform.Scale.X, transform.Scale.Y, transform.Scale.Z, transform.Scale.W );
 
             var data = Mapper->Mapping;
@@ -52,7 +52,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         }
 
         public void Write( HashSet<nint> handles ) {
-            var rotation = Rotation.Quat;
+            var rotation = Rotation.Quaternion;
 
             Mapper->Mapping.ExtractedMotionMapping = new() {
                 Translation = new() {
@@ -194,7 +194,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                 if( idx % 2 == 0 ) resultRot = new( 0f, 0f, 0f, 1f );
 
                 commands.Add( new ParsedSimpleCommand<Vector4>( simple.Translation, new( resultPos, 0 ) ) );
-                commands.Add( new ParsedSimpleCommand<Vector3>( simple.Rotation, ParsedQuat.ToEuler( resultRot ) ) );
+                commands.Add( new ParsedSimpleCommand<(Quaternion, Vector3)>( simple.Rotation, (resultRot, ParsedQuat.ToEuler( resultRot )) ) );
                 commands.Add( new ParsedSimpleCommand<Vector4>( simple.Scale, new( resultScl ) ) );
             }
 

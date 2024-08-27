@@ -1,6 +1,6 @@
-﻿using HelixToolkit.SharpDX.Core.Animations;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using HelixToolkit.SharpDX.Core.Animations;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.PhybFormat.Collision.Capsule;
@@ -56,7 +56,7 @@ namespace VfxEditor.PhybFormat.Collision {
             NormalPlaneSplitView = new( "Normal Plane", NormalPlanes, false,
                 ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybNormalPlane _, bool _ ) => File.OnChange() );
 
-            ThreePointPlaneSplitView = new( "Three-Point Plane", ThreePointPlanes, false,
+            ThreePointPlaneSplitView = new( "Three Point Plane", ThreePointPlanes, false,
                 ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybThreePointPlane _, bool _ ) => File.OnChange() );
 
             SphereDropdown = new( "Sphere", Spheres, false,

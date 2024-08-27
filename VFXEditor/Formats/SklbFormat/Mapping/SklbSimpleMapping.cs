@@ -1,5 +1,8 @@
-﻿using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
+using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
 using ImGuiNET;
+using System.Numerics;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Parsing;
 using VfxEditor.SklbFormat.Bones;
@@ -10,13 +13,13 @@ namespace VfxEditor.SklbFormat.Mapping {
         public readonly SklbMapping Mapping;
 
         public readonly ParsedBoneIndex BoneA = new( "骨骼节点映射", -1 );
-        public readonly ParsedBoneIndex BoneB = new( "该骨骼节点", -1 );
+        public readonly ParsedBoneIndex BoneB = new( "此骨骼节点", -1 );
         public readonly ParsedInt Unk1 = new( "未知 1" );
         public readonly ParsedInt Unk2 = new( "未知 2" );
         public readonly ParsedInt Unk3 = new( "未知 3" );
         public readonly ParsedFloat4 Translation = new( "平移" );
-        public readonly ParsedQuat Rotation = new( "旋转", new( 0, 0, 0 ) );
-        public readonly ParsedFloat4 Scale = new( "缩放", new( 1, 1, 1, 1 ) );
+        public readonly ParsedQuat Rotation = new( "旋转" );
+        public readonly ParsedFloat4 Scale = new( "缩放", new Vector4( 1, 1, 1, 1 ) );
 
         public SklbSimpleMapping( SklbMapping mapping ) {
             Mapping = mapping;
@@ -35,12 +38,12 @@ namespace VfxEditor.SklbFormat.Mapping {
             var scale = transform.Scale;
 
             Translation.Value = new( pos.X, pos.Y, pos.Z, pos.W );
-            Rotation.Value = ParsedQuat.ToEuler( new( rot.X, rot.Y, rot.Z, rot.W ) );
+            Rotation.Quaternion = new( rot.X, rot.Y, rot.Z, rot.W );
             Scale.Value = new( scale.X, scale.Y, scale.Z, scale.W );
         }
 
         public void Draw() {
-            if( ImGui.Checkbox( "Display Raw Indexes", ref Plugin.Configuration.SklbMappingIndexDisplay ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "显示原始索引", ref Plugin.Configuration.SklbMappingIndexDisplay ) ) Plugin.Configuration.Save();
 
             if( Plugin.Configuration.SklbMappingIndexDisplay ) {
                 BoneA.Draw();
@@ -70,12 +73,12 @@ namespace VfxEditor.SklbFormat.Mapping {
             };
             transform.Translation = pos;
 
-            var rotation = Rotation.Quat;
+            var rotation = Rotation.Quaternion;
             var rot = new hkQuaternionf {
-                X = rotation.X,
-                Y = rotation.Y,
-                Z = rotation.Z,
-                W = rotation.W
+                X = ( float )rotation.X,
+                Y = ( float )rotation.Y,
+                Z = ( float )rotation.Z,
+                W = ( float )rotation.W
             };
             transform.Rotation = rot;
 

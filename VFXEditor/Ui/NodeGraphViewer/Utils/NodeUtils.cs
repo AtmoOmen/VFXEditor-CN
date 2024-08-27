@@ -61,7 +61,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Utils {
 
         public static Vector4 AdjustTransparency( Vector4 pColor, float pTransparency ) => new( pColor.X, pColor.Y, pColor.Z, pTransparency );
 
-        public static Vector4 RgbatoVec4( int R, int G, int B, int A ) => new( ( float )R / 255, ( float )G / 255, ( float )B / 255, ( float )A / 255 );
+        public static Vector4 RgbatoVec4( int r, int g, int b, int a ) => new( ( float )r / 255, ( float )g / 255, ( float )b / 255, ( float )a / 255 );
 
         internal class Colors {
             public static readonly Vector4 GenObj_BlueAction = new( 0.61f, 0.79f, 0.92f, 0.4f );
@@ -69,13 +69,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Utils {
             public static readonly Vector4 NodeBg = RgbatoVec4( 49, 48, 49, 255 );
             public static readonly Vector4 NodeFg = RgbatoVec4( 148, 121, 74, 255 );
             public static readonly Vector4 NodeText = RgbatoVec4( 223, 211, 185, 255 );
-            public static readonly Vector4 NodePack = RgbatoVec4( 157, 189, 99, 255 );
             public static readonly Vector4 NodeEdgeHighlightNeg = RgbatoVec4( 246, 132, 118, 255 );
-            public static readonly Vector4 NodeGraphViewer_BackdropGrey = RgbatoVec4( 165, 165, 165, 255 );
             public static readonly Vector4 NodeGraphViewer_SnaplineGold = RgbatoVec4( 148, 121, 74, 255 );
-            public static readonly Vector4 NodeNotifInfo = RgbatoVec4( 223, 211, 185, 255 );
-            public static readonly Vector4 NodeNotifWarning = RgbatoVec4( 240, 160, 19, 255 );
-            public static readonly Vector4 NodeNotifError = RgbatoVec4( 216, 148, 148, 255 );
         }
     }
 }

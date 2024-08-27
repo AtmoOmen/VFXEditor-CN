@@ -79,7 +79,7 @@ namespace VfxEditor.Interop {
             GetResourceParameters* resParams,
             bool isUnknown
         ) {
-            if( !Utf8GamePath.FromPointer( path, out var gamePath ) ) {
+            if( !Utf8GamePath.FromPointer( path, MetaDataComputation.None, out var gamePath ) ) {
                 return CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
             }
 
@@ -111,6 +111,8 @@ namespace VfxEditor.Interop {
         }
 
         private byte ReadSqpackDetour( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync ) {
+            if( fileDesc->ResourceHandle == null ) return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
+
             if( !fileDesc->ResourceHandle->GamePath( out var originalGamePath ) ) {
                 return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
             }

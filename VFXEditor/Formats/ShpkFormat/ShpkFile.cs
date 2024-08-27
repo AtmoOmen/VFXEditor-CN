@@ -11,6 +11,7 @@ using VfxEditor.Formats.ShpkFormat.Keys;
 using VfxEditor.Formats.ShpkFormat.Materials;
 using VfxEditor.Formats.ShpkFormat.Nodes;
 using VfxEditor.Formats.ShpkFormat.Shaders;
+using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
@@ -27,13 +28,16 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly uint Version;
         private readonly uint DxMagic;
         public DX DxVersion => GetDxVersion( DxMagic );
+        public readonly bool IsV7;
 
         private readonly List<ShpkShader> VertexShaders = [];
         private readonly List<ShpkShader> PixelShaders = [];
 
+        public readonly ParsedBool HasDefaultMaterialValues = new( "默认值" );
         public readonly List<ShpkMaterialParmeter> MaterialParameters = [];
         public readonly List<ShpkParameterInfo> Constants = [];
         public readonly List<ShpkParameterInfo> Samplers = [];
+        public readonly List<ShpkParameterInfo> Textures = [];
         public readonly List<ShpkParameterInfo> Resources = [];
 
         public readonly List<ShpkKey> SystemKeys = [];
@@ -49,6 +53,7 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly CommandSplitView<ShpkMaterialParmeter> MaterialParameterView;
         private readonly CommandSplitView<ShpkParameterInfo> ConstantView;
         private readonly CommandSplitView<ShpkParameterInfo> SamplerView;
+        private readonly CommandSplitView<ShpkParameterInfo> TextureView;
         private readonly CommandSplitView<ShpkParameterInfo> ResourceView;
 
         private readonly CommandSplitView<ShpkKey> SystemKeyView;
@@ -73,12 +78,21 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numVertex = reader.ReadUInt32();
             var numPixel = reader.ReadUInt32();
 
-            reader.ReadUInt32(); // Material parameters size
-            var numMaterialParams = reader.ReadUInt32();
+            var materialParamsSize = reader.ReadUInt32(); // Material parameters size
+            var numMaterialParams = reader.ReadUInt16();
+            HasDefaultMaterialValues.Value = reader.ReadUInt16() != 0;
 
-            var numConstants = reader.ReadUInt32();
-            var numSamplers = reader.ReadUInt32();
-            var numResources = reader.ReadUInt32();
+            var numConstants = reader.ReadUInt16();
+            var unk1 = reader.ReadUInt16();
+
+            var numSamplers = reader.ReadUInt16();
+            var numTextures = reader.ReadUInt16();
+
+            var numResources = reader.ReadUInt16();
+            var unk2 = reader.ReadUInt16();
+
+            IsV7 = HasDefaultMaterialValues.Value || numTextures > 0;
+            if( unk1 != 0 || unk2 != 0 ) Dalamud.Error( $"未知参数: 0x{unk1:X4} 0x{unk2:X4}" );
 
             var numSystemKey = reader.ReadUInt32();
             var numSceneKey = reader.ReadUInt32();
@@ -87,13 +101,23 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numNode = reader.ReadUInt32();
             var numAlias = reader.ReadUInt32();
 
-            for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
-            for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk ) );
+            for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
+            for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
 
-            for( var i = 0; i < numMaterialParams; i++ ) MaterialParameters.Add( new( reader ) );
+            for( var i = 0; i < numMaterialParams; i++ ) MaterialParameters.Add( new( this, reader ) );
+
+            if( HasDefaultMaterialValues.Value ) {
+                var defaultStart = reader.BaseStream.Position;
+                foreach( var param in MaterialParameters ) {
+                    reader.BaseStream.Position = defaultStart + param.Offset.Value;
+                    param.DefaultValue.Read( reader );
+                }
+                reader.BaseStream.Position = defaultStart + materialParamsSize;
+            }
 
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, ShaderFileType.Shpk ) );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, ShaderFileType.Shpk ) );
+            for( var i = 0; i < numTextures; i++ ) Textures.Add( new( reader, ShaderFileType.Shpk ) );
             for( var i = 0; i < numResources; i++ ) Resources.Add( new( reader, ShaderFileType.Shpk ) );
 
             for( var i = 0; i < numSystemKey; i++ ) SystemKeys.Add( new( reader ) );
@@ -112,17 +136,19 @@ namespace VfxEditor.Formats.ShpkFormat {
             PixelShaders.ForEach( x => x.Read( reader, parameterOffset, shaderOffset ) );
             Constants.ForEach( x => x.Read( reader, parameterOffset ) );
             Samplers.ForEach( x => x.Read( reader, parameterOffset ) );
+            Textures.ForEach( x => x.Read( reader, parameterOffset ) );
             Resources.ForEach( x => x.Read( reader, parameterOffset ) );
 
             // ====== CONSTRUCT VIEWS ==========
 
-            VertexView = new( "顶点着色器", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
-            PixelView = new( "像素着色器", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
+            VertexView = new( "顶点着色器", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
+            PixelView = new( "像素着色器", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
 
-            MaterialParameterView = new( "参数", MaterialParameters, false, null, () => new() );
+            MaterialParameterView = new( "参数", MaterialParameters, false, null, () => new( this ) );
 
-            ConstantView = new( "常量", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ConstantView = new( "常亮", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
             SamplerView = new( "采样器", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            TextureView = new( "材质", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
             ResourceView = new( "资源", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
 
             SystemKeyView = new( "系统键", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
@@ -136,7 +162,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             // TODO: don't be dumb when adding keys, actually update selectors and stuff
             // TOOD: when adding keys, make sure to do it everywhere
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -152,16 +178,20 @@ namespace VfxEditor.Formats.ShpkFormat {
             writer.Write( VertexShaders.Count );
             writer.Write( PixelShaders.Count );
 
-            var materialParamSize = ( Constants.FirstOrDefault( x => x.Id == MaterialParamsConstantId )?.DataSize ?? 0u );
+            var materialParamsSize = Constants.FirstOrDefault( x => x.Id == MaterialParamsConstantId )?.DataSize ?? 0u;
             foreach( var param in MaterialParameters ) {
-                materialParamSize = ( uint )Math.Max( materialParamSize, ( uint )param.Offset.Value + param.Size.Value );
+                materialParamsSize = ( uint )Math.Max( materialParamsSize, ( uint )param.Offset.Value + ( int )param.Size.Value );
             }
-            materialParamSize = ( materialParamSize + 0xFu ) & ~0xFu;
-            writer.Write( materialParamSize );
-            writer.Write( MaterialParameters.Count );
+            materialParamsSize = ( materialParamsSize + 0xFu ) & ~0xFu;
+            writer.Write( materialParamsSize );
+            writer.Write( ( ushort )MaterialParameters.Count );
+            writer.Write( ( ushort )( HasDefaultMaterialValues.Value ? 1 : 0 ) );
 
             writer.Write( Constants.Count );
-            writer.Write( Samplers.Count );
+
+            writer.Write( ( ushort )Samplers.Count );
+            writer.Write( ( ushort )Textures.Count );
+
             writer.Write( Resources.Count );
 
             writer.Write( SystemKeys.Count );
@@ -179,8 +209,19 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             MaterialParameters.ForEach( x => x.Write( writer ) );
 
+            if( HasDefaultMaterialValues.Value ) {
+                var defaultStart = writer.BaseStream.Position;
+                FileUtils.Pad( writer, materialParamsSize );
+                foreach( var param in MaterialParameters ) {
+                    writer.BaseStream.Position = defaultStart + param.Offset.Value;
+                    param.DefaultValue.Write( writer );
+                }
+                writer.BaseStream.Position = defaultStart + materialParamsSize;
+            }
+
             Constants.ForEach( x => x.Write( writer, stringPositions ) );
             Samplers.ForEach( x => x.Write( writer, stringPositions ) );
+            Textures.ForEach( x => x.Write( writer, stringPositions ) );
             Resources.ForEach( x => x.Write( writer, stringPositions ) );
 
             SystemKeys.ForEach( x => x.Write( writer ) );
@@ -197,7 +238,7 @@ namespace VfxEditor.Formats.ShpkFormat {
 
         public override void Draw() {
             ImGui.Separator();
-            ImGui.TextDisabled( $"版本: {Version} DirectX: {DxVersion}" );
+            ImGui.TextDisabled( $"版本: 0x{Version:X4} DirectX: {DxVersion}" );
 
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -212,6 +253,7 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             using( var tab = ImRaii.TabItem( "材质参数" ) ) {
                 if( tab ) {
+                    if( IsV7 ) HasDefaultMaterialValues.Draw();
                     DrawMaterialTable();
                     ImGui.Separator();
                     MaterialParameterView.Draw();
@@ -224,6 +266,11 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             using( var tab = ImRaii.TabItem( "采样" ) ) {
                 if( tab ) SamplerView.Draw();
+            }
+
+            if( IsV7 ) {
+                using var tab = ImRaii.TabItem( "材质" );
+                if( tab ) TextureView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "资源" ) ) {
@@ -307,7 +354,7 @@ namespace VfxEditor.Formats.ShpkFormat {
                     using var selected = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, parameter != null && parameter == MaterialParameterView.GetSelected() );
                     using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE, parameters.Count > 1 );
 
-                    if( ImGui.Selectable( parameter == null ? "[无]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
+                    if( ImGui.Selectable( parameter == null ? "[无]" : $"参数 {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
                         MaterialParameterView.SetSelected( parameter );
                     }
                 }

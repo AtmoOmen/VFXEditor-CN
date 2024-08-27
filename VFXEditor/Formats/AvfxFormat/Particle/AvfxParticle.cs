@@ -29,6 +29,9 @@ namespace VfxEditor.AvfxFormat {
         // New to dawntrail
         public readonly AvfxInt ShUT = new( "ShUT", "ShUT" );
         public readonly AvfxInt ShR = new( "ShR", "ShR" );
+        public readonly AvfxInt ShT = new( "ShT", "ShT" );
+        public readonly AvfxInt UniV = new( "统一速度", "UniV" );
+        public readonly AvfxInt HybV = new( "混合速度", "HybV" );
         public readonly AvfxBool E24Enabled = new( "启用 E24", "bE24" );
 
         public readonly AvfxBool IsApplyToneMap = new( "应用色调映射", "bATM" );
@@ -122,6 +125,9 @@ namespace VfxEditor.AvfxFormat {
                 S11Enabled,
                 ShUT,
                 ShR,
+                ShT,
+                UniV,
+                HybV,
                 E24Enabled,
                 IsApplyToneMap,
                 IsApplyFog,
@@ -290,7 +296,8 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Disc => new AvfxParticleDataDisc(),
                 ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
                 ParticleType.Laser => new AvfxParticleDataLaser(),
-                ParticleType.Unknown_15 => new AvfxParticleDataUnknown15(),
+                ParticleType.ModelSkin => new AvfxParticleDataModelSkin(),
+                ParticleType.Dissolve => new AvfxParticleDataDissolve(),
                 _ => null,
             };
 

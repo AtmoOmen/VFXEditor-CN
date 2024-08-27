@@ -6,8 +6,8 @@
         <Company></Company>
         <Product>VFXEditorCN</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.8.3.8</FileVersion>
-        <AssemblyVersion>1.8.3.8</AssemblyVersion>
+        <FileVersion>1.9.0.9</FileVersion>
+        <AssemblyVersion>1.9.0.9</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -100,10 +100,10 @@
 
     <ItemGroup>
         <PackageReference Include="BCnEncoder.Net" Version="2.1.0" />
-        <PackageReference Include="DalamudPackager" Version="2.1.12" />
+        <PackageReference Include="DalamudPackager" Version="2.1.13" />
         <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
-        <PackageReference Include="HelixToolkit" Version="2.24.0" />
-        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.24.0" />
+        <PackageReference Include="HelixToolkit" Version="2.25.0" />
+        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.25.0" />
         <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -113,9 +113,9 @@
         <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
         <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
         <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
-        <PackageReference Include="Penumbra.Api" Version="5.0.0" />
+        <PackageReference Include="Penumbra.Api" Version="5.2.0" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
-        <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0031" />
+        <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
     </ItemGroup>
 
@@ -190,6 +190,15 @@
         <None Update="Files\oggenc2.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Files\sphere_d_array.tex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\tile_norm_array.tex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Files\tile_orb_array.tex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Files\useful_textures.txt">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -211,10 +220,10 @@
         <None Update="Shaders\SsaoQuad.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\MaterialGBuffer.fx">
+        <None Update="Shaders\MaterialLegacyGBuffer.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\MaterialUtils.fx">
+        <None Update="Shaders\PhongUtils.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\ModelUtils.fx">
@@ -226,5 +235,9 @@
         <None Update="VFXEditorCN.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Flatbuffer\Ephb\" />
     </ItemGroup>
 </Project>

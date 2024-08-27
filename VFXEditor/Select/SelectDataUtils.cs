@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using VfxEditor.Select.Data;
 
-namespace VfxEditor.Select {
-    public partial class SelectDataUtils {
+namespace VfxEditor.Select
+{
+    public partial class SelectDataUtils
+    {
         public static string BnpcPath => Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
         public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
         public static string CommonVfxPath => Path.Combine( Plugin.RootLocation, "Files", "common_vfx" );
@@ -90,7 +92,8 @@ namespace VfxEditor.Select {
 
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
-        public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
+        public static Dictionary<string, string> GetAllSkeletonPaths( string path )
+        {
             if( string.IsNullOrEmpty( path ) ) return [];
             return CharacterRaces.ToDictionary( x => x.Name, x => GetSkeletonPath( x.Id, path ) );
         }

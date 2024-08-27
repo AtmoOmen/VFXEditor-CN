@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
@@ -16,8 +16,8 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
     public class ShpkMaterialParmeter : IUiItem {
         public readonly ShpkFile File;
         public readonly ParsedUIntHex Id = new( "Id" );
-        public readonly ParsedShort Offset = new( "Offset" );
-        public readonly ParsedEnum<MaterialParameterSize> Size = new( "Size", size: 2 );
+        public readonly ParsedShort Offset = new( "偏移" );
+        public readonly ParsedEnum<MaterialParameterSize> Size = new( "大小", size: 2 );
 
         public ParsedBase DefaultValue { get; private set; }
 
@@ -37,10 +37,10 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
 
         private void UpdateDefaultValue() {
             DefaultValue = Size.Value switch {
-                MaterialParameterSize.Float => new ParsedFloat( "Default Value" ),
-                MaterialParameterSize.Vector2 => new ParsedFloat2( "Default Value" ),
-                MaterialParameterSize.Vector3 => new ParsedFloat3( "Default Value" ),
-                MaterialParameterSize.Vector4 => new ParsedFloat4( "Default Value" ),
+                MaterialParameterSize.Float => new ParsedFloat( "默认值" ),
+                MaterialParameterSize.Vector2 => new ParsedFloat2( "默认值" ),
+                MaterialParameterSize.Vector3 => new ParsedFloat3( "默认值" ),
+                MaterialParameterSize.Vector4 => new ParsedFloat4( "默认值" ),
                 _ => null
             };
         }

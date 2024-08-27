@@ -21,37 +21,37 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMtrl loaded ) {
             loaded = new() {
-                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, ["fac_a", "etc_a", "iri_a"], item.Data.FaceToIcon ),
-                Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, ["a"] ),
-                Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, ["hir_a", "acc_b"], item.Data.HairToIcon ),
-                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, ["fac_a", "a"], item.Data.FeatureToIcon ),
-                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, ["a"], item.Data.FeatureToIcon )
+                Faces = GetPart( "面部", CharacterPart.Face, item, item.Data.FaceOptions, ["fac_a", "etc_a", "iri_a"], item.Data.FaceToIcon ),
+                Bodies = GetPart( "身体", CharacterPart.Body, item, item.Data.BodyOptions, ["a"] ),
+                Hairs = GetPart( "头发", CharacterPart.Hair, item, item.Data.HairOptions, ["hir_a", "acc_b"], item.Data.HairToIcon ),
+                Ears = GetPart( "耳朵", CharacterPart.Ear, item, item.Data.EarOptions, ["fac_a", "a"], item.Data.FeatureToIcon ),
+                Tails = GetPart( "尾巴", CharacterPart.Tail, item, item.Data.TailOptions, ["a"], item.Data.FeatureToIcon )
             };
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Faces" ) ) {
+            if( ImGui.BeginTabItem( "面部" ) ) {
                 Dialog.DrawPaths( Loaded.Faces, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Bodies" ) ) {
+            if( ImGui.BeginTabItem( "身体" ) ) {
                 Dialog.DrawPaths( Loaded.Bodies, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Hairs" ) ) {
+            if( ImGui.BeginTabItem( "头发" ) ) {
                 Dialog.DrawPaths( Loaded.Hairs, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Ears" ) ) {
+            if( ImGui.BeginTabItem( "耳朵" ) ) {
                 Dialog.DrawPaths( Loaded.Ears, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Tails" ) ) {
+            if( ImGui.BeginTabItem( "尾巴" ) ) {
                 Dialog.DrawPaths( Loaded.Tails, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }

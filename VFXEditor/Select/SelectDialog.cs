@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -80,8 +80,8 @@ namespace VfxEditor.Select {
             ShowLocal = showLocal;
             Action = action;
 
-            RecentTab = new( this, "Recent", manager.GetConfig().RecentItems );
-            FavoritesTab = new( this, "Favorites", manager.GetConfig().Favorites );
+            RecentTab = new( this, "最近", manager.GetConfig().RecentItems );
+            FavoritesTab = new( this, "收藏", manager.GetConfig().Favorites );
             PenumbraTab = new( this );
         }
 
@@ -96,7 +96,7 @@ namespace VfxEditor.Select {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( $"{Manager.GetId()}/{WindowName}" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawGameTabs();
@@ -112,12 +112,12 @@ namespace VfxEditor.Select {
             if( GameTabs.Count == 0 ) return;
             using var _ = ImRaii.PushId( "Game" );
 
-            using var tabItem = ImRaii.TabItem( "Game Items" );
+            using var tabItem = ImRaii.TabItem( "游戏物品" );
             if( !tabItem ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             foreach( var tab in GameTabs ) tab.Draw();

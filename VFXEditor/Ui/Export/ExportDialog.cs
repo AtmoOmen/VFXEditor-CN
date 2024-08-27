@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using VfxEditor.FileManager.Interfaces;
 
@@ -13,23 +13,23 @@ namespace VfxEditor.Ui.Export {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( WindowName );
 
-            var width = ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize( "Export" ).X - ImGui.GetStyle().ItemInnerSpacing.X - ImGui.GetStyle().FramePadding.X * 2;
+            var width = ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize( "导出" ).X - ImGui.GetStyle().ItemInnerSpacing.X - ImGui.GetStyle().FramePadding.X * 2;
             var inputWidth = width / 3.0f - ImGui.GetStyle().ItemInnerSpacing.X;
 
             using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SetNextItemWidth( inputWidth );
-                ImGui.InputTextWithHint( "##Name", "Mod Name", ref ModName, 255 );
+                ImGui.InputTextWithHint( "##Name", "模组名", ref ModName, 255 );
 
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth( inputWidth );
-                ImGui.InputTextWithHint( "##Author", "Author", ref Author, 255 );
+                ImGui.InputTextWithHint( "##Author", "作者", ref Author, 255 );
 
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth( inputWidth );
-                ImGui.InputTextWithHint( "##Version", "Version", ref Version, 255 );
+                ImGui.InputTextWithHint( "##Version", "版本", ref Version, 255 );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Export" ) ) OnExport();
+                if( ImGui.Button( "导出" ) ) OnExport();
             }
 
             ImGui.Separator();

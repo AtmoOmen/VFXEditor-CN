@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override string GetDefaultText() => "Data";
+        public override string GetDefaultText() => "数据";
 
         public override void Draw() {
             if( Tabs.Count == 1 ) {
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
         public void DrawEnableCheckbox() {
             if( !Optional ) return;
             var assigned = Assigned;
-            if( ImGui.Checkbox( "Enable Data", ref assigned ) ) {
+            if( ImGui.Checkbox( "启用数据", ref assigned ) ) {
                 CommandManager.Add( new AvfxAssignCommand( this, assigned ) );
             }
         }

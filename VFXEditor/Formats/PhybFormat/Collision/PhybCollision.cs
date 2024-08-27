@@ -56,7 +56,7 @@ namespace VfxEditor.PhybFormat.Collision {
             NormalPlaneSplitView = new( "Normal Plane", NormalPlanes, false,
                 ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybNormalPlane _, bool _ ) => File.OnChange() );
 
-            ThreePointPlaneSplitView = new( "Three-Point Plane", ThreePointPlanes, false,
+            ThreePointPlaneSplitView = new( "Three Point Plane", ThreePointPlanes, false,
                 ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybThreePointPlane _, bool _ ) => File.OnChange() );
 
             SphereDropdown = new( "Sphere", Spheres, false,
@@ -86,31 +86,31 @@ namespace VfxEditor.PhybFormat.Collision {
             using var _ = ImRaii.PushId( "Collision" );
 
             if( Ellipsoids.Count > 0 || NormalPlanes.Count > 0 || ThreePointPlanes.Count > 0 ) {
-                ImGui.TextColored( UiUtils.RED_COLOR, "[ELLIPSOID/NORMAL PLANE/THREE-POINT PLANE]" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "[椭球/法平面/三点平面]" );
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Capsules" ) ) {
+            using( var tab = ImRaii.TabItem( "胶囊" ) ) {
                 if( tab ) CapsuleSplitView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Ellipsoids" ) ) {
+            using( var tab = ImRaii.TabItem( "椭球" ) ) {
                 if( tab ) EllipsoidSplitView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Normal Planes" ) ) {
+            using( var tab = ImRaii.TabItem( "法平面" ) ) {
                 if( tab ) NormalPlaneSplitView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Three-Point Planes" ) ) {
+            using( var tab = ImRaii.TabItem( "三点平面" ) ) {
                 if( tab ) ThreePointPlaneSplitView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Spheres" ) ) {
+            using( var tab = ImRaii.TabItem( "球" ) ) {
                 if( tab ) SphereDropdown.Draw();
             }
         }

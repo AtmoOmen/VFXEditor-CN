@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -15,13 +15,13 @@ namespace VfxEditor.Formats.AvfxFormat.Texture {
         }
 
         protected override void DrawBody() {
-            using var child = ImRaii.Child( "Child", new( 600, 300 ) );
+            using var child = ImRaii.Child( "子级", new( 600, 300 ) );
             foreach( var (path, idx) in Paths.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
                         var extension = path.Split( '.' )[^1].Trim( '\0' );
-                        FileBrowserManager.OpenFileModal( "Select a File", "Image files{.png,." + extension + ",.dds},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileModal( "选择文件", "Image files{.png,." + extension + ",.dds},.*", ( bool ok, string res ) => {
                             Show();
                             if( !ok ) return;
                             try {
@@ -29,7 +29,7 @@ namespace VfxEditor.Formats.AvfxFormat.Texture {
                                 Paths.Remove( path );
                             }
                             catch( Exception e ) {
-                                Dalamud.Error( e, "Could not import data" );
+                                Dalamud.Error( e, "无法导入数据" );
                             }
                         } );
                     }

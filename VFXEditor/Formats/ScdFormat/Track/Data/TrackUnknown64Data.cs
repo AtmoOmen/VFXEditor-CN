@@ -1,12 +1,12 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackUnknown64Data : ScdTrackData {
-        public readonly ParsedByte Version = new( "Version" );
-        public readonly ParsedShort Unk1 = new( "Unknown 1" );
+        public readonly ParsedByte Version = new( "版本" );
+        public readonly ParsedShort Unk1 = new( "未知 1" );
 
         private readonly List<TrackUnknown64Item> Items = [];
 
@@ -43,9 +43,9 @@ namespace VfxEditor.ScdFormat {
 
     public class TrackUnknown64Item {
         public readonly ParsedShort BankNumber = new( "Bank Number" );
-        public readonly ParsedShort Index = new( "Index" );
-        public readonly ParsedInt Unk1 = new( "Unknown 1" );
-        public readonly ParsedFloat Unk2 = new( "Unknown 2" );
+        public readonly ParsedShort Index = new( "索引" );
+        public readonly ParsedInt Unk1 = new( "未知 1" );
+        public readonly ParsedFloat Unk2 = new( "未知 2" );
 
         public void Read( BinaryReader reader ) {
             BankNumber.Read( reader );

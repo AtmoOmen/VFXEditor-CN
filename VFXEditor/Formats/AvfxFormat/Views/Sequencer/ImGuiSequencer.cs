@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -106,7 +106,7 @@ namespace VfxEditor.AvfxFormat {
             var headerSize = new Vector2( canvasSize.X, ItemHeight );
             var scrollBarSize = new Vector2( canvasSize.X, 14f );
 
-            ImGui.InvisibleButton( "SeqTopBar", headerSize );
+            ImGui.InvisibleButton( "序列编辑器顶栏", headerSize );
             focused |= ImGui.IsItemFocused();
 
             drawList.AddRectFilled( canvasPos, canvasPos + headerSize, 0xFFFF0000, 0 );
@@ -118,7 +118,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.BeginChildFrame( 889, childFrameSize );
             focused |= ImGui.IsItemFocused();
 
-            ImGui.InvisibleButton( "SeqContentBar", new Vector2( canvasSize.X, controlHeight ) );
+            ImGui.InvisibleButton( "序列编辑器内容栏", new Vector2( canvasSize.X, controlHeight ) );
             focused |= ImGui.IsItemFocused();
 
             var contentMin = ImGui.GetItemRectMin();
@@ -363,7 +363,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndChildFrame();
             frameColor.Pop();
 
-            ImGui.InvisibleButton( "SeqScollBar", scrollBarSize );
+            ImGui.InvisibleButton( "序列编辑器滚动条", scrollBarSize );
             var scrollBarMin = ImGui.GetItemRectMin();
             var scrollBarMax = ImGui.GetItemRectMax();
 
@@ -465,7 +465,7 @@ namespace VfxEditor.AvfxFormat {
                 Selected.Draw();
             }
             else {
-                ImGui.Text( "Select an item..." );
+                ImGui.Text( "请选择..." );
             }
         }
 

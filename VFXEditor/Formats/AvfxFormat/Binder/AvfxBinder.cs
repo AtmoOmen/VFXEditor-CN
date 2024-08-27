@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -9,24 +9,24 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxBinder : AvfxNodeWithData<BinderType> {
         public const string NAME = "Bind";
 
-        public readonly AvfxBool StartToGlobalDirection = new( "Start To Global Direction", "bStG" );
-        public readonly AvfxBool VfxScaleEnabled = new( "VFX Scale", "bVSc" );
-        public readonly AvfxFloat VfxScaleBias = new( "VFX Scale Bias", "bVSb" );
-        public readonly AvfxBool VfxScaleDepthOffset = new( "VFX Scale Depth Offset", "bVSd" );
-        public readonly AvfxBool VfxScaleInterpolation = new( "VFX Scale Interpolation", "bVSi" );
-        public readonly AvfxBool TransformScale = new( "Transform Scale", "bTSc" );
-        public readonly AvfxBool TransformScaleDepthOffset = new( "Transform Scale Depth Offset", "bTSd" );
-        public readonly AvfxBool TransformScaleInterpolation = new( "Transform Scale Interpolation", "bTSi" );
-        public readonly AvfxBool FollowingTargetOrientation = new( "Following Target Orientation", "bFTO" );
-        public readonly AvfxBool DocumentScaleEnabled = new( "Document Scale Enabled", "bDSE" );
-        public readonly AvfxBool AdjustToScreenEnabled = new( "Adjust to Screen", "bATS" );
-        public readonly AvfxBool BET_Unknown = new( "BET (Unknown)", "bBET" );
-        public readonly AvfxInt Life = new( "Life", "Life" );
-        public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "Binder Rotation Type", "RoTp" );
-        public readonly AvfxBinderProperties PropStart = new( "Properties Start", "PrpS" );
-        public readonly AvfxBinderProperties Prop1 = new( "Properties 1", "Prp1" );
-        public readonly AvfxBinderProperties Prop2 = new( "Properties 2", "Prp2" );
-        public readonly AvfxBinderProperties PropGoal = new( "Properties Goal", "PrpG" );
+        public readonly AvfxBool StartToGlobalDirection = new( "起始点至全局方向", "bStG" );
+        public readonly AvfxBool VfxScaleEnabled = new( "视效缩放", "bVSc" );
+        public readonly AvfxFloat VfxScaleBias = new( "视效缩放偏移", "bVSb" );
+        public readonly AvfxBool VfxScaleDepthOffset = new( "视效缩放深度偏移", "bVSd" );
+        public readonly AvfxBool VfxScaleInterpolation = new( "视效缩放插值", "bVSi" );
+        public readonly AvfxBool TransformScale = new( "变换缩放", "bTSc" );
+        public readonly AvfxBool TransformScaleDepthOffset = new( "变换缩放深度偏移", "bTSd" );
+        public readonly AvfxBool TransformScaleInterpolation = new( "变换缩放插值", "bTSi" );
+        public readonly AvfxBool FollowingTargetOrientation = new( "跟随目标面向", "bFTO" );
+        public readonly AvfxBool DocumentScaleEnabled = new( "启用文档缩放", "bDSE" );
+        public readonly AvfxBool AdjustToScreenEnabled = new( "适应屏幕", "bATS" );
+        public readonly AvfxBool BET_Unknown = new( "BET (未知)", "bBET" );
+        public readonly AvfxInt Life = new( "生命周期", "Life" );
+        public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "绑定器选择类型", "RoTp" );
+        public readonly AvfxBinderProperties PropStart = new( "起始属性", "PrpS" );
+        public readonly AvfxBinderProperties Prop1 = new( "属性 1", "Prp1" );
+        public readonly AvfxBinderProperties Prop2 = new( "属性 2", "Prp2" );
+        public readonly AvfxBinderProperties PropGoal = new( "目标属性", "PrpG" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -56,7 +56,7 @@ namespace VfxEditor.AvfxFormat {
                 PropGoal
             ];
 
-            Parameters = new( "Parameters", [
+            Parameters = new( "参数", [
                 new UiNodeGraphView( this ),
                 StartToGlobalDirection,
                 VfxScaleEnabled,
@@ -121,16 +121,16 @@ namespace VfxEditor.AvfxFormat {
             Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+            using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) Parameters.Draw();
             }
 
             DrawData();
 
-            using( var tab = ImRaii.TabItem( "Properties" ) ) {
+            using( var tab = ImRaii.TabItem( "属性" ) ) {
                 if( tab ) PropSplitDisplay.Draw();
             }
         }
@@ -138,13 +138,13 @@ namespace VfxEditor.AvfxFormat {
         private void DrawData() {
             if( Data == null ) return;
 
-            using var tabItem = ImRaii.TabItem( "Data" );
+            using var tabItem = ImRaii.TabItem( "数据" );
             if( !tabItem ) return;
 
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Binder {GetIdx()} ({Type.Value})";
+        public override string GetDefaultText() => $"绑定器 {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Bind{GetIdx()}";
     }

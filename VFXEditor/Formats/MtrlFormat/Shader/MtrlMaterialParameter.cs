@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         public MtrlMaterialParameter( MtrlFile file ) {
             File = file;
             ValueView = new( Values, () => new( "##Value" ), true );
-            Id = new( "Parameter",
+            Id = new( "参数",
                 () => File.ShaderFile?.MaterialParameters,
                 ( ShpkMaterialParmeter item, int _ ) => item.GetText(),
                 ( ShpkMaterialParmeter item ) => item.Id.Value

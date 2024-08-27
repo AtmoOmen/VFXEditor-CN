@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -41,14 +41,14 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected void DrawExportReplaceButtons() {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
+                if( ImGui.Button( "导出" ) ) ImGui.OpenPopup( "TexExport" );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" ) ) ImportDialog();
+                if( ImGui.Button( "替换" ) ) ImportDialog();
 
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    if( ImGui.Button( FontAwesomeIcon.Edit.ToIconString() ) ) ImGui.OpenPopup( "Edit" );
+                    if( ImGui.Button( FontAwesomeIcon.Edit.ToIconString() ) ) ImGui.OpenPopup( "编辑" );
                 }
 
                 DrawSettingsCog();
@@ -62,34 +62,34 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 ImGui.EndPopup();
             }
 
-            if( ImGui.BeginPopup( "Edit" ) ) {
+            if( ImGui.BeginPopup( "编辑" ) ) {
                 if( ResizeInput == null && GetPreview() != null ) ResizeInput = [GetPreview().Width, GetPreview().Height];
                 ImGui.SetNextItemWidth( 100f );
                 ImGui.InputInt2( "##Resize", ref ResizeInput[0] );
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                     ImGui.SameLine();
-                    if( ImGui.Button( "Resize" ) ) {
+                    if( ImGui.Button( "调整大小" ) ) {
                         ApplyEdit( ( Surface surface ) => surface.Resize( ResizeInput[0], ResizeInput[1], ImageFilter.Box ) );
                     }
                 }
 
-                if( ImGui.Selectable( "Grayscale" ) ) {
+                if( ImGui.Selectable( "灰度" ) ) {
                     ApplyEdit( ( Surface surface ) => surface.ConvertTo( ImageConversion.ToGreyscale ) );
                 }
 
-                if( ImGui.Selectable( "Flip Horizontally" ) ) {
+                if( ImGui.Selectable( "水平翻转" ) ) {
                     ApplyEdit( ( Surface surface ) => surface.FlipHorizontally() );
                 }
 
-                if( ImGui.Selectable( "Flip Vertically" ) ) {
+                if( ImGui.Selectable( "垂直翻转" ) ) {
                     ApplyEdit( ( Surface surface ) => surface.FlipVertically() );
                 }
 
-                if( ImGui.Selectable( "Rotate Left" ) ) {
+                if( ImGui.Selectable( "向左旋转" ) ) {
                     ApplyEdit( ( Surface surface ) => surface.Rotate( 90 ) );
                 }
 
-                if( ImGui.Selectable( "Rotate Right" ) ) {
+                if( ImGui.Selectable( "向右旋转" ) ) {
                     ApplyEdit( ( Surface surface ) => surface.Rotate( -90 ) );
                 }
 
@@ -115,33 +115,33 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 OnReplace( TextureManager.TempPng );
             }
             catch( Exception ex ) {
-                Dalamud.Error( ex, "Could not edit image" );
+                Dalamud.Error( ex, "无法编辑图像" );
             }
         }
 
         protected static void DrawSettingsCog() {
             ImGui.SameLine();
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "Settings" );
+            if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "设置" );
         }
 
         protected static void DrawSettingsPopup() {
-            using var popup = ImRaii.Popup( "Settings" );
+            using var popup = ImRaii.Popup( "设置" );
             if( !popup ) return;
 
-            ImGui.TextDisabled( ".png Import Settings" );
+            ImGui.TextDisabled( ".png 导入设置" );
 
             TextureView.DrawPngSettings();
         }
 
         protected void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.tex,.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "图像文件{.png,.atex,.tex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     OnReplace( res );
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "无法导入数据" );
                 }
             } );
         }

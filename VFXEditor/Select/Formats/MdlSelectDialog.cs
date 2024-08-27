@@ -7,9 +7,9 @@ namespace VfxEditor.Select.Formats {
     public class MdlSelectDialog : SelectDialog {
         public MdlSelectDialog( string id, MdlManager manager, bool isSourceDialog ) : base( id, "mdl", manager, isSourceDialog ) {
             GameTabs.AddRange( [
-                new ItemTabMdl( this, "Item" ),
-                new CharacterTabMdl( this, "Character" ),
-                new NpcTabMdl( this, "Npc" ),
+                new ItemTabMdl( this, "物品" ),
+                new CharacterTabMdl( this, "角色" ),
+                new NpcTabMdl( this, "NPC" ),
             ] );
         }
     }

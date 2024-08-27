@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -15,28 +15,28 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class LayoutPointData : ScdLayoutData {
-        public readonly ParsedFloat4 Position = new( "Position" );
-        public readonly ParsedFloat MaxRange = new( "Max Range" );
-        public readonly ParsedFloat MinRange = new( "Min Range" );
-        public readonly ParsedFloat2 Height = new( "Height" );
-        public readonly ParsedFloat RangeVolume = new( "Range Volume" );
-        public readonly ParsedFloat Volume = new( "Volume" );
-        public readonly ParsedFloat Pitch = new( "Pitch" );
-        public readonly ParsedFloat ReverbFac = new( "Reverb FAC" );
-        public readonly ParsedFloat DopplerFac = new( "Doppler FAC" );
-        public readonly ParsedFloat CenterFac = new( "Center FAC" );
-        public readonly ParsedFloat InteriorFac = new( "Interior FAC" );
-        public readonly ParsedFloat Direction = new( "Direction" );
-        public readonly ParsedFloat NearFadeStart = new( "Near Fade Start" );
-        public readonly ParsedFloat NearFadeEnd = new( "Near Fade End" );
-        public readonly ParsedFloat FarDelayFac = new( "Far Delay FAC" );
+        public readonly ParsedFloat4 Position = new( "位置" );
+        public readonly ParsedFloat MaxRange = new( "范围最大值" );
+        public readonly ParsedFloat MinRange = new( "范围最小值" );
+        public readonly ParsedFloat2 Height = new( "高度" );
+        public readonly ParsedFloat RangeVolume = new( "范围音量" );
+        public readonly ParsedFloat Volume = new( "音量" );
+        public readonly ParsedFloat Pitch = new( "音高" );
+        public readonly ParsedFloat ReverbFac = new( "混音强度系数" );
+        public readonly ParsedFloat DopplerFac = new( "多普勒效应强度系数" );
+        public readonly ParsedFloat CenterFac = new( "中心效应强度系数" );
+        public readonly ParsedFloat InteriorFac = new( "内部效应强度系数" );
+        public readonly ParsedFloat Direction = new( "方向" );
+        public readonly ParsedFloat NearFadeStart = new( "近距离淡出开始" );
+        public readonly ParsedFloat NearFadeEnd = new( "近距离淡出结束" );
+        public readonly ParsedFloat FarDelayFac = new( "远距离延迟强度系数" );
         public readonly ParsedFlag<PointEnvironmentFlags> Environment = new( "Environment", size: 1 );
-        public readonly ParsedFlag<PointFlags> Flag = new( "Flag", size: 1 );
+        public readonly ParsedFlag<PointFlags> Flag = new( "标识", size: 1 );
         public readonly ParsedReserve Reserved1 = new( 2 );
-        public readonly ParsedFloat LowerLimit = new( "Lower Limit" );
-        public readonly ParsedShort FadeInTime = new( "Fade In Time" );
-        public readonly ParsedShort FadeOutTime = new( "Fade Out Time" );
-        public readonly ParsedFloat ConvergenceFac = new( "Convergence FAC" );
+        public readonly ParsedFloat LowerLimit = new( "下限" );
+        public readonly ParsedShort FadeInTime = new( "淡入时间" );
+        public readonly ParsedShort FadeOutTime = new( "淡出时间" );
+        public readonly ParsedFloat ConvergenceFac = new( "汇聚强度系数" );
         public readonly ParsedReserve Reserved2 = new( 4 );
 
         public LayoutPointData() {

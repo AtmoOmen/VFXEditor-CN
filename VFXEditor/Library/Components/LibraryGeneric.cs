@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace VfxEditor.Library.Components {
     public abstract class LibraryGeneric {

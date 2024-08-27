@@ -7,7 +7,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly PartListSelect PartListId;
         private readonly PartItemSelect PartId;
 
-        private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );
+        private readonly ParsedUInt Unknown1 = new( "未知 1", size: 2 );
         private readonly ParsedByteBool FlipH = new( "Flip H" );
         private readonly ParsedByteBool FlipV = new( "Flip V" );
         private readonly ParsedInt Wrap = new( "Wrap", size: 1 );

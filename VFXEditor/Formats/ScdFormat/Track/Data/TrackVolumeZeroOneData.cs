@@ -1,11 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
     public class TrackVolumeZeroOneData : ScdTrackData {
-        public readonly ParsedByte Version = new( "Version" );
+        public readonly ParsedByte Version = new( "版本" );
         private byte Reserved1;
         private short HeaderSize;
         private readonly List<TrackZeroOnePoint> Points = [];

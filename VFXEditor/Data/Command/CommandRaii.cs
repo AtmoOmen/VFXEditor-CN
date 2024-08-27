@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace VfxEditor.Data.Command {
     public struct CommandRaii : IDisposable {

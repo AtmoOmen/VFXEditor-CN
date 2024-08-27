@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -25,7 +25,7 @@ namespace VfxEditor.TmbFormat {
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private TmtrLuaEntry DraggingItem;
-        private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
+        private readonly ParsedByteBool LuaAssigned = new( "使用 Lua 条件", value: false );
         public readonly List<TmtrLuaEntry> LuaEntries = [];
 
         public int AllEntriesIdx => Entries.Count == 0 ? 0 : Entries.Max( File.AllEntries.IndexOf ) + 1;
@@ -70,7 +70,7 @@ namespace VfxEditor.TmbFormat {
         private void DrawLua() {
             LuaAssigned.Draw();
             ImGui.SameLine();
-            UiUtils.HelpMarker( "The current value of Lua variables can be found in the \"Lua Variables\" tab of File > Tools" );
+            UiUtils.HelpMarker( "可以在\"文件 > 工具 > Lua 变量\"选项卡中查阅 Lua 变量的当前值" );
 
             if( !LuaAssigned.Value ) return;
 
@@ -87,7 +87,7 @@ namespace VfxEditor.TmbFormat {
                     if( UiUtils.DrawDragDrop( LuaEntries, lua, lua.Text, ref DraggingItem, "LUA", true ) ) break;
                 }
 
-                if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
+                if( UiUtils.IconButton( FontAwesomeIcon.Plus, "新建" ) ) {
                     CommandManager.Add( new ListAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
                 }
             }
@@ -107,7 +107,7 @@ namespace VfxEditor.TmbFormat {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) ImGui.OpenPopup( "NewEntryPopup" );
+            if( UiUtils.IconButton( FontAwesomeIcon.Plus, "新建" ) ) ImGui.OpenPopup( "NewEntryPopup" );
 
             if( ImGui.BeginPopup( "NewEntryPopup" ) ) {
                 DrawNewPopup();
@@ -191,7 +191,7 @@ namespace VfxEditor.TmbFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth( 200f );
-                resetScroll = ImGui.InputTextWithHint( "##Search", "Search", ref NewSearchInput, 255 );
+                resetScroll = ImGui.InputTextWithHint( "##Search", "搜索", ref NewSearchInput, 255 );
             }
 
             ImGui.Separator();
@@ -199,7 +199,7 @@ namespace VfxEditor.TmbFormat {
             var maxLength = TmbUtils.ItemTypes.Select( x => ImGui.CalcTextSize( $"{x.Key} | {x.Value.DisplayName}" ).X ).Max();
             var imguiStyle = ImGui.GetStyle();
 
-            using var child = ImRaii.Child( "Child", new Vector2( maxLength + imguiStyle.FramePadding.X * 3 + imguiStyle.ScrollbarSize, 800 ) );
+            using var child = ImRaii.Child( "子级", new Vector2( maxLength + imguiStyle.FramePadding.X * 3 + imguiStyle.ScrollbarSize, 800 ) );
 
             if( resetScroll ) ImGui.SetScrollHereY();
 
@@ -216,13 +216,13 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbentry},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "TMB entry{.tmbentry},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     ImportEntry( System.IO.File.ReadAllBytes( res ) );
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "无法导入数据" );
                 }
             } );
         }

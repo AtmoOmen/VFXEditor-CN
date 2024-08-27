@@ -1,4 +1,4 @@
-using Dalamud.Game.ClientState.Objects.Enums;
+﻿using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
@@ -31,7 +31,7 @@ namespace VfxEditor.Ui.Tools {
 
             if( objectAddress == 0 ) {
                 ObjectId = 0; // couldn't find object, reset
-                objectName = "[NONE]";
+                objectName = "[无]";
 
                 // Try to reset back to player character
                 if( Plugin.PlayerObject != null && Plugin.PlayerObject.Address != IntPtr.Zero ) {
@@ -41,20 +41,20 @@ namespace VfxEditor.Ui.Tools {
                 }
             }
 
-            ImGui.TextDisabled( $"Pools: 0x{manager:X8}" );
+            ImGui.TextDisabled( $"池: 0x{manager:X8}" );
             if( ImGui.IsItemClicked() ) ImGui.SetClipboardText( $"{manager:X8}" );
 
             ImGui.SameLine();
-            ImGui.TextDisabled( $"Dynamic: 0x{Plugin.ResourceLoader.LuaActorVariables:X8}" );
+            ImGui.TextDisabled( $"动态: 0x{Plugin.ResourceLoader.LuaActorVariables:X8}" );
             if( ImGui.IsItemClicked() ) ImGui.SetClipboardText( $"{Plugin.ResourceLoader.LuaActorVariables:X8}" );
 
             DrawCombo( objectName );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             foreach( var pool in LuaPool.Pools ) {
-                using var tab = ImRaii.TabItem( $"Pool {pool.Id}" );
+                using var tab = ImRaii.TabItem( $"池 {pool.Id}" );
                 if( tab ) DrawPool( pool, manager, objectAddress );
             }
         }
@@ -87,14 +87,14 @@ namespace VfxEditor.Ui.Tools {
         private static void DrawPool( LuaPool pool, IntPtr manager, IntPtr objectAddress ) {
             using var _ = ImRaii.PushId( pool.Id );
 
-            using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
+            using var child = ImRaii.Child( "子级", new Vector2( -1 ), false );
 
             using var table = ImRaii.Table( "Table", 4, ImGuiTableFlags.RowBg );
             if( !table ) return;
 
-            ImGui.TableSetupColumn( "Index", ImGuiTableColumnFlags.WidthFixed, 60 );
-            ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthStretch );
-            ImGui.TableSetupColumn( "Current Value", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "索引", ImGuiTableColumnFlags.WidthFixed, 60 );
+            ImGui.TableSetupColumn( "名称", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "当前值", ImGuiTableColumnFlags.WidthStretch );
             ImGui.TableSetupColumn( "Hex", ImGuiTableColumnFlags.WidthStretch );
             ImGui.TableHeadersRow();
 

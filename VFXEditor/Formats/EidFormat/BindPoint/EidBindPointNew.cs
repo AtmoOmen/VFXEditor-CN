@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using SharpDX;
 using System.IO;
 using VfxEditor.EidFormat.BindPoint;
@@ -7,10 +7,10 @@ using VfxEditor.Parsing.String;
 
 namespace VfxEditor.EidFormat {
     public class EidBindPointNew : EidBindPoint {
-        public readonly ParsedPaddedString Name = new( "Bone Name", "n_root", 32, 0x00 );
+        public readonly ParsedPaddedString Name = new( "骨骼名", "n_root", 32, 0x00 );
         public readonly ParsedInt Id = new( "Id" );
-        public readonly ParsedFloat3 Position = new( "Position" );
-        public readonly ParsedRadians3 Rotation = new( "Rotation" );
+        public readonly ParsedFloat3 Position = new( "位置" );
+        public readonly ParsedRadians3 Rotation = new( "旋转" );
 
         public EidBindPointNew( EidFile file ) : base( file ) { }
 
@@ -33,7 +33,7 @@ namespace VfxEditor.EidFormat {
         public override string GetName() => $"{Id.Value} ({Name.Value})";
 
         public override void Draw() {
-            ImGui.TextDisabled( "Data Version: [NEW]" );
+            ImGui.TextDisabled( "数据版本: [新]" );
 
             Name.Draw();
             Id.Draw();

@@ -1,10 +1,10 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.SkpFormat.Slope {
     public class SkpSlopePoint : IUiItem {
-        private readonly ParsedFloat3 Position = new( "Position" );
+        private readonly ParsedFloat3 Position = new( "位置" );
 
         public SkpSlopePoint() { }
 

@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -76,7 +76,7 @@ namespace VfxEditor.Ui.Export {
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();
@@ -141,7 +141,7 @@ namespace VfxEditor.Ui.Export {
         private PenumbraMeta GetMeta() => new() {
             Name = ModName,
             Author = Author,
-            Description = "Exported from VFXEditor",
+            Description = "由 VFXEditor 导入",
             Version = Version
         };
 
@@ -172,7 +172,7 @@ namespace VfxEditor.Ui.Export {
                 Dalamud.Log( $"Exported To: {saveFile}" );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Could not export to Penumbra" );
+                Dalamud.Error( e, "无法导出至 Penumbra" );
             }
         }
 

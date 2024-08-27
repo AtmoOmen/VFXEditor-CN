@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -21,8 +21,8 @@ namespace VfxEditor.FileManager {
 
         protected SelectResult Source;
         protected SelectResult Replace;
-        public string SourceDisplay => Source == null ? "[NONE]" : Source.DisplayString;
-        public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
+        public string SourceDisplay => Source == null ? "[无]" : Source.DisplayString;
+        public string ReplaceDisplay => Replace == null ? "[无]" : Replace.DisplayString;
         public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
         protected bool Disabled = false;
 
@@ -55,12 +55,12 @@ namespace VfxEditor.FileManager {
 
         protected void LoadLocal( string path, bool verify ) {
             if( !System.IO.File.Exists( path ) ) {
-                Dalamud.Error( $"Local file: [{path}] does not exist" );
+                Dalamud.Error( $"本地文件: [{path}] 不存在" );
                 return;
             }
 
             if( !path.EndsWith( $".{Extension}" ) ) {
-                Dalamud.Error( $"{path} is the wrong file type" );
+                Dalamud.Error( $"{path} 文件类型非法" );
                 return;
             }
 
@@ -70,19 +70,19 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
-                Dalamud.ErrorNotification( "Error reading file" );
+                Dalamud.Error( e, "读取文件时发生错误" );
+                Dalamud.ErrorNotification( "读取文件时发生错误" );
             }
         }
 
         protected void LoadGame( string path, bool verify ) {
             if( !Dalamud.DataManager.FileExists( path ) ) {
-                Dalamud.Error( $"Game file: [{path}] does not exist" );
+                Dalamud.Error( $"游戏文件: [{path}] 不存在" );
                 return;
             }
 
             if( !path.EndsWith( $".{Extension}" ) ) {
-                Dalamud.Error( $"{path} is the wrong file type" );
+                Dalamud.Error( $"{path} 文件类型非法" );
                 return;
             }
 
@@ -94,8 +94,8 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
-                Dalamud.ErrorNotification( "Error reading file" );
+                Dalamud.Error( e, "读取文件时发生错误" );
+                Dalamud.ErrorNotification( "读取文件时发生错误" );
             }
         }
 
@@ -136,7 +136,7 @@ namespace VfxEditor.FileManager {
 
         protected void WriteFile( string path ) {
             if( File == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"Wrote {Id} file to {path}" );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"已写入了 {Id} 个文件至 {path}" );
             System.IO.File.WriteAllBytes( path, File.ToBytes() );
         }
 
@@ -218,7 +218,7 @@ namespace VfxEditor.FileManager {
 
         public void Draw() {
             if( Plugin.Configuration.WriteLocationError ) {
-                ImGui.TextWrapped( $"VFXEditor does not have access to {Plugin.Configuration.WriteLocation}. Please go to [File > Settings] and change it, then restart your game" );
+                ImGui.TextWrapped( $"VFXEditor 没有 {Plugin.Configuration.WriteLocation} 的访问权限. 请到 [文件 > 设置] 更改路径并重启游戏" );
                 return;
             }
 
@@ -226,7 +226,7 @@ namespace VfxEditor.FileManager {
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0 ) ) )
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
-                ImGui.Columns( 3, "Columns", false );
+                ImGui.Columns( 3, "列", false );
                 ImGui.SetColumnWidth( 0, 160 );
             }
             DrawInputTextColumn();
@@ -302,15 +302,15 @@ namespace VfxEditor.FileManager {
                 drawList.AddTriangleFilled( bottomRight, bottomRight + new Vector2( -arrowWidth, arrowHeight / 2 ), bottomRight + new Vector2( -arrowWidth, -arrowHeight / 2 ), color );
             }
 
-            if( hovered ) UiUtils.Tooltip( "Toggle replacement", true );
+            if( hovered ) UiUtils.Tooltip( "切换替换模式", true );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"Loaded {Id}" );
+            ImGui.Text( $"已载入的 {Id}" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"{Id} Being Replaced" );
+            ImGui.Text( $"被替换的 {Id}" );
         }
 
         private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
@@ -344,7 +344,7 @@ namespace VfxEditor.FileManager {
             using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Source != null ) ) {
                 if( ImGui.InputTextWithHint( "", SourceDisplay, ref SourceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
                     var cleanedPath = SourceTextInput.Trim().Replace( "\\", "/" );
-                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath );
+                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[游戏] {cleanedPath}", cleanedPath );
                     SetSource( result );
                     Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
                 }
@@ -373,7 +373,7 @@ namespace VfxEditor.FileManager {
             using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Replace != null ) ) {
                 if( ImGui.InputTextWithHint( "", ReplaceDisplay, ref ReplaceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
                     var cleanedPath = ReplaceTextInput.Trim().Replace( "\\", "/" );
-                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath );
+                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[游戏] {cleanedPath}", cleanedPath );
                     SetReplace( result );
                     Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
                 }
@@ -402,7 +402,7 @@ namespace VfxEditor.FileManager {
         // ==========================
 
         protected virtual void DisplayFileControls() {
-            if( UiUtils.OkButton( "UPDATE" ) ) Update();
+            if( UiUtils.OkButton( "刷新" ) ) Update();
 
             using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
@@ -411,7 +411,7 @@ namespace VfxEditor.FileManager {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRaw();
             }
-            UiUtils.Tooltip( "Export as a raw file" );
+            UiUtils.Tooltip( "导出为原始文件" );
 
             ImGui.SameLine();
             UiUtils.ShowVerifiedStatus( Verified );
@@ -472,7 +472,7 @@ namespace VfxEditor.FileManager {
             var buttonWidth = ImGui.GetContentRegionMax().X - ImGui.GetStyle().FramePadding.X * 2;
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.41764705882f, 0.41764705882f, 0.41764705882f, 1 ) );
-            if( ImGui.Button( "Wiki + Guides", new Vector2( buttonWidth, 0 ) ) ) {
+            if( ImGui.Button( "Wiki + 指南(英文)", new Vector2( buttonWidth, 0 ) ) ) {
                 UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki" );
             }
             ImGui.PopStyleColor();
@@ -480,7 +480,7 @@ namespace VfxEditor.FileManager {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
-            if( ImGui.Button( "Github", new Vector2( buttonWidth, 0 ) ) ) {
+            if( ImGui.Button( "GitHub", new Vector2( buttonWidth, 0 ) ) ) {
                 UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
             }
             ImGui.PopStyleColor();
@@ -488,7 +488,7 @@ namespace VfxEditor.FileManager {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             ImGui.PushStyleColor( ImGuiCol.Button, new Vector4( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 ) );
-            if( ImGui.Button( "Report an Issue", new Vector2( buttonWidth, 0 ) ) ) {
+            if( ImGui.Button( "提交 Issue", new Vector2( buttonWidth, 0 ) ) ) {
                 UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues" );
             }
             ImGui.PopStyleColor();
@@ -502,7 +502,7 @@ namespace VfxEditor.FileManager {
             ImGui.PopStyleColor();
         }
 
-        private static readonly string WarningText = "DO NOT modify movement abilities (dashes, backflips). Please read a guide before attempting to modify a .tmb or .pap file";
+        private static readonly string WarningText = "请 不要 修改移动类技能 (如冲刺、后跳等) 初次尝试修改 .tmb 或 .pap 文件前请先阅读相关指南";
 
         protected static void DrawAnimationWarning() {
             using var color = ImRaii.PushColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );

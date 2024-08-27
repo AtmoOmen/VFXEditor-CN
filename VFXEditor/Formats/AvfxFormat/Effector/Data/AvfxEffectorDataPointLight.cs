@@ -1,18 +1,18 @@
-using static VfxEditor.AvfxFormat.Enums;
+﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataPointLight : AvfxDataWithParameters {
-        public readonly AvfxCurveColor Color = new( "Color" );
-        public readonly AvfxCurve DistanceScale = new( "Distance Scale", "DstS" );
-        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
-        public readonly AvfxCurve3Axis Position = new( "Position", "Pos" );
-        public readonly AvfxEnum<PointLightAttenuation> PointLightAttenuationType = new( "Point Light Attenuation", "Attn" );
-        public readonly AvfxBool EnableShadow = new( "Enable Shadow", "bSdw" );
-        public readonly AvfxBool EnableCharShadow = new( "Enable Char Shadow", "bChS" );
-        public readonly AvfxBool EnableMapShadow = new( "Enable Map Shadow", "bMpS" );
-        public readonly AvfxBool EnableMoveShadow = new( "Enabled Move Shadow", "bMvS" );
-        public readonly AvfxFloat ShadowCreateDistanceNear = new( "Create Distance Near", "SCDN" );
-        public readonly AvfxFloat ShadowCreateDistanceFar = new( "Create Distance Far", "SCDF" );
+        public readonly AvfxCurveColor Color = new( "颜色" );
+        public readonly AvfxCurve DistanceScale = new( "距离缩放", "DstS" );
+        public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle );
+        public readonly AvfxCurve3Axis Position = new( "位置", "Pos" );
+        public readonly AvfxEnum<PointLightAttenuation> PointLightAttenuationType = new( "点光源衰减", "Attn" );
+        public readonly AvfxBool EnableShadow = new( "启用阴影", "bSdw" );
+        public readonly AvfxBool EnableCharShadow = new( "启用角色阴影", "bChS" );
+        public readonly AvfxBool EnableMapShadow = new( "启用地图阴影", "bMpS" );
+        public readonly AvfxBool EnableMoveShadow = new( "启用移动阴影", "bMvS" );
+        public readonly AvfxFloat ShadowCreateDistanceNear = new( "创建近距离效果", "SCDN" );
+        public readonly AvfxFloat ShadowCreateDistanceFar = new( "创建远距离效果", "SCDF" );
 
         public AvfxEffectorDataPointLight() : base() {
             Parsed = [

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
@@ -6,8 +6,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat.AttributeSet {
     public class MtrlAttributeSet : IUiItem {
-        public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedShort Index = new( "Index" );
+        public readonly ParsedString Name = new( "名称" );
+        public readonly ParsedShort Index = new( "索引" );
 
         private readonly ushort TempOffset;
 

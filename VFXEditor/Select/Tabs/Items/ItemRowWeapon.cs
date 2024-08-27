@@ -38,7 +38,7 @@ namespace VfxEditor.Select.Tabs.Items {
             var doubleHand = ( category == 1 || category == 84 || category == 107 ); // MNK, NIN, DNC weapons
 
             SubItem = new ItemRowWeapon(
-                $"{Name} (Offhand)",
+                $"{Name} (副手)",
                 item.RowId,
                 Icon,
                 doubleHand ? Ids with { Id1 = Ids.Id1 + 50 } : SecondaryIds,

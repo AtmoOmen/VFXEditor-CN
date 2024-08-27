@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using ImGuiNET;
@@ -9,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using Dalamud.Interface;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.Utils;
 using Buffer = SharpDX.Direct3D11.Buffer;
@@ -322,7 +322,7 @@ namespace VfxEditor.DirectX.Renderers {
 
             topRight += new Vec2( -30, 0 );
 
-            if( DrawButton( "Reset", new Vec2( 43, 25 ), topRight - new Vec2( 43, 0 ) ) ) {
+            if( DrawButton( "重置", new Vec2( 43, 25 ), topRight - new Vec2( 43, 0 ) ) ) {
                 LastMousePos = default;
                 Yaw = default;
                 Pitch = default;

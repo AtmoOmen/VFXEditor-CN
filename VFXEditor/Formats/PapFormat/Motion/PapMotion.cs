@@ -36,8 +36,8 @@ namespace VfxEditor.PapFormat.Motion {
         public float Duration => Animation->Duration;
         public int TotalFrames => ( int )( Duration * 30f );
 
-        private readonly ParsedString OriginalSkeletonName = new( "Original Skeleton Name" );
-        private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "Blend Hint" );
+        private readonly ParsedString OriginalSkeletonName = new( "原始骨骼名称" );
+        private readonly ParsedEnum<BlendHintTypes> BlendHint = new( "混合提示" );
         private readonly PapMotionPreview Preview;
 
         public PapMotion( PapFile file, HavokData bones, hkaAnimationBinding* binding ) {

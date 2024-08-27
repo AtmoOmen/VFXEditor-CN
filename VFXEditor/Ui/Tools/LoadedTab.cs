@@ -31,7 +31,7 @@ namespace VfxEditor.Ui.Tools {
 
                 ImGui.TextDisabled( $"[{id:X8}] 0x{item.Address:X8}" );
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Copy" ) ) ImGui.SetClipboardText( $"{item.Address:X8}" );
+                if( ImGui.SmallButton( "复制" ) ) ImGui.SetClipboardText( $"{item.Address:X8}" );
 
                 DrawCharacterBase( ( CharacterBase* )drawObject );
 

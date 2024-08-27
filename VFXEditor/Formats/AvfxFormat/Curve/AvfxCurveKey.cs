@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using ImPlotNET;
@@ -23,7 +23,7 @@ namespace VfxEditor.AvfxFormat {
         private Vector3 BackupColor;
 
         public readonly ParsedEnum<KeyType> Type = new( "Type", 2 );
-        public readonly ParsedShort Time = new( "Time" );
+        public readonly ParsedShort Time = new( "时间" );
         public readonly ParsedFloat3 Data = new( "Data" );
 
         public Vector3 Converted => new( Data.Value.X, Data.Value.Y, ( float )Curve.ToDegrees( Data.Value.Z ) );
@@ -129,7 +129,7 @@ namespace VfxEditor.AvfxFormat {
             if( IsColor ) DrawColor();
             else {
                 var data = Converted;
-                if( ImGui.InputFloat3( "Value", ref data ) ) {
+                if( ImGui.InputFloat3( "值", ref data ) ) {
                     CommandManager.Add( new CompoundCommand( new[] {
                         new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
                     }, onChangeAction: Curve.Update ) );
@@ -158,7 +158,7 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 ImGui.SameLine();
-                ImGui.Text( "Color" );
+                ImGui.Text( "颜色" );
             }
 
             if( DrawPalettePopup( color, BackupColor, out var popupColor ) ) {

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -8,8 +8,8 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxScheduler : AvfxNode {
         public const string NAME = "Schd";
 
-        public readonly AvfxInt ItemCount = new( "Item Count", "ItCn" );
-        public readonly AvfxInt TriggerCount = new( "Trigger Count", "TrCn" );
+        public readonly AvfxInt ItemCount = new( "物体数", "ItCn" );
+        public readonly AvfxInt TriggerCount = new( "触发器数", "TrCn" );
         public readonly List<AvfxSchedulerItem> Items = [];
         public readonly List<AvfxSchedulerItem> Triggers = [];
         public readonly List<AvfxBase> Parsed;
@@ -19,9 +19,9 @@ namespace VfxEditor.AvfxFormat {
         private readonly CommandTable<AvfxSchedulerItem> TriggerTable;
 
         private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = [
-            ( "Timeline", ImGuiTableColumnFlags.None, -1 ),
-            ( "Enabled", ImGuiTableColumnFlags.None, -1 ),
-            ( "Start Time", ImGuiTableColumnFlags.None, -1 )
+            ( "时间线", ImGuiTableColumnFlags.None, -1 ),
+            ( "启用", ImGuiTableColumnFlags.None, -1 ),
+            ( "开始时间", ImGuiTableColumnFlags.None, -1 )
         ];
 
         public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
@@ -96,14 +96,14 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Scheduler" );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Items" ) ) {
+            using( var tab = ImRaii.TabItem( "物体" ) ) {
                 if( tab ) ItemTable.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Triggers" ) ) {
+            using( var tab = ImRaii.TabItem( "触发器" ) ) {
                 if( tab ) TriggerTable.Draw();
             }
         }
@@ -112,7 +112,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public override string GetDefaultText() => $"Scheduler {GetIdx()}";
+        public override string GetDefaultText() => $"调度器 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Sched{GetIdx()}";
     }

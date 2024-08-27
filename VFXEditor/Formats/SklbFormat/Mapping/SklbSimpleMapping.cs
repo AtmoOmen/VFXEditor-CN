@@ -12,14 +12,14 @@ namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbSimpleMapping : IUiItem {
         public readonly SklbMapping Mapping;
 
-        public readonly ParsedBoneIndex BoneA = new( "Mapped Skeleton Bone", -1 );
-        public readonly ParsedBoneIndex BoneB = new( "This Skeleton Bone", -1 );
-        public readonly ParsedInt Unk1 = new( "Unknown 1" );
-        public readonly ParsedInt Unk2 = new( "Unknown 2" );
-        public readonly ParsedInt Unk3 = new( "Unknown 3" );
-        public readonly ParsedFloat4 Translation = new( "Translation" );
-        public readonly ParsedQuat Rotation = new( "Rotation" );
-        public readonly ParsedFloat4 Scale = new( "Scale", new Vector4( 1, 1, 1, 1 ) );
+        public readonly ParsedBoneIndex BoneA = new( "骨骼节点映射", -1 );
+        public readonly ParsedBoneIndex BoneB = new( "此骨骼节点", -1 );
+        public readonly ParsedInt Unk1 = new( "未知 1" );
+        public readonly ParsedInt Unk2 = new( "未知 2" );
+        public readonly ParsedInt Unk3 = new( "未知 3" );
+        public readonly ParsedFloat4 Translation = new( "平移" );
+        public readonly ParsedQuat Rotation = new( "旋转" );
+        public readonly ParsedFloat4 Scale = new( "缩放", new Vector4( 1, 1, 1, 1 ) );
 
         public SklbSimpleMapping( SklbMapping mapping ) {
             Mapping = mapping;
@@ -43,7 +43,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         }
 
         public void Draw() {
-            if( ImGui.Checkbox( "Display Raw Indexes", ref Plugin.Configuration.SklbMappingIndexDisplay ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "显示原始索引", ref Plugin.Configuration.SklbMappingIndexDisplay ) ) Plugin.Configuration.Save();
 
             if( Plugin.Configuration.SklbMappingIndexDisplay ) {
                 BoneA.Draw();

@@ -1,4 +1,4 @@
-using Dalamud.Interface.Windowing;
+﻿using Dalamud.Interface.Windowing;
 
 namespace VfxEditor.FileManager.Interfaces {
     public interface IFileManagerSelect {

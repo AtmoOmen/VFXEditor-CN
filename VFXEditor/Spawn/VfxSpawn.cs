@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -44,9 +44,9 @@ namespace VfxEditor.Spawn {
             using var popup = ImRaii.Popup( "SpawnPopup" );
             if( !popup ) return;
 
-            if( ImGui.Selectable( "Self" ) ) OnSelf( path, loop );
-            if( ImGui.Selectable( "Ground" ) ) OnGround( path, loop );
-            if( ImGui.Selectable( "Target" ) ) OnTarget( path, loop );
+            if( ImGui.Selectable( "自身" ) ) OnSelf( path, loop );
+            if( ImGui.Selectable( "地面" ) ) OnGround( path, loop );
+            if( ImGui.Selectable( "目标" ) ) OnTarget( path, loop );
         }
 
         public static void OnGround( string path, bool canLoop ) {

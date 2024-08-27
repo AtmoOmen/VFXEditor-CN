@@ -8,14 +8,14 @@ using VfxEditor.Utils;
 namespace VfxEditor.Select {
     public class SelectUiUtils {
         public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
-            var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
+            var resultPrefix = resultType.ToString().ToUpper().Replace( "游戏", "" );
             return new SelectResult( resultType, resultName, $"[{resultPrefix}] {resultName}", path );
         }
 
         public static void DisplayNoVfx() {
             using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE ) ) {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                ImGui.TextWrapped( $"This item does not have a VFX. See the link below for information on adding one" );
+                ImGui.TextWrapped( $"此对象未预置任何视效，点击下方链接以查阅如何为其添加一个视效 (英文)" );
             }
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Adding-a-VFX-to-an-Item-Without-One" );
         }
@@ -48,9 +48,9 @@ namespace VfxEditor.Select {
         }
 
         public static void NpcThankYou() {
-            ImGui.TextDisabled( "Npc file list provided by ResLogger" );
+            ImGui.TextDisabled( "查阅由 ResLogger 提供的 NPC 文件列表" );
             ImGui.SameLine();
-            if( ImGui.SmallButton( "Github##ResLogger" ) ) UiUtils.OpenUrl( "https://github.com/lmcintyre/ResLogger2" );
+            if( ImGui.SmallButton( "GitHub##ResLogger" ) ) UiUtils.OpenUrl( "https://github.com/lmcintyre/ResLogger2" );
         }
     }
 }

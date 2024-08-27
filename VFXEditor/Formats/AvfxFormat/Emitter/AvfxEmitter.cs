@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -12,44 +12,44 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEmitter : AvfxNodeWithData<EmitterType> {
         public const string NAME = "Emit";
 
-        public readonly AvfxString Sound = new( "Sound", "SdNm", true, false, null, true );
-        public readonly AvfxInt SoundNumber = new( "Sound Index", "SdNo" );
-        public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
-        public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
-        public readonly AvfxInt ChildLimit = new( "Child Limit", "ClCn" );
-        public readonly AvfxInt EffectorIdx = new( "Effector Select", "EfNo", value: -1 );
-        public readonly AvfxBool AnyDirection = new( "Any Direction", "bAD", size: 1 );
-        public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "Rotation Direction Base", "RBDT" );
-        public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrderType = new( "Coordinate Compute Order", "CCOT" );
-        public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
-        public readonly AvfxInt ParticleCount = new( "Particle Count", "PrCn" );
-        public readonly AvfxInt EmitterCount = new( "Emitter Count", "EmCn" );
+        public readonly AvfxString Sound = new( "音效", "SdNm", true, false, null, true );
+        public readonly AvfxInt SoundNumber = new( "音频索引", "SdNo" );
+        public readonly AvfxInt LoopStart = new( "循环开始", "LpSt" );
+        public readonly AvfxInt LoopEnd = new( "循环结束", "LpEd" );
+        public readonly AvfxInt ChildLimit = new( "子级限制", "ClCn" );
+        public readonly AvfxInt EffectorIdx = new( "效果器选择", "EfNo", value: -1 );
+        public readonly AvfxBool AnyDirection = new( "任意方向", "bAD", size: 1 );
+        public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "旋转方向基准", "RBDT" );
+        public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrderType = new( "坐标计算顺序", "CCOT" );
+        public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "旋转顺序", "ROT" );
+        public readonly AvfxInt ParticleCount = new( "粒子数", "PrCn" );
+        public readonly AvfxInt EmitterCount = new( "发射器数", "EmCn" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve CreateCount = new( "Create Count", "CrC", locked: true );
-        public readonly AvfxCurve CreateCountRandom = new( "Create Count Random", "CrCR" );
-        public readonly AvfxCurve CreateInterval = new( "Create Count Interval", "CrI", locked: true );
-        public readonly AvfxCurve CreateIntervalRandom = new( "Create Count Interval Random", "CrIR" );
-        public readonly AvfxCurve Gravity = new( "Gravity", "Gra" );
-        public readonly AvfxCurve GravityRandom = new( "Gravity Random", "GraR" );
-        public readonly AvfxCurve AirResistance = new( "Air Resistance", "ARs", locked: true );
-        public readonly AvfxCurve AirResistanceRandom = new( "Air Resistance Random", "ARsR" );
-        public readonly AvfxCurveColor Color = new( "Color", locked: true );
-        public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
-        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
-        public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
+        public readonly AvfxCurve CreateCount = new( "创建数", "CrC", locked: true );
+        public readonly AvfxCurve CreateCountRandom = new( "随机创建数", "CrCR" );
+        public readonly AvfxCurve CreateInterval = new( "创建数间隔", "CrI", locked: true );
+        public readonly AvfxCurve CreateIntervalRandom = new( "随机创建数间隔", "CrIR" );
+        public readonly AvfxCurve Gravity = new( "重力", "Gra" );
+        public readonly AvfxCurve GravityRandom = new( "随机重力", "GraR" );
+        public readonly AvfxCurve AirResistance = new( "空气阻力", "ARs", locked: true );
+        public readonly AvfxCurve AirResistanceRandom = new( "随机空气阻力", "ARsR" );
+        public readonly AvfxCurveColor Color = new( "颜色", locked: true );
+        public readonly AvfxCurve3Axis Position = new( "位置", "Pos", locked: true );
+        public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle, locked: true );
+        public readonly AvfxCurve3Axis Scale = new( "缩放", "Scl", locked: true );
 
-        public readonly AvfxCurve InjectionAngleX = new( "Injection Angle X", "IAX", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomX = new( "Injection Angle X Random", "IAXR", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleX = new( "X 轴注入角度", "IAX", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandomX = new( "随机 X 轴注入角度", "IAXR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleY = new( "Injection Angle Y", "IAY", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomY = new( "Injection Angle Y Random", "IAYR", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleY = new( "Y 轴注入角度", "IAY", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandomY = new( "随机 Y 轴注入角度", "IAYR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleZ = new( "Injection Angle Z", "IAZ", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomZ = new( "Injection Angle Z Random", "IAZR", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleZ = new( "Z 轴注入角度", "IAZ", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleRandomZ = new( "随机 Z 轴注入角度", "IAZR", CurveType.Angle );
 
-        public readonly AvfxCurve VelocityRandomX = new( "Velocity Random X", "VRX" );
-        public readonly AvfxCurve VelocityRandomY = new( "Velocity Random Y", "VRY" );
-        public readonly AvfxCurve VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
+        public readonly AvfxCurve VelocityRandomX = new( "随机 X 轴速度", "VRX" );
+        public readonly AvfxCurve VelocityRandomY = new( "随机 Y 轴速度", "VRY" );
+        public readonly AvfxCurve VelocityRandomZ = new( "随机 Z 轴速度", "VRZ" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -134,7 +134,7 @@ namespace VfxEditor.AvfxFormat {
                 VelocityRandomZ
             ] );
 
-            EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
+            EffectorSelect = new( this, "效果器选择", groupSet.Effectors, EffectorIdx );
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
             ParticleSplit = new( "Create Particles", Particles, this, true );
 
@@ -243,27 +243,27 @@ namespace VfxEditor.AvfxFormat {
             Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
             DrawData();
 
-            using( var tab = ImRaii.TabItem( "Animation" ) ) {
+            using( var tab = ImRaii.TabItem( "动画" ) ) {
                 if( tab ) AnimationSplitDisplay.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Create Particles" ) ) {
+            using( var tab = ImRaii.TabItem( "创建粒子" ) ) {
                 if( tab ) ParticleSplit.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Create Emitters" ) ) {
+            using( var tab = ImRaii.TabItem( "创建发射器" ) ) {
                 if( tab ) EmitterSplit.Draw();
             }
         }
 
         private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
+            using var tabItem = ImRaii.TabItem( "参数" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Parameters" );
@@ -283,7 +283,7 @@ namespace VfxEditor.AvfxFormat {
         private void DrawData() {
             if( Data == null ) return;
 
-            using var tabItem = ImRaii.TabItem( "Data" );
+            using var tabItem = ImRaii.TabItem( "数据" );
             if( !tabItem ) return;
 
             Data.Draw();

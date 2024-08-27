@@ -1,16 +1,16 @@
-using static VfxEditor.AvfxFormat.Enums;
+﻿using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEmitterDataSphereModel : AvfxDataWithParameters {
-        public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
-        public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
-        public readonly AvfxInt DivideX = new( "Divide X", "DivX", value: 1 );
-        public readonly AvfxInt DivideY = new( "Divide Y", "DivY", value: 1 );
-        public readonly AvfxCurve Radius = new( "Radius", "Rads" );
-        public readonly AvfxCurve AZ = new( "Angle Z", "AnZ", CurveType.Angle );
-        public readonly AvfxCurve AYR = new( "Angle Y Random", "AnYR", CurveType.Angle );
-        public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
-        public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
+        public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "旋转顺序", "ROT" );
+        public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "生成方法", "GeMT" );
+        public readonly AvfxInt DivideX = new( "X 轴分割", "DivX", value: 1 );
+        public readonly AvfxInt DivideY = new( "Y 轴分割", "DivY", value: 1 );
+        public readonly AvfxCurve Radius = new( "半径", "Rads" );
+        public readonly AvfxCurve AZ = new( "Z 角度", "AnZ", CurveType.Angle );
+        public readonly AvfxCurve AYR = new( "随机 Y 轴角度", "AnYR", CurveType.Angle );
+        public readonly AvfxCurve InjectionSpeed = new( "注入速度", "IjS" );
+        public readonly AvfxCurve InjectionSpeedRandom = new( "随机注入速度", "IjSR" );
 
         public AvfxEmitterDataSphereModel() : base() {
             Parsed = [

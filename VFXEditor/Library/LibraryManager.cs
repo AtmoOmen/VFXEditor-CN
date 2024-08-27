@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -40,13 +40,13 @@ namespace VfxEditor.Library {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
-                    LastDrawnRoot.Add( new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), [] ) );
+                    LastDrawnRoot.Add( new LibraryFolder( NodeRoot, "新建文件夹", UiUtils.RandomString( 12 ), [] ) );
                     Save();
                 }
             }
 
             ImGui.SameLine();
-            ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
+            ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 );
 
             // Info circle
 
@@ -54,7 +54,7 @@ namespace VfxEditor.Library {
                 ImGui.SameLine();
                 ImGui.TextDisabled( FontAwesomeIcon.InfoCircle.ToIconString() );
             }
-            UiUtils.Tooltip( "Import and edit items by right-clicking them" );
+            UiUtils.Tooltip( "右键以导入或编辑" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
@@ -84,7 +84,7 @@ namespace VfxEditor.Library {
             // Move them here
             if( DraggingItem != destination ) {
                 if( DraggingItem is LibraryFolder folderCheck && folderCheck.Contains( destination ) ) {
-                    Dalamud.Log( "Tried to put folder into itself" );
+                    Dalamud.Log( "尝试将文件夹放入自身" );
                 }
                 else {
                     if( destination is LibraryFolder folder && !overridePosition ) { // Just add it at the end
@@ -120,7 +120,7 @@ namespace VfxEditor.Library {
             using var combo = ImRaii.Combo( "##Library", string.Empty, ImGuiComboFlags.NoPreview | ImGuiComboFlags.PopupAlignLeft | ImGuiComboFlags.HeightLargest );
             if( !combo ) return;
 
-            var resetScroll = ImGui.InputTextWithHint( "##Search", "Search", ref ComboSearchInput, 255 );
+            var resetScroll = ImGui.InputTextWithHint( "##Search", "搜索", ref ComboSearchInput, 255 );
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 4 ) ) ) {
                 ImGui.SameLine();
@@ -131,7 +131,7 @@ namespace VfxEditor.Library {
                 }
             }
 
-            using var child = ImRaii.Child( "Child", new Vector2( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 300 ), true );
+            using var child = ImRaii.Child( "子级", new Vector2( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 300 ), true );
 
             if( resetScroll ) ImGui.SetScrollHereY();
 

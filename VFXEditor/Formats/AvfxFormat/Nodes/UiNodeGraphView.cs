@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
@@ -34,11 +34,11 @@ namespace VfxEditor.AvfxFormat {
                 Node.Graph = new UiNodeGraph( Node );
             }
             if( Node.Graph.Cycle ) {
-                ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: CYCLICAL" );
+                ImGui.TextColored( UiUtils.RED_COLOR, "警告: 循环" );
                 return;
             }
 
-            if( !ImGui.CollapsingHeader( "Node Graph", ImGuiTreeNodeFlags.DefaultOpen ) ) return;
+            if( !ImGui.CollapsingHeader( "节点图", ImGuiTreeNodeFlags.DefaultOpen ) ) return;
 
             // now the fun (tm) begins
             var space = ImGui.GetContentRegionAvail();

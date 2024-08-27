@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Tabs.Items {
                 if( armor.Type == ItemType.RFinger ) {
                     var newArmorPaths = new Dictionary<string, string>();
                     foreach( var (name, path) in loaded.ArmorPaths ) {
-                        newArmorPaths[$"{name} (Right)"] = path;
+                        newArmorPaths[$"{name} (右)"] = path;
                         var leftPath = path.Replace( "_rir", "_ril" );
                         if( Dalamud.DataManager.FileExists( leftPath ) ) newArmorPaths[$"{name} (Left)"] = leftPath;
                     }

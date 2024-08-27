@@ -18,12 +18,12 @@ namespace VfxEditor.SklbFormat.Mapping {
             File = file;
         }
 
-        public override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
+        public override string GetText( SklbMapping item, int idx ) => $"映射 {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
 
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 
         private unsafe void OnNew() {
-            FileBrowserManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
+            FileBrowserManager.OpenFileDialog( "选择骨骼", "骨骼{.hkx,.sklb},.*", ( ok, res ) => {
                 if( !ok ) return;
 
                 var hkxPath = res;

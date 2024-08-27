@@ -39,17 +39,17 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class AttributeExtendData {
-        public readonly ParsedFlag<ConditionType1st> FirstCondition = new( "First Condition", size: 1 );
-        public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "Second Condition", size: 1 );
-        public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "Join Type", size: 1 );
-        public readonly ParsedByte NumberOfConditions = new( "Number of Conditions" );
+        public readonly ParsedFlag<ConditionType1st> FirstCondition = new( "第一条件", size: 1 );
+        public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "第二条件", size: 1 );
+        public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "连接类型", size: 1 );
+        public readonly ParsedByte NumberOfConditions = new( "情况数" );
 
-        public readonly ParsedInt SelfArgument = new( "Self Argument" );
+        public readonly ParsedInt SelfArgument = new( "自身参数" );
         // idk what's up with this
         public ParsedBase TargetArgument => SecondCondition.Value == ConditionType2nd.Unknown ? TargetArgument_Float : TargetArgument_Int;
 
-        public readonly ParsedInt TargetArgument_Int = new( "Target Argument" );
-        public readonly ParsedFloat TargetArgument_Float = new( "Target Argument" );
+        public readonly ParsedInt TargetArgument_Int = new( "目标参数" );
+        public readonly ParsedFloat TargetArgument_Float = new( "目标参数" );
 
 
         public readonly AttributeResultCommand Result = new();

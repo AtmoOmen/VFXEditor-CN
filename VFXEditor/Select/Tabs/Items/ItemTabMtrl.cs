@@ -58,14 +58,14 @@ namespace VfxEditor.Select.Tabs.Items {
                 }
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error loading IMC file " + imcPath );
+                Dalamud.Error( e, "加载 IMC 文件 时发生错误" + imcPath );
             }
         }
 
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            ImGui.Text( $"Variant: {Selected.Variant}" );
+            ImGui.Text( $"变量: {Selected.Variant}" );
 
             if( string.IsNullOrEmpty( Selected.ImcPath ) ) return;
             ImGui.Text( "IMC: " );

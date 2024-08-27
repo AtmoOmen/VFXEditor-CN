@@ -12,24 +12,24 @@ namespace VfxEditor.Select {
         private void DrawPaths() {
             using var _ = ImRaii.PushId( "Paths" );
 
-            using var tabItem = ImRaii.TabItem( "Paths" );
+            using var tabItem = ImRaii.TabItem( "路径" );
             if( !tabItem ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            ImGui.Text( "Game Path" );
+            ImGui.Text( "游戏路径" );
             using( var __ = ImRaii.PushId( "Game" ) )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.InputTextWithHint( "##Path", $"vfx/common/eff/wp_astro1h.{Extensions[0]}", ref GamePathInput, 255 );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "SELECT" ) ) SelectGamePath( GamePathInput );
+                if( ImGui.Button( "选择" ) ) SelectGamePath( GamePathInput );
             }
 
             if( ShowLocal ) {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-                ImGui.Text( "Local Path" );
+                ImGui.Text( "本地路径" );
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
                 using var __ = ImRaii.PushId( "Local" );
 
@@ -39,16 +39,16 @@ namespace VfxEditor.Select {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                        FileBrowserManager.OpenFileDialog( "Select a File", "Files{" + string.Join( ",", Extensions.Select( e => $".{e}" ) ) + "},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileDialog( "选择文件", "Files{" + string.Join( ",", Extensions.Select( e => $".{e}" ) ) + "},.*", ( bool ok, string res ) => {
                             if( !ok ) return;
-                            Invoke( new SelectResult( SelectResultType.Local, res, "[LOCAL] " + res, res ) );
+                            Invoke( new SelectResult( SelectResultType.Local, res, "[本地] " + res, res ) );
                         } );
                     }
                 }
 
                 ImGui.SameLine();
-                if( ImGui.Button( "SELECT" ) && Path.IsPathRooted( LocalPathInput ) && File.Exists( LocalPathInput ) ) {
-                    Invoke( new SelectResult( SelectResultType.Local, LocalPathInput, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
+                if( ImGui.Button( "选择" ) && Path.IsPathRooted( LocalPathInput ) && File.Exists( LocalPathInput ) ) {
+                    Invoke( new SelectResult( SelectResultType.Local, LocalPathInput, "[本地] " + LocalPathInput, LocalPathInput ) );
                     LocalPathInput = "";
                 }
             }
@@ -65,7 +65,7 @@ namespace VfxEditor.Select {
             if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.SelectDialogLogOpen ) ) Plugin.Configuration.Save();
             if( !Plugin.Configuration.SelectDialogLogOpen ) return;
 
-            if( ImGui.Checkbox( "Log all files", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
+            if( ImGui.Checkbox( "记录所有文件", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
 
             using var disabled = ImRaii.Disabled( LoggedFiles.Count == 0 && !Plugin.Configuration.LogAllFiles );
 
@@ -114,7 +114,7 @@ namespace VfxEditor.Select {
         private void SelectGamePath( string path ) {
             var cleanedPath = path.Trim().Replace( "\\", "/" );
             if( !ShowLocal || Dalamud.DataManager.FileExists( cleanedPath ) ) {
-                Invoke( new SelectResult( SelectResultType.GamePath, cleanedPath, "[GAME] " + cleanedPath, cleanedPath ) );
+                Invoke( new SelectResult( SelectResultType.GamePath, cleanedPath, "[游戏] " + cleanedPath, cleanedPath ) );
                 GamePathInput = "";
             }
         }

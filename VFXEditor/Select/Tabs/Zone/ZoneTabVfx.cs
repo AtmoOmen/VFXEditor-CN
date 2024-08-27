@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace VfxEditor.Select.Tabs.Zone {
     public class ZoneTabVfx : ZoneTab<ParsedPaths> {

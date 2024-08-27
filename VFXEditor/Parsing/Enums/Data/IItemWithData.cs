@@ -1,4 +1,4 @@
-namespace VfxEditor.Parsing.Data {
+﻿namespace VfxEditor.Parsing.Data {
     public interface IItemWithData<S> where S : class, IData {
         public void UpdateData();
 

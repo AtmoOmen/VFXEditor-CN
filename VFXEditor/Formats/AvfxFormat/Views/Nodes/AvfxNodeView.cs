@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
 
                     // Tooltip
                     ImGui.PopFont();
-                    UiUtils.Tooltip( "Add to node library" );
+                    UiUtils.Tooltip( "添加到节点库" );
                     ImGui.PushFont( UiBuilder.IconFont );
 
                     ImGui.SameLine();
@@ -62,11 +62,11 @@ namespace VfxEditor.AvfxFormat {
             using var popup = ImRaii.Popup( "NewPopup" );
             if( !popup ) return;
 
-            if( ImGui.Selectable( "Default" ) ) file.Import( view.GetDefaultPath() );
+            if( ImGui.Selectable( "默认" ) ) file.Import( view.GetDefaultPath() );
 
-            if( ImGui.Selectable( "Import" ) ) file.ShowImportDialog();
+            if( ImGui.Selectable( "导入" ) ) file.ShowImportDialog();
 
-            if( selected != null && ImGui.Selectable( "Duplicate" ) ) {
+            if( selected != null && ImGui.Selectable( "复制" ) ) {
                 using var ms = new MemoryStream();
                 using var writer = new BinaryWriter( ms );
                 using var reader = new BinaryReader( ms );

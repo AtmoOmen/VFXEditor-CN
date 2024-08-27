@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
@@ -37,8 +37,8 @@ namespace VfxEditor.EidFormat {
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
-            Dropdown = new( "Bind Point", BindPoints,
-                ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew( this ) );
+            Dropdown = new( "绑定点", BindPoints,
+                ( EidBindPoint item, int idx ) => $"绑定点 {item.GetName()}", () => new EidBindPointNew( this ) );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
@@ -57,11 +57,11 @@ namespace VfxEditor.EidFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Bind Points" ) ) {
+            using( var tab = ImRaii.TabItem( "绑定点" ) ) {
                 if( tab ) Dropdown.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "3D View" ) ) {
+            using( var tab = ImRaii.TabItem( "3D 视图" ) ) {
                 if( tab ) Skeleton.Draw();
             }
         }

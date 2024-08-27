@@ -91,7 +91,7 @@ namespace VfxEditor {
 #if BETA
         private const string CommandName = "/vfxbeta";
 #else
-        private const string CommandName = "/vfxedit";
+        private const string CommandName = "/vfxeditcn";
 #endif
 
         private static bool ClearKeyState = false;
@@ -100,7 +100,7 @@ namespace VfxEditor {
         public Plugin( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
-            Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
+            Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "打开主界面" } );
 
             RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
 

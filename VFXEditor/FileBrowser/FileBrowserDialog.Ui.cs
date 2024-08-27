@@ -75,12 +75,12 @@ namespace VfxEditor.FileBrowser {
                 var confirmed = false;
                 var open = true;
 
-                var name = "Overwrite This File?";
+                var name = "要覆盖当前文件吗?";
                 ImGui.OpenPopup( name );
                 if( ImGui.BeginPopupModal( name, ref open, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove ) ) {
-                    if( ImGui.Checkbox( "Never ask me again", ref Plugin.Configuration.FileBrowserOverwriteDontAsk ) ) Plugin.Configuration.Save();
+                    if( ImGui.Checkbox( "记住我的选择", ref Plugin.Configuration.FileBrowserOverwriteDontAsk ) ) Plugin.Configuration.Save();
 
-                    if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
+                    if( ImGui.Button( "确认", new Vector2( 120, 0 ) ) ) {
                         WaitingForConfirmation = false;
                         IsOk = true;
                         confirmed = true;
@@ -89,7 +89,7 @@ namespace VfxEditor.FileBrowser {
 
                     ImGui.SameLine();
                     using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                    if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
+                    if( ImGui.Button( "取消", new Vector2( 120, 0 ) ) ) {
                         WaitingForConfirmation = false;
                         IsOk = false;
                         confirmed = false;

@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedUIntHex : ParsedUInt {

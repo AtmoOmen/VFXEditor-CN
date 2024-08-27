@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Formats.AvfxFormat.Nodes;

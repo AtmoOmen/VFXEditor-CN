@@ -19,15 +19,15 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly PartListSelect PartListId;
         private readonly PartItemSelect PartId;
 
-        private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );
-        private readonly ParsedEnum<GridPartsType> GridParts = new( "Grid Parts Type", size: 1 );
-        private readonly ParsedEnum<GridRenderType> GridRender = new( "Grid Render Type", size: 1 );
-        private readonly ParsedShort TopOffset = new( "Top Offset" );
-        private readonly ParsedShort BottonOffset = new( "Bottom Offset" );
-        private readonly ParsedShort LeftOffset = new( "Left Offset" );
-        private readonly ParsedShort RightOffset = new( "Right Offset" );
-        private readonly ParsedInt Unknown2 = new( "Unknown 2", size: 1 );
-        private readonly ParsedInt Unknown3 = new( "Unknown 2", size: 1 );
+        private readonly ParsedUInt Unknown1 = new( "未知 1", size: 2 );
+        private readonly ParsedEnum<GridPartsType> GridParts = new( "网格组件类型", size: 1 );
+        private readonly ParsedEnum<GridRenderType> GridRender = new( "网格渲染类型", size: 1 );
+        private readonly ParsedShort TopOffset = new( "顶部偏移" );
+        private readonly ParsedShort BottonOffset = new( "底部偏移" );
+        private readonly ParsedShort LeftOffset = new( "左侧偏移" );
+        private readonly ParsedShort RightOffset = new( "右侧偏移" );
+        private readonly ParsedInt Unknown2 = new( "未知 2", size: 1 );
+        private readonly ParsedInt Unknown3 = new( "未知 3", size: 1 );
 
         public NineGridNodeData() {
             PartListId = new();

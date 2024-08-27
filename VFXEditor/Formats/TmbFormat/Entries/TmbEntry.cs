@@ -100,7 +100,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         private void SaveDialog() =>
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
             } );
 

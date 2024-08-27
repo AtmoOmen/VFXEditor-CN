@@ -8,8 +8,8 @@ namespace VfxEditor.Select.Tabs.Mounts {
 
         protected override void DrawSelected() {
             Dialog.DrawPaths( new Dictionary<string, string>() {
-                { "Mount", Selected.Sound },
-                { "Bgm", Selected.Bgm },
+                { "坐骑", Selected.Sound },
+                { "BGM", Selected.Bgm },
             }, Selected.Name, SelectResultType.GameMount );
         }
     }

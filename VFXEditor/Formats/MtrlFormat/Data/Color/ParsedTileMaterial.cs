@@ -22,12 +22,12 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
         protected override void DrawBody() {
             var size = Math.Min( Plugin.MtrlManager.TileNormal.Count, Plugin.MtrlManager.TileDiffuse.Count );
 
-            var text = ( Value >= 0 && Value < size ) ? $"Tile {Value}" : "[UNKNOWN]";
+            var text = ( Value >= 0 && Value < size ) ? $"倾斜 {Value}" : "[未知]";
             using var combo = ImRaii.Combo( Name, text );
             if( !combo ) return;
 
             for( var i = 0; i < size; i++ ) {
-                if( ImGui.Selectable( $"Tile {i}", i == Value ) ) Update( i );
+                if( ImGui.Selectable( $"倾斜 {i}", i == Value ) ) Update( i );
                 if( i == Value ) ImGui.SetItemDefaultFocus();
 
                 if( ImGui.IsItemHovered() ) {

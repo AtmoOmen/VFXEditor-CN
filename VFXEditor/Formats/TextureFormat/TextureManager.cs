@@ -38,7 +38,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public IEnumerable<IFileDocument> GetDocuments() => Textures;
 
-        public string GetId() => "Textures";
+        public string GetId() => "材质";
 
         public string GetName() => "tex";
 
@@ -57,14 +57,14 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void Import( SelectResult result ) {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     AddRecent( result );
                     ReplaceTexture( res, result.Path );
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "无法导入数据" );
                 }
             } );
         }
@@ -104,7 +104,7 @@ namespace VfxEditor.Formats.TextureFormat {
                     Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
 
                 if( !data.ValidFormat ) {
-                    Dalamud.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
+                    Dalamud.Error( $"非法格式: {data.Header.Format} {gamePath}" );
                     return null;
                 }
                 var newPreview = new TexturePreview( data, penumbraFileExits, gamePath );
@@ -112,7 +112,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 return newPreview;
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Could not find tex: {gamePath}" );
+                Dalamud.Error( e, $"无法找到材质: {gamePath}" );
                 return null;
             }
         }
@@ -133,7 +133,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
             newPath = string.IsNullOrEmpty( Plugin.Configuration.CustomPathPrefix ) ? path : Plugin.Configuration.CustomPathPrefix + path.Split( "/", 2 )[1];
             if( FileExists( newPath ) ) {
-                Dalamud.Log( $"{newPath} already converted" );
+                Dalamud.Log( $"{newPath} 已被转换" );
                 return true;
             }
 
@@ -206,27 +206,27 @@ namespace VfxEditor.Formats.TextureFormat {
             var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "FreeImage.dll" );
             freeImgLib.Resolver.SetOverrideLibraryName32( _32bitPath );
             freeImgLib.Resolver.SetOverrideLibraryName64( _32bitPath );
-            Dalamud.Log( $"FreeImage TeximpNet paths: {_32bitPath} / {_64bitPath}" );
-            Dalamud.Log( $"FreeImage Default name: {freeImgLib.DefaultLibraryName} Library loaded: {freeImgLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"FreeImage TeximpNet 路径: {_32bitPath} / {_64bitPath}" );
+            Dalamud.Log( $"FreeImage 默认名称: {freeImgLib.DefaultLibraryName} 已加载库: {freeImgLib.IsLibraryLoaded}" );
             freeImgLib.LoadLibrary();
-            Dalamud.Log( $"FreeImage Library path: {freeImgLib.LibraryPath} Library loaded: {freeImgLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"FreeImage 库路径: {freeImgLib.LibraryPath} 已加载库: {freeImgLib.IsLibraryLoaded}" );
 
             var nvtLib = TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance;
             var nv_32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "nvtt.dll" );
             var nv_64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "nvtt.dll" );
             nvtLib.Resolver.SetOverrideLibraryName32( nv_32bitPath );
             nvtLib.Resolver.SetOverrideLibraryName64( nv_32bitPath );
-            Dalamud.Log( $"NVT TeximpNet paths: {nv_32bitPath} / {nv_64bitPath}" );
-            Dalamud.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"NVT TeximpNet 路径: {nv_32bitPath} / {nv_64bitPath}" );
+            Dalamud.Log( $"NVT 默认名称: {nvtLib.DefaultLibraryName} 已加载库: {nvtLib.IsLibraryLoaded}" );
             nvtLib.LoadLibrary();
-            Dalamud.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"NVT 库路径: {nvtLib.LibraryPath} 已加载库: {nvtLib.IsLibraryLoaded}" );
         }
 
         public static void FreeLibrary() {
             TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
             TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.FreeLibrary();
-            Dalamud.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
-            Dalamud.Log( $"NVTT Library loaded: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
+            Dalamud.Log( $"已加载 FreeImage 库: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
+            Dalamud.Log( $"已加载 NVTT 库: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
 
         public WindowSystem GetWindowSystem() => WindowSystem;

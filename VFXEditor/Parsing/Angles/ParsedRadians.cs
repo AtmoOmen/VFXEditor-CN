@@ -1,4 +1,4 @@
-using VfxEditor.Utils;
+﻿using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedRadians : ParsedFloat {

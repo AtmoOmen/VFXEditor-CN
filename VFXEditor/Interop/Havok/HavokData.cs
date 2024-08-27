@@ -37,7 +37,7 @@ namespace VfxEditor.Interop.Havok {
                 Resource = hkSerializeUtil.LoadFromFile( ( byte* )path, null, loadOptions );
 
                 if( Resource == null ) {
-                    Dalamud.Error( $"Could not read file: {Path}" );
+                    Dalamud.Error( $"无法读取文件: {Path}" );
                     return;
                 }
 
@@ -54,7 +54,7 @@ namespace VfxEditor.Interop.Havok {
                 Marshal.FreeHGlobal( path );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Could not read file: {Path}" );
+                Dalamud.Error( e, $"无法读取文件: {Path}" );
             }
         }
 
@@ -68,7 +68,7 @@ namespace VfxEditor.Interop.Havok {
 
                     var className = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry()->GetClassByName( n1 );
 
-                    Dalamud.Log( $"Writing Havok to {Path}" );
+                    Dalamud.Log( $"正在为 {Path} 写入 Havok 数据" );
 
                     var oStream = stackalloc hkOstream[1];
                     oStream->Ctor( Path );
@@ -85,7 +85,7 @@ namespace VfxEditor.Interop.Havok {
                 }
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Could not export to: {Path}" );
+                Dalamud.Error( e, $"无法导出至: {Path}" );
             }
         }
 

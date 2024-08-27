@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -36,11 +36,11 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class AttributeResultCommand {
-        public readonly ParsedEnum<SelfCommand> SelfCommandSelect = new( "Result Select Command", size: 1 );
-        public readonly ParsedEnum<TargetCommand> TargetCommandSelect = new( "Result Target Command", size: 1 );
+        public readonly ParsedEnum<SelfCommand> SelfCommandSelect = new( "选择命令", size: 1 );
+        public readonly ParsedEnum<TargetCommand> TargetCommandSelect = new( "目标命令", size: 1 );
         public readonly ParsedReserve Reserved1 = new( 2 );
-        public readonly ParsedInt SelfArgument = new( "Result Self Argument" );
-        public readonly ParsedInt TargetArgument = new( "Result Target Argument" );
+        public readonly ParsedInt SelfArgument = new( "自身参数" );
+        public readonly ParsedInt TargetArgument = new( "目标参数" );
 
         public AttributeResultCommand() { }
 

@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.IO;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Parsing.Int;
@@ -6,8 +6,8 @@ using VfxEditor.UldFormat.Texture;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartItem {
-        public readonly ParsedShort2 Offset = new( "Offset" );
-        public readonly ParsedShort2 Size = new( "Size" );
+        public readonly ParsedShort2 Offset = new( "偏移" );
+        public readonly ParsedShort2 Size = new( "大小" );
 
         public readonly ParsedIntSelect<UldTexture> TextureId = new( "Texture", 0,
             () => Plugin.UldManager.File.TextureSplitView,
@@ -33,7 +33,7 @@ namespace VfxEditor.UldFormat.PartList {
         }
 
         public void Draw() {
-            ImGui.Checkbox( "Show HD", ref ShowHd );
+            ImGui.Checkbox( "显示 HD 素材", ref ShowHd );
 
             DrawImage( true );
 
@@ -67,8 +67,8 @@ namespace VfxEditor.UldFormat.PartList {
 
         public string GetText( int idx ) {
             var currentTexture = CurrentTexture;
-            var text = currentTexture != null ? currentTexture.GetText() : $"Texture {TextureId.Value}";
-            return $"Part {idx} ({text})";
+            var text = currentTexture != null ? currentTexture.GetText() : $"材质 {TextureId.Value}";
+            return $"组件 {idx} ({text})";
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.ScdFormat {
@@ -8,21 +8,21 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class LayoutPolygonData : ScdLayoutData {
-        public readonly ParsedFloat MaxRange = new( "Max Range" );
-        public readonly ParsedFloat MinRange = new( "Min Range" );
-        public readonly ParsedFloat2 Height = new( "Height" );
-        public readonly ParsedFloat RangeVolume = new( "Range Volume" );
-        public readonly ParsedFloat Volume = new( "Volume" );
-        public readonly ParsedFloat Pitch = new( "Pitch" );
-        public readonly ParsedFloat ReverbFac = new( "Reverb FAC" );
-        public readonly ParsedFloat DopplerFac = new( "Doppler FAC" );
-        public readonly ParsedFloat InteriorFac = new( "Interior FAC" );
-        public readonly ParsedFloat Direction = new( "Direction" );
-        public readonly ParsedByte SubSoundType = new( "Sub-Sound Type" );
-        public readonly ParsedFlag<PolygonFlags> Flag = new( "Flag", size: 1 );
-        public readonly ParsedByte VertexCount = new( "Vertex Count" );
+        public readonly ParsedFloat MaxRange = new( "范围最大值" );
+        public readonly ParsedFloat MinRange = new( "范围最小值" );
+        public readonly ParsedFloat2 Height = new( "高度" );
+        public readonly ParsedFloat RangeVolume = new( "范围音量" );
+        public readonly ParsedFloat Volume = new( "音量" );
+        public readonly ParsedFloat Pitch = new( "音高" );
+        public readonly ParsedFloat ReverbFac = new( "混音强度系数" );
+        public readonly ParsedFloat DopplerFac = new( "多普勒效应强度系数" );
+        public readonly ParsedFloat InteriorFac = new( "内部效应强度系数" );
+        public readonly ParsedFloat Direction = new( "方向" );
+        public readonly ParsedByte SubSoundType = new( "子声音类型" );
+        public readonly ParsedFlag<PolygonFlags> Flag = new( "标识", size: 1 );
+        public readonly ParsedByte VertexCount = new( "顶点数量" );
         public readonly ParsedReserve Reserved1 = new( 1 );
-        public readonly ParsedFloat RotSpeed = new( "Rotation Speed" );
+        public readonly ParsedFloat RotSpeed = new( "旋转速度" );
         public readonly ParsedReserve Reserved2 = new( 3 * 4 );
 
         public LayoutPolygonData() {

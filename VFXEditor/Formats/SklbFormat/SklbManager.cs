@@ -6,8 +6,8 @@ using VfxEditor.Utils;
 namespace VfxEditor.SklbFormat {
     public class SklbManager : FileManager<SklbDocument, SklbFile, WorkspaceMetaBasic> {
         public SklbManager() : base( "Sklb Editor", "Sklb" ) {
-            SourceSelect = new SklbSelectDialog( "Sklb Select [LOADED]", this, true );
-            ReplaceSelect = new SklbSelectDialog( "Sklb Select [REPLACED]", this, false );
+            SourceSelect = new SklbSelectDialog( "选择文件 [加载]###SKLB", this, true );
+            ReplaceSelect = new SklbSelectDialog( "选择文件 [替换]###SKLB", this, false );
         }
 
         protected override SklbDocument GetNewDocument() => new( this, NewWriteLocation );

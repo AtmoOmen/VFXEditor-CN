@@ -8,9 +8,9 @@ namespace VfxEditor.Library.Node {
         public NodeRoot( List<LibraryProps> items ) : base( "Nodes", items ) { }
 
         public override bool Draw( LibraryManager library, string searchInput ) {
-            using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );
+            using var child = ImRaii.Child( "子级", ImGui.GetContentRegionAvail(), false );
 
-            if( Children.Count == 0 ) ImGui.TextDisabled( "No nodes saved..." );
+            if( Children.Count == 0 ) ImGui.TextDisabled( "未保存任何节点..." );
             return base.Draw( library, searchInput );
         }
     }

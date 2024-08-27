@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +39,7 @@ namespace VfxEditor.Ui.Export {
         public TexToolsDialog() : base( "TexTools" ) { }
 
         protected override void OnExport() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();
@@ -92,7 +92,7 @@ namespace VfxEditor.Ui.Export {
                 Dalamud.Log( $"Exported To: {saveFile}" );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Could not export to TexTools" );
+                Dalamud.Error( e, "无法导出至 TexTools" );
             }
         }
     }

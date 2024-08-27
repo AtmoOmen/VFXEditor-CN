@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Numerics;
@@ -39,7 +39,7 @@ namespace VfxEditor.Ui.Components {
                 if( ShowCancel ) {
                     ImGui.SameLine();
                     using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                    if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
+                    if( ImGui.Button( "取消", new Vector2( 120, 0 ) ) ) {
                         ImGui.CloseCurrentPopup();
                         Remove();
                         OnCancel();

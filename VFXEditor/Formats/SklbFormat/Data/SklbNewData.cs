@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -19,7 +19,7 @@ namespace VfxEditor.SklbFormat.Data {
             HavokOffset = reader.ReadInt32();
 
             Parsed = [
-                new ParsedShort( "Bone Connect Index" ),
+                new ParsedShort( "骨骼连接索引" ),
                 new ParsedReserve( 2 ), // Padding
                 Id
             ];
@@ -49,14 +49,14 @@ namespace VfxEditor.SklbFormat.Data {
         }
 
         public override void Draw() {
-            ImGui.TextDisabled( "Header Version: [NEW]" );
+            ImGui.TextDisabled( "头版本 [新]" );
             Parsed.ForEach( x => x.Draw() );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            ImGui.TextDisabled( "Parents" );
+            ImGui.TextDisabled( "父级" );
             ParentsView.Draw();
         }
     }

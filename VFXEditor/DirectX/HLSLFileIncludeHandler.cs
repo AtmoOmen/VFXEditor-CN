@@ -1,4 +1,4 @@
-// Modified on 20-Jun-2013 by Justin Stenning
+﻿// Modified on 20-Jun-2013 by Justin Stenning
 // From original code by Alexandre Mutel.
 // -------------------------------------------------------------------
 // Original source in SharpDX.Toolkit.Graphics.FileIncludeHandler

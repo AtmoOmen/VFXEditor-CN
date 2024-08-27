@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;

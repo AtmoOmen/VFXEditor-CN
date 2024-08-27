@@ -1,6 +1,6 @@
-namespace VfxEditor.AvfxFormat {
+﻿namespace VfxEditor.AvfxFormat {
     public class AvfxBinderDataUnknown4 : AvfxData {
-        public readonly AvfxCurve CarryOverFactor = new( "Carry Over Factor", "COF" );
+        public readonly AvfxCurve CarryOverFactor = new( "传递因子", "COF" );
 
         public AvfxBinderDataUnknown4() : base() {
             Parsed = [

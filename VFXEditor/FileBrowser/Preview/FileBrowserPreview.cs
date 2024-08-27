@@ -46,7 +46,7 @@ namespace VfxEditor.FileBrowser.Preview {
             var size = ImGui.GetContentRegionAvail();
 
             if( Texture == null ) {
-                var text = "No File to Preview";
+                var text = "无待预览文件";
                 var textWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.InfoCircle ) + ImGui.CalcTextSize( text ).X;
 
                 if( size.X < textWidth ) return;
@@ -112,7 +112,7 @@ namespace VfxEditor.FileBrowser.Preview {
                     if( newTexture != null ) Texture = newTexture;
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, $"Error loading image preview for {path}" );
+                    Dalamud.Error( e, $"尝试加载图片预览时发生错误: {path}" );
                     Dispose();
                 }
 

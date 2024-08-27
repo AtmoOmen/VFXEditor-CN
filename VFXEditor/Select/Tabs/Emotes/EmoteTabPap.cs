@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +58,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         protected override void DrawSelected() {
             ImGui.TextDisabled( Selected.Command );
 
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
             foreach( var (key, paths) in Loaded ) {

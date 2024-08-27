@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -7,11 +7,11 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleTexturePalette : AvfxParticleAttribute {
-        public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
-        public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
-        public readonly AvfxEnum<TextureBorderType> TextureBorder = new( "Texture Border", "TBT" );
-        public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
-        public readonly AvfxCurve Offset = new( "Offset", "POff" );
+        public readonly AvfxBool Enabled = new( "启用", "bEna" );
+        public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "材质筛选器", "TFT" );
+        public readonly AvfxEnum<TextureBorderType> TextureBorder = new( "材质边框", "TBT" );
+        public readonly AvfxInt TextureIdx = new( "材质索引", "TxNo", value: -1 );
+        public readonly AvfxCurve Offset = new( "偏移", "POff" );
 
         private readonly List<AvfxBase> Parsed;
 
@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "TP" );
 
             AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Texture Palette" ) ) Assign();
+            if( ImGui.SmallButton( "+ 材质调色" ) ) Assign();
         }
 
         public override void DrawAssigned() {
@@ -59,10 +59,10 @@ namespace VfxEditor.AvfxFormat {
             DrawNamedItems( DisplayTabs );
         }
 
-        public override string GetDefaultText() => "Texture Palette";
+        public override string GetDefaultText() => "材质调色";
 
         public override List<AvfxNodeSelect> GetNodeSelects() => [
-            new AvfxNodeSelect<AvfxTexture>( Particle, "Texture", Particle.NodeGroups.Textures, TextureIdx )
+            new AvfxNodeSelect<AvfxTexture>( Particle, "材质", Particle.NodeGroups.Textures, TextureIdx )
         ];
     }
 }

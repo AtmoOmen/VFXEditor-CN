@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh;

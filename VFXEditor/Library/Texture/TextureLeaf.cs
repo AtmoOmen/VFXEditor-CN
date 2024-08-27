@@ -28,13 +28,13 @@ namespace VfxEditor.Library.Texture {
         protected override void DrawTooltip() { }
 
         protected override void DrawEditing() {
-            ImGui.InputText( "Name", ref Name, 255 );
-            ImGui.InputText( "Path", ref Path, 255 );
-            ImGui.ColorEdit4( "Color", ref Color, ImGuiColorEditFlags.DisplayHex | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar );
+            ImGui.InputText( "名称", ref Name, 255 );
+            ImGui.InputText( "路径", ref Path, 255 );
+            ImGui.ColorEdit4( "颜色", ref Color, ImGuiColorEditFlags.DisplayHex | ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar );
         }
 
         protected override void DrawImport() {
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Clipboard, "Copy" ) ) ImGui.SetClipboardText( Path );
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Clipboard, "复制" ) ) ImGui.SetClipboardText( Path );
         }
 
         protected override void DrawBody() {

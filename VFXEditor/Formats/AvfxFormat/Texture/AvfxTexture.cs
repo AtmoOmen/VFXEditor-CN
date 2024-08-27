@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
         public const string NAME = "Tex";
 
-        public readonly AvfxString Path = new( "Path", "Path", false, false );
+        public readonly AvfxString Path = new( "路径", "Path", false, false );
         public readonly UiNodeGraphView NodeView;
 
         public string PathTrimmed => Path.Value.Trim( '\0' );
@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
 
         public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.Value );
 
-        public override string GetDefaultText() => $"Texture {GetIdx()}";
+        public override string GetDefaultText() => $"材质 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Tex{GetIdx()}";
     }

@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -36,7 +36,7 @@ namespace VfxEditor.Ui.Components.Tables {
             using var _ = ImRaii.PushId( Id );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 4, 4 ) );
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using var child = ImRaii.Child( "Child", childSize, false );
+            using var child = ImRaii.Child( "子级", childSize, false );
             using var table = ImRaii.Table( "Table", Columns.Count + ( AllowNewDelete ? 1 : 0 ) + ( ShowRow ? 1 : 0 ),
                 ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendX | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.PadOuterX );
             if( !table ) return;

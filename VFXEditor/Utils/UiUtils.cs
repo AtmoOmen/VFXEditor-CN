@@ -1,4 +1,4 @@
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
@@ -140,7 +140,7 @@ namespace VfxEditor.Utils {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), DALAMUD_ORANGE ) ) OpenUrl( url );
             }
-            Tooltip( "Click to view more information on the VFXEditor wiki" );
+            Tooltip( "点击以在 VFXEditor Wiki 上了解更多信息(英文)" );
         }
 
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
@@ -162,13 +162,13 @@ namespace VfxEditor.Utils {
             };
 
             var text = verified switch {
-                VerifiedStatus.VERIFIED => "Verified",
-                VerifiedStatus.PARTIAL => "Partially Verified",
-                VerifiedStatus.ERROR => "Parsing Issues",
-                VerifiedStatus.WORKSPACE => "Workspace",
-                VerifiedStatus.UNKNOWN => "Unknown",
-                VerifiedStatus.UNSUPPORTED => "Unsupported",
-                _ => "[OTHER]"
+                VerifiedStatus.VERIFIED => "已验证",
+                VerifiedStatus.PARTIAL => "部分验证",
+                VerifiedStatus.ERROR => "验证出错",
+                VerifiedStatus.WORKSPACE => "工作区",
+                VerifiedStatus.UNKNOWN => "未知",
+                VerifiedStatus.UNSUPPORTED => "不支持",
+                _ => "[其他]"
             };
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -178,7 +178,7 @@ namespace VfxEditor.Utils {
             ImGui.SameLine();
             ImGui.TextColored( color, text );
 
-            if( verified == VerifiedStatus.UNSUPPORTED ) Tooltip( "Verification is not supported for this file or file type" );
+            if( verified == VerifiedStatus.UNSUPPORTED ) Tooltip( "不支持验证该类文件的有效性" );
 
             if( verified == VerifiedStatus.ERROR ) {
                 ImGui.SameLine();
@@ -192,7 +192,7 @@ namespace VfxEditor.Utils {
         }
 
         public static void WriteBytesDialog( string filter, byte[] data, string ext, string fileName ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", filter, fileName, ext, ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", filter, fileName, ext, ( bool ok, string res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
             } );
         }
@@ -310,7 +310,7 @@ namespace VfxEditor.Utils {
                 Plugin.Configuration.UseDegreesForAngles = !Plugin.Configuration.UseDegreesForAngles;
                 Plugin.Configuration.Save();
             }
-            Tooltip( "Switch between degrees and radians" );
+            Tooltip( "在度和弧度之间转换" );
 
             ImGui.SameLine();
             ImGui.Text( name );

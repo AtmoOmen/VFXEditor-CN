@@ -1,4 +1,4 @@
-namespace VfxEditor.Select.Tabs.Character {
+﻿namespace VfxEditor.Select.Tabs.Character {
     public class CharacterTabAtch : CharacterTab {
         public CharacterTabAtch( SelectDialog dialog, string name ) : base( dialog, name ) { }
 

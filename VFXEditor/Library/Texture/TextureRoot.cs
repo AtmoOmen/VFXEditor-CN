@@ -27,7 +27,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
-                    FileBrowserManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( bool ok, string res ) => {
+                    FileBrowserManager.SaveFileDialog( "选择保存位置", ".txt", "Textures", "txt", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ExportTextures( res );
                     } );
@@ -35,7 +35,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
-                    FileBrowserManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
+                    FileBrowserManager.OpenFileDialog( "选择文件", ".txt,.*", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ImportTextures( res );
                     } );
@@ -44,9 +44,9 @@ namespace VfxEditor.Library.Node {
 
             ImGui.Separator();
 
-            using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );
+            using var child = ImRaii.Child( "子级", ImGui.GetContentRegionAvail(), false );
 
-            if( Children.Count == 0 ) ImGui.TextDisabled( "No textures saved..." );
+            if( Children.Count == 0 ) ImGui.TextDisabled( "无已保存的材质" );
             return base.Draw( library, searchInput );
         }
 

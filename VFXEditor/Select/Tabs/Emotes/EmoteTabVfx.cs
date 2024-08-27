@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public class EmoteTabVfx : EmoteTab<ParsedPaths> {

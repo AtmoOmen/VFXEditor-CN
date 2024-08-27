@@ -89,7 +89,7 @@ namespace VfxEditor.Utils.Gltf {
                     if( skipUnanimated ) {
                         var idx = names.IndexOf( node.Name );
                         if( unanimated.Contains( idx ) ) {
-                            Dalamud.Log( $"Skipping unanimated node {node.Name} in animation {animationName}" );
+                            Dalamud.Log( $"正在跳过 {animationName} 中的无动画节点 {node.Name}" );
                             continue;
                         }
                     }
@@ -102,7 +102,7 @@ namespace VfxEditor.Utils.Gltf {
             }
 
             model.SaveGLTF( path );
-            Dalamud.Log( $"Saved GLTF to: {path}" );
+            Dalamud.Log( $"已保存 GLTF 至: {path}" );
         }
 
         private static void ExportKeys( Dictionary<string, AnimationKeys> nameToKeys, List<string> names, PapMotion motion, float time ) {
@@ -173,7 +173,7 @@ namespace VfxEditor.Utils.Gltf {
             foreach( var node in nodes ) {
                 if( string.IsNullOrEmpty( node.Name ) ) continue;
                 if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated || skipBones.Contains( node.Name ) ) {
-                    Dalamud.Log( $"Skipped gLTF node: {node.Name}" );
+                    Dalamud.Log( $"已跳过 gLTF 节点: {node.Name}" );
                     continue;
                 }
 
@@ -181,7 +181,7 @@ namespace VfxEditor.Utils.Gltf {
             }
 
             if( animations.Count == 0 ) {
-                Dalamud.Error( "File has no animations" );
+                Dalamud.Error( "文件无任何动画" );
                 return;
             }
 
@@ -293,7 +293,7 @@ namespace VfxEditor.Utils.Gltf {
             var finalAnim = ( hkaAnimation* )anim;
 
             if( compress ) {
-                Dalamud.Log( "Compressing animation..." );
+                Dalamud.Log( "正在压缩动画..." );
 
                 var spline = ( HkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaSplineCompressedAnimation ) ) );
                 handles.Add( ( nint )spline );

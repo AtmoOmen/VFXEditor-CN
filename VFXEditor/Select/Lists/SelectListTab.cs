@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Lists {
 
             DefaultWindowPadding = ImGui.GetStyle().WindowPadding;
 
-            ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
+            ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 4, 3 ) );
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
@@ -64,7 +64,7 @@ namespace VfxEditor.Select.Lists {
             if( Dialog.DrawFavorite( item ) ) return true;
 
             ImGui.TableNextColumn();
-            ImGui.TextDisabled( "[" + item.Type.ToString().ToUpper().Replace( "GAME", "" ) + "]" );
+            ImGui.TextDisabled( "[" + item.Type.ToString().ToUpper().Replace( "游戏", "" ) + "]" );
 
             ImGui.TableNextColumn();
             ImGui.Selectable( string.IsNullOrEmpty( item.Name ) ? item.DisplayString.Split( "]" )[^1] : item.Name, false, ImGuiSelectableFlags.SpanAllColumns );

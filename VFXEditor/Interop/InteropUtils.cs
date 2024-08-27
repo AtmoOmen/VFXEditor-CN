@@ -1,4 +1,4 @@
-using Dalamud;
+﻿using Dalamud;
 using Penumbra.String;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace VfxEditor.Interop {
                 process.WaitForExit();
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error executing" );
+                Dalamud.Error( e, "执行过程中发生错误" );
             }
         }
 

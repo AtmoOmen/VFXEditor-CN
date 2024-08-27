@@ -53,8 +53,8 @@ namespace VfxEditor.Select.Tabs.Job {
 
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
                     poses.Add( race.Name, new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
+                        { "开始", start },
+                        { "循环", loop }
                     } );
                 }
 
@@ -85,18 +85,18 @@ namespace VfxEditor.Select.Tabs.Job {
         }
 
         protected override void DrawSelected() {
-            using var tabBar = ImRaii.TabBar( "Tabs" );
+            using var tabBar = ImRaii.TabBar( "栏" );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "General" ) ) {
+            if( ImGui.BeginTabItem( "一般" ) ) {
                 Dialog.DrawPaths( Loaded.General, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Poses" ) ) {
+            if( ImGui.BeginTabItem( "姿势" ) ) {
                 Dialog.DrawPaths( Loaded.Poses, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Auto-Attack" ) ) {
+            if( ImGui.BeginTabItem( "自动攻击" ) ) {
                 Dialog.DrawPaths( Loaded.AutoAttack, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }

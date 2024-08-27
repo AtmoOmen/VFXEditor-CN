@@ -22,7 +22,7 @@ namespace VfxEditor.UldFormat.Widget {
     }
 
     public class UldWidget : UldWorkspaceItem {
-        public readonly ParsedEnum<AlignmentType> AlignmentType = new( "Alignment Type" );
+        public readonly ParsedEnum<AlignmentType> AlignmentType = new( "对齐类型" );
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
 
@@ -75,7 +75,7 @@ namespace VfxEditor.UldFormat.Widget {
             Id.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
@@ -83,7 +83,7 @@ namespace VfxEditor.UldFormat.Widget {
         }
 
         private void DrawParameters() {
-            using var tabItem = ImRaii.TabItem( "Parameters" );
+            using var tabItem = ImRaii.TabItem( "参数" );
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Parameters" );
@@ -95,13 +95,13 @@ namespace VfxEditor.UldFormat.Widget {
         }
 
         private void DrawNodes() {
-            using var tabItem = ImRaii.TabItem( "Nodes" );
+            using var tabItem = ImRaii.TabItem( "节点" );
             if( !tabItem ) return;
 
             NodeSplitView.Draw();
         }
 
-        public override string GetDefaultText() => $"Widget {GetIdx()}";
+        public override string GetDefaultText() => $"控件 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"Widget{GetIdx()}";
 

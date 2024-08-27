@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using VfxEditor.Formats.MdlFormat.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {

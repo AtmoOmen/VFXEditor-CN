@@ -1,4 +1,4 @@
-using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -77,7 +77,7 @@ namespace VfxEditor.Select {
 
             var resetScroll = false;
             DrawExtra();
-            if( ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 ) ) {
+            if( ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 ) ) {
                 Searched = Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
                 resetScroll = true;
             }
@@ -152,7 +152,7 @@ namespace VfxEditor.Select {
 
             ImGui.TableNextColumn();
 
-            if( Selected == null ) ImGui.Text( "Select an item..." );
+            if( Selected == null ) ImGui.Text( "请选择..." );
             else DrawInner();
         }
 
@@ -172,14 +172,14 @@ namespace VfxEditor.Select {
         public virtual async void Load() {
             if( WaitingForItems || ItemsLoaded ) return;
             State.WaitingForItems = true;
-            Dalamud.Log( "Loading " + StateId );
+            Dalamud.Log( "正在加载 " + StateId );
 
             await Task.Run( () => {
                 try {
                     LoadData();
                 }
                 catch( Exception e ) {
-                    Dalamud.Error( e, "Error Loading: " + StateId );
+                    Dalamud.Error( e, "加载时发生错误: " + StateId );
                 }
 
                 State.ItemsLoaded = true;
@@ -219,7 +219,7 @@ namespace VfxEditor.Select {
                 if( ISelectItemWithIcon.HasIcon( Selected, out var iconId ) ) DrawIcon( iconId );
                 DrawSelected();
             }
-            else ImGui.Text( "No data found" );
+            else ImGui.Text( "未发现任何数据" );
         }
 
         private async void LoadItemAsync( T item ) {

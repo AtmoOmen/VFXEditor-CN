@@ -39,12 +39,12 @@ namespace VfxEditor.UldFormat.PartList {
 
                 var item = Parts[idx];
                 var currentTexture = item.CurrentTexture;
-                var text = currentTexture != null ? currentTexture.GetText() : $"Texture {item.TextureId.Value}";
+                var text = currentTexture != null ? currentTexture.GetText() : $"材质 {item.TextureId.Value}";
 
-                if( ImGui.CollapsingHeader( $"Part {idx} ({text})###{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"分部 {idx} ({text})###{idx}" ) ) {
                     using var indent = ImRaii.PushIndent();
 
-                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
+                    if( UiUtils.RemoveButton( "删除", true ) ) { // REMOVE
                         CommandManager.Add( new ListRemoveCommand<UldPartItem>( Parts, item ) );
                         break;
                     }
@@ -53,12 +53,12 @@ namespace VfxEditor.UldFormat.PartList {
                 }
             }
 
-            if( ImGui.Button( "+ New" ) ) { // NEW
+            if( ImGui.Button( "+ 新建" ) ) { // NEW
                 CommandManager.Add( new ListAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
             }
         }
 
-        public override string GetDefaultText() => $"Part List {GetIdx()}";
+        public override string GetDefaultText() => $"分部列表 {GetIdx()}";
 
         public override string GetWorkspaceId() => $"PartList{GetIdx()}";
     }

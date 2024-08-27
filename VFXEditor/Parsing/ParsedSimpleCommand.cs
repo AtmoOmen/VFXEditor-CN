@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace VfxEditor.Parsing {
     public class ParsedSimpleCommand<S> : ICommand {

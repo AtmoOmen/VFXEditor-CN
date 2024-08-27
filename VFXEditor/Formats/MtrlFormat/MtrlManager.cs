@@ -35,8 +35,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly List<MtrlStain> LegacyStains = [];
 
         public MtrlManager() : base( "Mtrl Editor", "Mtrl" ) {
-            SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );
-            ReplaceSelect = new MtrlSelectDialog( "Mtrl Select [REPLACED]", this, false );
+            SourceSelect = new MtrlSelectDialog( "选择文件 [加载]###MTRL", this, true );
+            ReplaceSelect = new MtrlSelectDialog( "选择文件 [替换]###MTRL", this, false );
 
             try {
                 TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );

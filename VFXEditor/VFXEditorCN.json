@@ -7,6 +7,5 @@
     "RepoUrl": "https://github.com/AtmoOmen/VFXEditor-CNTR",
     "ApplicableVersion": "any",
     "Tags": [ "VFX", "AVFX" ],
-    "DalamudApiLevel": 9,
     "LoadPriority": 69
 }

@@ -52,7 +52,7 @@ namespace VfxEditor.Library.Components {
                 // Main folder item
 
                 using( var color = ImRaii.PushColor( ImGuiCol.Header, new Vector4( 0 ) ) ) {
-                    open = ImGui.TreeNodeEx( "###Node",
+                    open = ImGui.TreeNodeEx( "##Node",
                         ImGuiTreeNodeFlags.SpanAvailWidth |
                         ImGuiTreeNodeFlags.FramePadding |
                         ImGuiTreeNodeFlags.Framed

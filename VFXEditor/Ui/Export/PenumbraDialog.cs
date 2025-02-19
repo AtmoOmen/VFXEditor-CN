@@ -90,7 +90,7 @@ namespace VfxEditor.Ui.Export {
                 }
 
                 foreach( var (group, idx) in Groups.WithIndex() ) {
-                    if( ImGui.Selectable( $"{group.GetName()}###{idx}" ) ) Selected = group;
+                    if( ImGui.Selectable( $"{group.GetName()}##{idx}" ) ) Selected = group;
                 }
                 ImGui.EndCombo();
             }

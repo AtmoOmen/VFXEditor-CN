@@ -12,8 +12,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxExportDialog ExportDialog;
 
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
-            SourceSelect = new VfxSelectDialog( "选择文件 [加载]###AVFX", this, true );
-            ReplaceSelect = new VfxSelectDialog( "选择文件 [替换]###AVFX", this, false );
+            SourceSelect = new VfxSelectDialog( "选择文件 [原始]##AVFX", this, true );
+            ReplaceSelect = new VfxSelectDialog( "选择文件 [替换]##AVFX", this, false );
             ExportDialog = new( WindowSystem );
         }
 

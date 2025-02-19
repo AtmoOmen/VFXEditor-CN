@@ -25,7 +25,7 @@ namespace VfxEditor.Ui.Components {
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 var text = GetTextAction == null ? $"{Id} {idx}" : GetTextAction.Invoke( item, idx );
-                if( ImGui.CollapsingHeader( $"{text}###{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"{text}##{idx}" ) ) {
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 

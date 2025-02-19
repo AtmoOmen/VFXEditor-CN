@@ -5,7 +5,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.Formats.AtchFormat {
     public unsafe class AtchManager : FileManager<AtchDocument, AtchFile, WorkspaceMetaBasic> {
         public AtchManager() : base( "Atch Editor", "Atch" ) {
-            SourceSelect = new AtchSelectDialog( "选择文件 [加载]###ATCH", this, true );
+            SourceSelect = new AtchSelectDialog( "选择文件 [原始]##ATCH", this, true );
             ReplaceSelect = new AtchSelectDialog( "选择文件 [替换]###ATCH", this, false );
         }
 

@@ -8,7 +8,7 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
-### Supported File Types
+## Supported File Types
 
 | Extension | Description |
 | --- | --- |

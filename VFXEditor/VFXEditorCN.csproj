@@ -39,7 +39,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <DalamudLibPath>E:\Program Files (x86)\XIVLauncherCN\Roaming\addon\Hooks\dev\</DalamudLibPath>
+        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
         <RootNamespace>VfxEditor</RootNamespace>
     </PropertyGroup>
 

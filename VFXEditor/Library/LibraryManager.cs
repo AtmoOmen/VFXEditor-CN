@@ -23,7 +23,7 @@ namespace VfxEditor.Library {
 
         private string ComboSearchInput = string.Empty;
 
-        public LibraryManager() : base( "Library", false, new( 500, 750 ), Plugin.WindowSystem ) {
+        public LibraryManager() : base( "库", false, new( 500, 750 ), Plugin.WindowSystem ) {
             NodeRoot = new( Plugin.Configuration.VFXNodeLibraryItems );
             TextureRoot = new( Plugin.Configuration.VfxTextureLibraryItems );
             RootPath = Plugin.Configuration.WriteLocation;

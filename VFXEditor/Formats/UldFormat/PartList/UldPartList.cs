@@ -41,7 +41,7 @@ namespace VfxEditor.UldFormat.PartList {
                 var currentTexture = item.CurrentTexture;
                 var text = currentTexture != null ? currentTexture.GetText() : $"材质 {item.TextureId.Value}";
 
-                if( ImGui.CollapsingHeader( $"分部 {idx} ({text})###{idx}" ) ) {
+                if( ImGui.CollapsingHeader( $"分部 {idx} ({text})##{idx}" ) ) {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "删除", true ) ) { // REMOVE

@@ -114,7 +114,7 @@ namespace VfxEditor.Select {
                     if( iconOnLeft ) {
                         // based on https://github.com/Etheirys/Brio/blob/93950203668f672f8ff67a4fcf9d8758418b783f/Brio/UI/Controls/Selectors/GearSelector.cs#L12
                         var startPos = ImGui.GetCursorPos();
-                        if( ImGui.Selectable( "###Entry", Selected == item, ImGuiSelectableFlags.AllowDoubleClick, new Vector2( 0, itemHeight ) ) && Selected != item ) Select( item );
+                        if( ImGui.Selectable( "##Entry", Selected == item, ImGuiSelectableFlags.AllowDoubleClick, new Vector2( 0, itemHeight ) ) && Selected != item ) Select( item );
                         var endPos = ImGui.GetCursorPos();
 
                         ImGui.SetCursorPos( startPos );

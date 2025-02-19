@@ -228,7 +228,7 @@ namespace VfxEditor.FileManager {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0 ) ) )
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
                 ImGui.Columns( 3, "列", false );
-                ImGui.SetColumnWidth( 0, 160 );
+                ImGui.SetColumnWidth( 0, 120 );
             }
             DrawInputTextColumn();
 
@@ -240,7 +240,7 @@ namespace VfxEditor.FileManager {
 
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
                 ImGui.NextColumn();
-                ImGui.SetColumnWidth( 2, 126 );
+                ImGui.SetColumnWidth( 2, 140 );
             }
             DrawExtraColumn();
 
@@ -307,11 +307,11 @@ namespace VfxEditor.FileManager {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"已载入的 {Id}" );
+            ImGui.Text( $"原始 {Id}" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"被替换的 {Id}" );
+            ImGui.Text( $"替换 {Id}" );
         }
 
         private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;

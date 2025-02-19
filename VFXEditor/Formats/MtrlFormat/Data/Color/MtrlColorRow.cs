@@ -112,7 +112,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
         }
 
         protected override void DrawTabs() {
-            using( var tab = ImRaii.TabItem( "Color" ) ) {
+            using( var tab = ImRaii.TabItem( "颜色" ) ) {
                 if( tab ) {
                     Shader.Draw();
                     Diffuse.Draw();
@@ -121,7 +121,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 }
             }
 
-            using( var tab = ImRaii.TabItem( "Texture" ) ) {
+            using( var tab = ImRaii.TabItem( "材质" ) ) {
                 if( tab ) {
                     SheenRate.Draw();
                     SheenTint.Draw();
@@ -132,7 +132,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 }
             }
 
-            using( var tab = ImRaii.TabItem( "Tiling and Sphere" ) ) {
+            using( var tab = ImRaii.TabItem( "平铺/球体" ) ) {
                 if( tab ) {
                     Sphere.Draw();
                     SphereMask.Draw();
@@ -142,7 +142,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 }
             }
 
-            using( var tab = ImRaii.TabItem( "Unknown" ) ) {
+            using( var tab = ImRaii.TabItem( "未知" ) ) {
                 if( tab ) {
                     Unknown1.Draw();
                     Unknown2.Draw();

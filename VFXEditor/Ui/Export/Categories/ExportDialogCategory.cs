@@ -29,7 +29,7 @@ namespace VfxEditor.Ui.Export.Categories {
             var selectedCount = GetItemsToExport().Count();
             var totalCount = Manager.GetDocuments().Where( x => x.CanExport() ).Count();
             using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.DALAMUD_ORANGE, selectedCount > 0 );
-            if( ImGui.CollapsingHeader( $"{id} [{selectedCount}/{totalCount}]###{id}" ) ) {
+            if( ImGui.CollapsingHeader( $"{id} [{selectedCount}/{totalCount}]##{id}" ) ) {
                 color.Pop();
 
                 using var indent = ImRaii.PushIndent();

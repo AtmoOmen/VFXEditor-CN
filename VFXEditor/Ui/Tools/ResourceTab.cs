@@ -50,7 +50,7 @@ namespace VfxEditor.Ui.Tools {
 
         private void DrawCategoryContainer( ResourceCategory category, ResourceGraph.CategoryContainer container ) {
             var map = container.CategoryMaps[0].Value;
-            if( map == null || !ImGui.TreeNodeEx( $"({( uint )category:D2}) {category} - {map->Count}###{( uint )category}Debug" ) ) return;
+            if( map == null || !ImGui.TreeNodeEx( $"({( uint )category:D2}) {category} - {map->Count}##{( uint )category}Debug" ) ) return;
 
             foreach( var key in map->Keys ) {
                 var value = map->GetValueOrDefault( key ).Value;

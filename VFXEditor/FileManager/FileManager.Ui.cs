@@ -26,7 +26,7 @@ namespace VfxEditor.FileManager {
                 Title
 #endif
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
-                + $"###{Title}";
+                + $"##{Title}";
 
             using var _ = ImRaii.PushId( Id );
             DrawMenu();
@@ -90,7 +90,7 @@ namespace VfxEditor.FileManager {
                     if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
-                    if( ImGui.BeginTabItem( $"{document.DisplayName}###Tab{idx}", ref open, flags ) ) ImGui.EndTabItem();
+                    if( ImGui.BeginTabItem( $"{document.DisplayName}##Tab{idx}", ref open, flags ) ) ImGui.EndTabItem();
 
                     if( UiUtils.DrawDragDrop( Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENT-TABS", false ) ) break;
 

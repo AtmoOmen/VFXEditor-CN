@@ -115,7 +115,9 @@ namespace VfxEditor.AvfxFormat {
                     // Selecting point [Left Click]
                     // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
                     var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
-                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() ) SingleSelect();
+                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() && !ImGui.IsAnyItemActive() && ImGui.IsWindowFocused() ) {
+                        SingleSelect();
+                    }
 
                     // Box selection [Right-click, drag, then left-click]
                     if( ImPlot.IsPlotSelected() ) BoxSelect();
@@ -135,7 +137,7 @@ namespace VfxEditor.AvfxFormat {
                 }
 
                 // Inserting point [Ctrl + Left Click]
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() ) NewPoint();
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() && ImGui.IsWindowFocused() ) NewPoint();
 
                 if( clickState && !PrevClickState ) {
                     PrevClickTime = DateTime.Now;
@@ -177,6 +179,9 @@ namespace VfxEditor.AvfxFormat {
 
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "粘贴", CopiedKeys.Count > 0, true ) ) Paste();
+
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( "替换", CopiedKeys.Count > 0, true ) ) Replace();
 
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( "清除", true ) ) Clear();
@@ -292,6 +297,10 @@ namespace VfxEditor.AvfxFormat {
 
         private void Clear() {
             CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
+        }
+
+        private void Replace() {
+            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, CopiedKeys.Select( x => new AvfxCurveKey( this, x ) ), Update ) );
         }
 
         // ======== GRADIENT ==========

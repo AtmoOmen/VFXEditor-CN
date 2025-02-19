@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using VfxEditor.Select.Base;
 
@@ -19,18 +19,15 @@ namespace VfxEditor.Select.Tabs.Statuses
         {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
-            Icon = ( uint )status.Icon;
+            Icon = status.Icon;
 
-            HitPath = GetVfxPath( status.HitEffect.Value?.Location.Value?.Location );
-            
-            var loopVfxs = status.VFX.Value?.VFX;
+            HitPath = GetVfxPath( status.HitEffect.ValueNullable?.Location.ValueNullable?.Location.ExtractText() );
+
+            var loopVfxs = status.VFX.ValueNullable?.VFX;
             if( loopVfxs == null ) return;
-            foreach( var vfx in loopVfxs )
-            {
-                if( vfx?.Value == null ) continue;
-                var key = vfx?.Value.Location;
-                if( string.IsNullOrEmpty( key ) ) continue;
-                LoopPaths.Add( GetVfxPath( key ) );
+            foreach( var vfx in loopVfxs ) {
+                var key = vfx.ValueNullable?.Location.ExtractText();
+                if( !string.IsNullOrEmpty( key ) ) LoopPaths.Add( GetVfxPath( key ) );
             }
         }
         

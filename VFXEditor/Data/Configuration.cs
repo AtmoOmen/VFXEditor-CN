@@ -48,7 +48,7 @@ namespace VfxEditor {
         public bool HideWithUI = true;
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
-        public bool UseDegreesForAngles = false;
+        public bool UseDegreesForAngles = true;
 
         public bool SelectDialogLogOpen = true;
         public bool SelectDialogIconsOnLeft = true;
@@ -63,6 +63,8 @@ namespace VfxEditor {
             "pluginConfigs",
             "VFXEditor",
         ] );
+
+        public string DefaultAuthor = "";
 
         public List<(string, string)> RecentWorkspaces = [];
 
@@ -331,8 +333,9 @@ namespace VfxEditor {
                 }
                 ImGui.SetNextItemWidth( 135 );
                 if( ImGui.InputFloat( "悬浮窗移除延迟", ref OverlayRemoveDelay ) ) Save();
-                if( ImGui.Checkbox( "限制悬浮窗距离", ref OverlayLimit ) ) Save();
+                if( ImGui.Checkbox( "悬浮窗限制距离", ref OverlayLimit ) ) Save();
                 if( ImGui.Checkbox( "在选择窗口显示图标", ref SelectDialogIconsOnLeft ) ) Save();
+                if( ImGui.InputText( "默认 MOD 作者", ref DefaultAuthor, 255 ) ) Save();
             }
         }
 

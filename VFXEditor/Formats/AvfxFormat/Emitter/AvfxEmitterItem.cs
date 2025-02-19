@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool InfluenceCoordRot = new( "对旋转的影响", "ICbR", value: false );
         public readonly AvfxBool InfluenceCoordPos = new( "对位置的影响", "ICbP", value: true );
         public readonly AvfxBool InfluenceCoordBinderPosition = new( "对绑定点位置的影响", "ICbB", value: false );
-        public readonly AvfxInt InfluenceCoordUnstickiness = new( "对坐标不粘性的影响", "ICSK", value: 0 );
+        public readonly AvfxFloat InfluenceCoordUnstickiness = new( "对坐标不粘性的影响", "ICSK", value: 0 );
         public readonly AvfxBool InheritParentVelocity = new( "继承父级速度", "IPbV", value: false );
         public readonly AvfxBool InheritParentLife = new( "继承父级生命周期", "IPbL", value: false );
         public readonly AvfxBool OverrideLife = new( "覆盖生命周期", "bOvr", value: false );
@@ -36,7 +36,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxRadians ByInjectionAngleZ = new( "通过 Z 轴注射角度", "BIAZ", value: 0 );
         public readonly AvfxInt GenerateDelay = new( "生成延迟", "GenD", 0 );
         public readonly AvfxBool GenerateDelayByOne = new( "生成 1 单元延迟", "bGD", value: false );
-
+        
         private readonly List<AvfxBase> Parsed;
 
         public AvfxNodeSelect<AvfxParticle> ParticleSelect;

@@ -20,9 +20,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool FollowingTargetOrientation = new( "跟随目标面向", "bFTO" );
         public readonly AvfxBool DocumentScaleEnabled = new( "启用文档缩放", "bDSE" );
         public readonly AvfxBool AdjustToScreenEnabled = new( "适应屏幕", "bATS" );
+        public readonly AvfxBool IFY_Unknown = new( "IFY (未知)", "bIFY" );
         public readonly AvfxBool BET_Unknown = new( "BET (未知)", "bBET" );
         public readonly AvfxInt Life = new( "生命周期", "Life" );
-        public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "绑定器选择类型", "RoTp" );
+        public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "绑定器旋转类型", "RoTp" );
         public readonly AvfxBinderProperties PropStart = new( "起始属性", "PrpS" );
         public readonly AvfxBinderProperties Prop1 = new( "属性 1", "Prp1" );
         public readonly AvfxBinderProperties Prop2 = new( "属性 2", "Prp2" );
@@ -46,6 +47,7 @@ namespace VfxEditor.AvfxFormat {
                 FollowingTargetOrientation,
                 DocumentScaleEnabled,
                 AdjustToScreenEnabled,
+                IFY_Unknown,
                 BET_Unknown,
                 Life,
                 BinderRotationType,

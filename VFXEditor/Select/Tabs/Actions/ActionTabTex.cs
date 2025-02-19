@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,15 +13,15 @@ namespace VfxEditor.Select.Tabs.Actions
         public override void LoadData()
         {
             var sheet = Dalamud.DataManager.GetExcelSheet<Action>()
-                .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
-            
+                .Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) && ( x.IsPlayerAction || x.ClassJob.ValueNullable != null ) );
+
             foreach( var item in sheet ) Items.Add( new ActionRow( item ) );
         }
         
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            var path = Dalamud.TextureProvider.GetIconPath( ( uint )Selected.Icon );
+            var path = Dalamud.TextureProvider.GetIconPath( new( Selected.Icon, hiRes: false ) );
             var hdPath = Dalamud.TextureProvider.GetIconPath( new( Selected.Icon, hiRes: true ) );
 
             var paths = new Dictionary<string, string> {

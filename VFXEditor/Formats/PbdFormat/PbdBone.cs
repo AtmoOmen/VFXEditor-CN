@@ -9,11 +9,15 @@ namespace VfxEditor.Formats.PbdFormat {
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Data/TransformMatrix.cs#L211
 
         public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedFloat3 Translate = new( "Translate" );
-        public readonly ParsedFloat3 Scale = new( "Scale" );
+        public readonly ParsedFloat3 Translate = new( "Translate" ) {
+            HighPrecision = true
+        };
+        public readonly ParsedFloat3 Scale = new( "Scale" ) {
+            HighPrecision = true
+        };
         public readonly ParsedQuat Rotation = new( "Rotation" );
 
-        private TransformMatrix Matrix;
+        public TransformMatrix Matrix { get; private set; }
 
         public PbdBone() { }
 

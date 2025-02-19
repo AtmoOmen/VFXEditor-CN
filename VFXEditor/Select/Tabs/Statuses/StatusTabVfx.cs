@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,12 +9,10 @@ namespace VfxEditor.Select.Tabs.Statuses
         public StatusTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Status-Vfx" ) { }
         
         // ===== LOADING =====
-        
-        public override void LoadData()
-        {
-            var sheet = Dalamud.DataManager.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
-            foreach( var item in sheet )
-            {
+
+        public override void LoadData() {
+            var sheet = Dalamud.DataManager.GetExcelSheet<Status>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
+            foreach( var item in sheet ) {
                 var status = new StatusRow( item );
                 if( status.VfxExists ) Items.Add( status );
             }

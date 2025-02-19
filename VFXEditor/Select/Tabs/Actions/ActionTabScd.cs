@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,10 +9,9 @@ namespace VfxEditor.Select.Tabs.Actions
         public ActionTabScd( SelectDialog dialog, string name ) : base( dialog, name, "Action-Scd" ) { }
         
         // ===== LOADING =====
-        
-        public override void LoadData()
-        {
-            var sheet = Dalamud.DataManager.GetExcelSheet<Action>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+
+        public override void LoadData() {
+            var sheet = Dalamud.DataManager.GetExcelSheet<Action>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
             foreach( var item in sheet ) Items.Add( new ActionRow( item ) );
         }
         

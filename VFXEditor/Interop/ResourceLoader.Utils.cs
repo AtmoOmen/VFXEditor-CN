@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using Dalamud.Game.ClientState.Conditions;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Penumbra.String;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace VfxEditor.Interop {
         private readonly RequestFileDelegate RequestFile;
 
         public void ReRender() {
-            if( CurrentRedrawState != RedrawState.None || Plugin.PlayerObject == null ) return;
+            if( CurrentRedrawState != RedrawState.None || Plugin.PlayerObject == null || Dalamud.Condition[ConditionFlag.Fishing] ) return;
             CurrentRedrawState = RedrawState.Start;
             Dalamud.Framework.Update += OnUpdateEvent;
         }

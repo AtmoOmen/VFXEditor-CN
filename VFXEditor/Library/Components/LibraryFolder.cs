@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.Library.Node;
 using VfxEditor.Library.Texture;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library.Components {
@@ -120,9 +121,15 @@ namespace VfxEditor.Library.Components {
             }
 
             if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) ) {
-                Cleanup();
-                Parent.Remove( this );
-                library.Save();
+                Plugin.AddModal( new TextModal(
+                    "删除文件夹",
+                    "确定要删除该文件夹吗?",
+                    () => {
+                        Cleanup();
+                        Parent.Remove( this );
+                        library.Save();
+                    }
+                ) );
                 return true;
             }
 

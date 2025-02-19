@@ -63,13 +63,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt CreateIntervalCount = new( "创建间隔数", "CrIC" );
         public readonly AvfxInt CreateIntervalLife = new( "创建间隔生命周期", "CrIL" );
         public readonly AvfxInt CrLR = new( "CrLR", "CrLR" );
-        public readonly AvfxInt CreateNewAfterDelete = new( "死亡后创建新对象", "bCrN", size: 1 );
-        public readonly AvfxInt UvReverse = new( "平面坐标反转", "bRUV", size: 1 );
-        public readonly AvfxInt ScaleRandomLink = new( "随机缩放关联", "bSRL", size: 1 );
-        public readonly AvfxInt BindParent = new( "绑定父级", "bBnP", size: 1 );
+        public readonly AvfxBool CreateNewAfterDelete = new( "死亡后创建新对象", "bCrN", size: 1 );
+        public readonly AvfxBool UvReverse = new( "平面坐标反转", "bRUV", size: 1 );
+        public readonly AvfxBool ScaleRandomLink = new( "随机缩放关联", "bSRL", size: 1 );
+        public readonly AvfxBool BindParent = new( "绑定父级", "bBnP", size: 1 );
         public readonly AvfxInt ScaleByParent = new( "根据父级缩放", "bSnP", size: 1 );
         public readonly AvfxInt PolyLineTag = new( "折线标签", "PolT" );
-
+        
         public readonly AvfxSimpleColors Colors = new();
         public readonly AvfxSimpleFrames Frames = new();
 

@@ -174,9 +174,7 @@ namespace VfxEditor.AvfxFormat {
                 TD,
                 TP
             ];
-
-            UvView = new( UvSets, this );
-
+            
             // Drawing
 
             Parameters = new( "参数", [
@@ -238,6 +236,8 @@ namespace VfxEditor.AvfxFormat {
                     Color
                 ] )
             ] );
+            
+            UvView = new( UvSets );
 
             TextureDisplaySplit = new( "材质", [
                 TC1,
@@ -252,67 +252,100 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            var startPos = reader.BaseStream.Position;
+            Peek( reader, Parsed,  size );
+            Peek( reader, Parsed2, size );
 
-            var parsedCount = ReadNested( reader, Parsed );
-            ReadNested( reader, Parsed2 );
-            AvfxFile.ReadMany( reader, ( int )UvSetCount.Value, ( BinaryReader _ ) => {
-                var uvSet = new AvfxParticleUvSet( this );
-                uvSet.Read( reader, 0 );
-                UvSets.Add( uvSet );
-            } );
+            UpdateData(); // TODO: check if moving this here breaks anything
 
-            var remaining = size - ( reader.BaseStream.Position - startPos );
-            if( remaining > 0 ) Life.Read( reader, ( int )remaining );
+            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+                if( _name == "Data" ) {
+                    Data?.Read( _reader, _size );
+                }
+                else if( _name == "UvSt" ) {
+                    var uvSet = new AvfxParticleUvSet();
+                    uvSet.Read( _reader, _size );
+                    UvSets.Add( uvSet );
+                }
+            }, size );
+
+            UvView.UpdateIdx();
         }
 
         public override void WriteContents( BinaryWriter writer ) {
+            UvSetCount.Value = UvSets.Count;
             WriteNested( writer, Parsed );
-            WriteNested( writer, Parsed2 );
+
             foreach( var uvSet in UvSets ) uvSet.Write( writer );
-            Life.Write( writer );
+
+            Data?.Write( writer );
+            WriteNested( writer, Parsed2 );
         }
 
         protected override IEnumerable<AvfxBase> GetChildren() {
             foreach( var item in Parsed ) yield return item;
+            if( Data != null ) yield return Data;
             foreach( var item in Parsed2 ) yield return item;
-            foreach( var item in UvSets ) yield return item;
-            yield return Life;
         }
 
         public override void UpdateData() {
-            UvSetCount.Value = UvSets.Count;
-            base.UpdateData();
+            Data = Type.Value switch {
+                ParticleType.Parameter => null,
+                ParticleType.Powder => new AvfxParticleDataPowder(),
+                ParticleType.Windmill => new AvfxParticleDataWindmill(),
+                ParticleType.Line => new AvfxParticleDataLine(),
+                ParticleType.Model => new AvfxParticleDataModel( this ),
+                ParticleType.Polyline => new AvfxParticleDataPolyline(),
+                ParticleType.Quad => new AvfxParticleDataQuad(),
+                ParticleType.Polygon => new AvfxParticleDataPolygon(),
+                ParticleType.Decal => new AvfxParticleDataDecal(),
+                ParticleType.DecalRing => new AvfxParticleDataDecalRing(),
+                ParticleType.Disc => new AvfxParticleDataDisc(),
+                ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
+                ParticleType.Laser => new AvfxParticleDataLaser(),
+                ParticleType.ModelSkin => new AvfxParticleDataModelSkin(),
+                ParticleType.Dissolve => new AvfxParticleDataDissolve(),
+                _ => null,
+            };
+
+            Data?.SetAssigned( !Data.Optional );
         }
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Particle" );
-            DrawData();
-        }
+            DrawRename();
+            Type.Draw();
+            Data?.DrawEnableCheckbox();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-        private void DrawData() {
-            using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "参数" ) ) {
                 if( tab ) Parameters.Draw();
             }
 
+            DrawData();
+
             using( var tab = ImRaii.TabItem( "动画" ) ) {
                 if( tab ) AnimationSplitDisplay.Draw();
-            }
-
-            using( var tab = ImRaii.TabItem( "材质" ) ) {
-                if( tab ) TextureDisplaySplit.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "UV 集" ) ) {
                 if( tab ) UvView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "简易" ) ) {
-                if( tab ) Simple.Draw();
+            using( var tab = ImRaii.TabItem( "材质" ) ) {
+                if( tab ) TextureDisplaySplit.Draw();
             }
+        }
+
+        private void DrawData() {
+            if( Data == null || ( Data.Optional && !Data.IsAssigned() ) ) return;
+
+            using var tabItem = ImRaii.TabItem( "Data" );
+            if( !tabItem ) return;
+
+            Data.Draw();
         }
 
         public override string GetDefaultText() => $"粒子 {GetIdx()} ({Type.Value})";

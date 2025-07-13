@@ -1,9 +1,7 @@
-<Project Sdk="Dalamud.NET.Sdk/12.0.2">
+<Project Sdk="Dalamud.CN.NET.Sdk/12.0.2">
     <PropertyGroup>
-        <TargetFramework>net9.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditorCN</AssemblyTitle>
-        <Company></Company>
         <Product>VFXEditorCN</Product>
         <Copyright>Copyright © 2020</Copyright>
         <FileVersion>1.9.2.5</FileVersion>
@@ -19,7 +17,6 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
-        <DalamudLibPath>$(HOME)\.xlcore\dalamud\Hooks\dev\</DalamudLibPath>
         <RootNamespace>VfxEditor</RootNamespace>
     </PropertyGroup>
 
@@ -155,7 +152,7 @@
         </Content>
         <Content Include="Shaders\Model.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+        </Content>
         <None Update="VFXEditorCN.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

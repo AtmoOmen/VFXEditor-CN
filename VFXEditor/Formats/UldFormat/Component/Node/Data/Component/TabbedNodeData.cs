@@ -6,6 +6,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
             Parsed.AddRange( [
                 new ParsedUInt( "文本 ID", size: 2 ),
                 new ParsedUInt( "组 ID", size: 2 ),
+                new ParsedUInt( "未知 1" ),
             ] );
         }
     }

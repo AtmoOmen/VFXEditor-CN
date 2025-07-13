@@ -3,6 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -47,23 +48,23 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ApplyRateEnvironment = new( "应用环境光强度", "EvAR" );
         public readonly AvfxInt ApplyRateDirectional = new( "应用定向光强度", "DlAR" );
         public readonly AvfxInt ApplyRateLightBuffer = new( "应用光缓冲率", "LBAR" );
-        public readonly AvfxBool DOTy = new( "DOTy", "DOTy" );
+        public readonly AvfxEnum<DepthOffsetType> DOTy = new( "深度偏移类型", "DOTy" );
         public readonly AvfxFloat DepthOffset = new( "深度偏移", "DpOf" );
         public readonly AvfxBool SimpleAnimEnable = new( "使用简易动画", "bSCt" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve Gravity = new( "重力", "Gra" );
-        public readonly AvfxCurve GravityRandom = new( "随机重力", "GraR" );
-        public readonly AvfxCurve AirResistance = new( "空气阻力", "ARs", locked: true );
-        public readonly AvfxCurve AirResistanceRandom = new( "随机空气阻力", "ARsR", locked: true );
+        public readonly AvfxCurve1Axis Gravity = new( "重力", "Gra" );
+        public readonly AvfxCurve1Axis GravityRandom = new( "随机重力", "GraR" );
+        public readonly AvfxCurve1Axis AirResistance = new( "空气阻力", "ARs", locked: true );
+        public readonly AvfxCurve1Axis AirResistanceRandom = new( "随机空气阻力", "ARsR", locked: true );
         public readonly AvfxCurve3Axis Scale = new( "缩放", "Scl", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Position = new( "位置", "Pos", locked: true );
-        public readonly AvfxCurve RotVelX = new( "X 轴旋转速度", "VRX" );
-        public readonly AvfxCurve RotVelY = new( "Y 轴旋转速度", "VRY" );
-        public readonly AvfxCurve RotVelZ = new( "Z 轴旋转速度", "VRZ" );
-        public readonly AvfxCurve RotVelXRandom = new( "随机 X 轴旋转速度", "VRXR" );
-        public readonly AvfxCurve RotVelYRandom = new( "随机 Y 轴旋转速度", "VRYR" );
-        public readonly AvfxCurve RotVelZRandom = new( "随机 Z 轴旋转速度", "VRZR" );
+        public readonly AvfxCurve1Axis RotVelX = new( "X 轴旋转速度", "VRX" );
+        public readonly AvfxCurve1Axis RotVelY = new( "Y 轴旋转速度", "VRY" );
+        public readonly AvfxCurve1Axis RotVelZ = new( "Z 轴旋转速度", "VRZ" );
+        public readonly AvfxCurve1Axis RotVelXRandom = new( "随机 X 轴旋转速度", "VRXR" );
+        public readonly AvfxCurve1Axis RotVelYRandom = new( "随机 Y 轴旋转速度", "VRYR" );
+        public readonly AvfxCurve1Axis RotVelZRandom = new( "随机 Z 轴旋转速度", "VRZR" );
         public readonly AvfxCurveColor Color = new( "颜色", locked: true );
 
         // initialize these later
@@ -174,6 +175,8 @@ namespace VfxEditor.AvfxFormat {
                 TP
             ];
 
+            UvView = new( UvSets, this );
+
             // Drawing
 
             Parameters = new( "参数", [
@@ -195,6 +198,9 @@ namespace VfxEditor.AvfxFormat {
                 IsSoftParticle,
                 CollisionType,
                 S11Enabled,
+                ShT,
+                UniV,
+                HybV,
                 ShUT,
                 ShR,
                 E24Enabled,
@@ -209,29 +215,29 @@ namespace VfxEditor.AvfxFormat {
                 ApplyRateDirectional,
                 ApplyRateLightBuffer,
                 DOTy,
-                DepthOffset
+                DepthOffset,
             ] );
 
             AnimationSplitDisplay = new( "动画", [
-                Life,
-                Simple,
-                Gravity,
-                GravityRandom,
-                AirResistance,
-                AirResistanceRandom,
-                Scale,
-                Rotation,
-                Position,
-                RotVelX,
-                RotVelY,
-                RotVelZ,
-                RotVelXRandom,
-                RotVelYRandom,
-                RotVelZRandom,
-                Color
+                new UiDisplayList( "动画", [
+                    Gravity,
+                    GravityRandom,
+                    AirResistance,
+                    AirResistanceRandom,
+                    Scale,
+                    Rotation,
+                    Position,
+                    RotVelX,
+                    RotVelY,
+                    RotVelZ,
+                    RotVelXRandom,
+                    RotVelYRandom,
+                    RotVelZRandom
+                ] ),
+                new UiDisplayList( "颜色", [
+                    Color
+                ] )
             ] );
-
-            UvView = new( UvSets );
 
             TextureDisplaySplit = new( "材质", [
                 TC1,
@@ -241,76 +247,50 @@ namespace VfxEditor.AvfxFormat {
                 TN,
                 TR,
                 TD,
-                TP
+                TP,
             ] );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            Peek( reader, Parsed, size );
-            Peek( reader, Parsed2, size );
+            var startPos = reader.BaseStream.Position;
 
-            UpdateData(); // TODO: check if moving this here breaks anything
+            var parsedCount = ReadNested( reader, Parsed );
+            ReadNested( reader, Parsed2 );
+            AvfxFile.ReadMany( reader, ( int )UvSetCount.Value, ( BinaryReader _ ) => {
+                var uvSet = new AvfxParticleUvSet( this );
+                uvSet.Read( reader, 0 );
+                UvSets.Add( uvSet );
+            } );
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
-                if( _name == "Data" ) {
-                    Data?.Read( _reader, _size );
-                }
-                else if( _name == "UvSt" ) {
-                    var uvSet = new AvfxParticleUvSet();
-                    uvSet.Read( _reader, _size );
-                    UvSets.Add( uvSet );
-                }
-            }, size );
-
-            UvView.UpdateIdx();
+            var remaining = size - ( reader.BaseStream.Position - startPos );
+            if( remaining > 0 ) Life.Read( reader, ( int )remaining );
         }
 
         public override void WriteContents( BinaryWriter writer ) {
-            UvSetCount.Value = UvSets.Count;
             WriteNested( writer, Parsed );
-
-            foreach( var uvSet in UvSets ) uvSet.Write( writer );
-
-            Data?.Write( writer );
             WriteNested( writer, Parsed2 );
+            foreach( var uvSet in UvSets ) uvSet.Write( writer );
+            Life.Write( writer );
         }
 
         protected override IEnumerable<AvfxBase> GetChildren() {
             foreach( var item in Parsed ) yield return item;
-            if( Data != null ) yield return Data;
             foreach( var item in Parsed2 ) yield return item;
+            foreach( var item in UvSets ) yield return item;
+            yield return Life;
         }
 
         public override void UpdateData() {
-            Data = Type.Value switch {
-                ParticleType.Parameter => null,
-                ParticleType.Powder => new AvfxParticleDataPowder(),
-                ParticleType.Windmill => new AvfxParticleDataWindmill(),
-                ParticleType.Line => new AvfxParticleDataLine(),
-                ParticleType.Model => new AvfxParticleDataModel( this ),
-                ParticleType.Polyline => new AvfxParticleDataPolyline(),
-                ParticleType.Quad => new AvfxParticleDataQuad(),
-                ParticleType.Polygon => new AvfxParticleDataPolygon(),
-                ParticleType.Decal => new AvfxParticleDataDecal(),
-                ParticleType.DecalRing => new AvfxParticleDataDecalRing(),
-                ParticleType.Disc => new AvfxParticleDataDisc(),
-                ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
-                ParticleType.Laser => new AvfxParticleDataLaser(),
-                ParticleType.ModelSkin => new AvfxParticleDataModelSkin(),
-                ParticleType.Dissolve => new AvfxParticleDataDissolve(),
-                _ => null,
-            };
-
-            Data?.SetAssigned( !Data.Optional );
+            UvSetCount.Value = UvSets.Count;
+            base.UpdateData();
         }
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Particle" );
-            DrawRename();
-            Type.Draw();
-            Data?.DrawEnableCheckbox();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawData();
+        }
 
+        private void DrawData() {
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
@@ -318,28 +298,21 @@ namespace VfxEditor.AvfxFormat {
                 if( tab ) Parameters.Draw();
             }
 
-            DrawData();
-
             using( var tab = ImRaii.TabItem( "动画" ) ) {
                 if( tab ) AnimationSplitDisplay.Draw();
-            }
-
-            using( var tab = ImRaii.TabItem( "平面坐标集" ) ) {
-                if( tab ) UvView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "材质" ) ) {
                 if( tab ) TextureDisplaySplit.Draw();
             }
-        }
 
-        private void DrawData() {
-            if( Data == null || ( Data.Optional && !Data.IsAssigned() ) ) return;
+            using( var tab = ImRaii.TabItem( "UV 集" ) ) {
+                if( tab ) UvView.Draw();
+            }
 
-            using var tabItem = ImRaii.TabItem( "数据" );
-            if( !tabItem ) return;
-
-            Data.Draw();
+            using( var tab = ImRaii.TabItem( "简易" ) ) {
+                if( tab ) Simple.Draw();
+            }
         }
 
         public override string GetDefaultText() => $"粒子 {GetIdx()} ({Type.Value})";

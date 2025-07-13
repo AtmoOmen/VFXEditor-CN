@@ -5,8 +5,8 @@ namespace VfxEditor.TmbFormat.Tmfcs {
     public class TmfcRow {
         public readonly ParsedUInt Unk1 = new( "未知 1" );
         public readonly ParsedFloat Time = new( "时间" );
-        public readonly ParsedFloat Unk2 = new( "未知 2" );
-        public readonly ParsedFloat Unk3 = new( "未知 3" );
+        public readonly ParsedFloat Unk2 = new( "速度" );
+        public readonly ParsedFloat Unk3 = new( "距离 %" );
         public readonly ParsedFloat Unk4 = new( "未知 4" );
         public readonly ParsedFloat Unk5 = new( "未知 5" );
 

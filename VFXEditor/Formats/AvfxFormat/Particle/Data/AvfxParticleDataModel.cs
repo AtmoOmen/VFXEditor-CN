@@ -1,4 +1,5 @@
-﻿using static VfxEditor.AvfxFormat.Enums;
+using VFXEditor.Formats.AvfxFormat.Curve;
+using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataModel : AvfxDataWithParameters {
@@ -11,12 +12,14 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsLightning = new( "是否点亮", "bLgt" );
         public readonly AvfxBool IsMorph = new( "是否变形", "bShp" );
         public AvfxIntList ModelIdx = new( "模型索引", "MdNo", value: -1 );
-        public readonly AvfxCurve AnimationNumber = new( "动画编号", "NoAn" );
-        public readonly AvfxCurve Morph = new( "变形", "Moph" );
-        public readonly AvfxCurve FresnelCurve = new( "菲涅尔曲线", "FrC" );
+        public readonly AvfxCurve1Axis AnimationNumber = new( "动画编号", "NoAn" );
+        public readonly AvfxCurve1Axis Morph = new( "变形", "Moph" );
+        public readonly AvfxCurve1Axis FresnelCurve = new( "菲涅尔曲线", "FrC" );
+        public readonly AvfxCurve1Axis FresnelCurveRandom = new( "随机菲涅尔曲线", "FrCR" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "菲涅尔旋转", "FrRt", CurveType.Angle );
         public readonly AvfxCurveColor ColorBegin = new( name: "起始颜色", "ColB" );
         public readonly AvfxCurveColor ColorEnd = new( name: "结束颜色", "ColE" );
+
 
         public readonly AvfxNodeSelectList<AvfxModel> ModelSelect;
 
@@ -34,12 +37,13 @@ namespace VfxEditor.AvfxFormat {
                 AnimationNumber,
                 Morph,
                 FresnelCurve,
+                FresnelCurveRandom,
                 FresnelRotation,
                 ColorBegin,
                 ColorEnd
             ];
 
-            ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "模型", particle.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "模型", particle.NodeGroups.Models, ModelIdx, 8 ) );
             ParameterTab.Add( ModelNumberRandomValue );
             ParameterTab.Add( ModelNumberRandomType );
             ParameterTab.Add( ModelNumberRandomInterval );
@@ -51,6 +55,7 @@ namespace VfxEditor.AvfxFormat {
 
             Tabs.Add( Morph );
             Tabs.Add( FresnelCurve );
+            Tabs.Add( FresnelCurveRandom );
             Tabs.Add( FresnelRotation );
             Tabs.Add( ColorBegin );
             Tabs.Add( ColorEnd );

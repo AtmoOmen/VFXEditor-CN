@@ -6,7 +6,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C013 : TmbEntry {
         public const string MAGIC = "C013";
-        public const string DISPLAY_NAME = "";
+        public const string DISPLAY_NAME = "模型动画";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
@@ -17,7 +17,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "持续时间" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
         private readonly ParsedInt TmfcId = new( "F 曲线 ID" );
-        private readonly ParsedInt Unk4 = new( "未知 4" );
+        private readonly ParsedInt Placement = new( "位置" );
 
         public C013( TmbFile file ) : base( file ) { }
 
@@ -27,7 +27,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Duration,
             Unk2,
             TmfcId,
-            Unk4
+            Placement
         ];
     }
 }

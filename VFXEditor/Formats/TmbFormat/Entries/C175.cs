@@ -14,10 +14,10 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "持续时间" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt Unk3 = new( "未知 3", value: 4 );
+        private readonly ParsedEnum<ObjectControlPosition> ObjectScale = new( "物体缩放" );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "物体控制" );
-        private readonly ParsedInt Unk5 = new( "未知 5", value: 1 );
-        private readonly ParsedInt Unk6 = new( "未知 6", value: 1 );
+        private readonly ParsedEnum<ObjectControlFinal> FinalScale = new( "最终缩放" );
+        private readonly ParsedInt ScaleDelay = new( "缩放延迟", value: 1 );
         private readonly ParsedInt Unk7 = new( "未知 7" );
 
         public C175( TmbFile file ) : base( file ) { }
@@ -27,10 +27,10 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk2,
-            Unk3,
+            ObjectScale,
             ObjectControl,
-            Unk5,
-            Unk6,
+            FinalScale,
+            ScaleDelay,
             Unk7
         ];
 

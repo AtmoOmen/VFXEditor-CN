@@ -4,8 +4,8 @@ using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public enum FreezePositionType {
-        Target_0,
-        Target_1,
+        Target_FixedDirection,
+        Target_UserFacingDirection,
         Return
     }
 
@@ -20,7 +20,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "持续时间" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt Position = new( "位置" );
+        private readonly ParsedInt Position = new( "绑定点" );
         private readonly ParsedEnum<FreezePositionType> FreezeLocation = new( "冻结位置" );
 
         public C142( TmbFile file ) : base( file ) { }

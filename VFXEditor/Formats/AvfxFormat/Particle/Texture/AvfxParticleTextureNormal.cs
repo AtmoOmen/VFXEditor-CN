@@ -1,8 +1,7 @@
-﻿using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -13,11 +12,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureBorderType> TextureBorderU = new( "水平材质边界", "TBUT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderV = new( "垂直材质边界", "TBVT" );
         public readonly AvfxInt TextureIdx = new( "材质索引", "TxNo", value: -1 );
-        public readonly AvfxCurve NPow = new( "强度", "NPow" );
+        public readonly AvfxCurve1Axis NPow = new( "强度", "NPow" );
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTextureNormal( AvfxParticle particle ) : base( "TN", particle ) {
+        public AvfxParticleTextureNormal( AvfxParticle particle ) : base( "TN", particle, locked: true ) {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
@@ -51,17 +50,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "TN" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ 法线材质" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "TN" );
-
-            AssignedCopyPaste( GetDefaultText() );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

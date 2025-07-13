@@ -6,7 +6,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C192 : TmbEntry {
         public const string MAGIC = "C192";
-        public const string DISPLAY_NAME = "语音台词";
+        public const string DISPLAY_NAME = "";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
         public override DangerLevel Danger => DangerLevel.Yellow;
@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Unk1 = new( "未知 1" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt VoicelineNumber = new( "语音台词编号" );
+        private readonly ParsedInt Unk3 = new( "未知 3" ); //not voiceline, but similar format
         private readonly ParsedInt Unk4 = new( "未知 4" );
         private readonly ParsedInt Unk5 = new( "未知 5" );
         private readonly ParsedInt Unk6 = new( "未知 6" );
@@ -33,7 +33,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => [
             Unk1,
             Unk2,
-            VoicelineNumber,
+            Unk3,
             Unk4,
             Unk5,
             Unk6,

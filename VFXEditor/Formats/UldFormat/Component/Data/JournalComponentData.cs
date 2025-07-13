@@ -3,7 +3,7 @@
 namespace VfxEditor.UldFormat.Component.Data {
     public class JournalComponentData : UldGenericData {
         public JournalComponentData() {
-            AddUnknown( 32, "未知节点 ID" );
+            AddUnknown( 38, "未知节点 ID" );
 
             Parsed.AddRange( [
                 new ParsedUInt( "项边距", size: 2 ),

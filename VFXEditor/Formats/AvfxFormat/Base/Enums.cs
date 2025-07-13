@@ -99,6 +99,8 @@ namespace VfxEditor.AvfxFormat {
             Opacity = 8,
             Unknown_Multiply_9 = 9,
             Unknown_Add_10 = 10,
+            Unknown_Subtract_11 = 11,
+            Unknown_Screen_12 = 12,
         }
         public enum CullingType {
             None = 0,
@@ -127,7 +129,13 @@ namespace VfxEditor.AvfxFormat {
             Camera = 0,
             Caster = 1
         }
-        public enum RandomType {
+        public enum DepthOffsetType
+        {
+            Legacy = 0,
+            FixedIntervalNDC = 1
+        }
+        public enum RandomType
+        {
             FirstPlusMinus = 0,
             FirstPlus = 1,
             FirstMinus = 2,
@@ -246,7 +254,7 @@ namespace VfxEditor.AvfxFormat {
             Linear = 1,
             Spline = 2,
             Camera = 3,
-            Unknown_4 = 4,
+            LinearAdjust = 4,
         }
         public enum BindPoint {
             Caster = 0,
@@ -262,11 +270,11 @@ namespace VfxEditor.AvfxFormat {
         public enum EffectorType {
             PointLight = 0,
             DirectionalLight = 1,
-            Reserve1 = 2,
-            Reserve2 = 3,
-            Reserve3 = 4,
-            Reserve4 = 5,
-            CameraQuake2_Unknown = 6, // NOTE: seen in Akh Rai
+            Reserve2 = 2,
+            Reserve3 = 3,
+            RadialBlur_Unknown = 4,
+            MirrorBlur = 5,
+            CameraQuake_Variable = 6, // NOTE: seen in Akh Rai
             RadialBlur = 7,
             BlackHole = 8,
             CameraQuake = 9
@@ -289,7 +297,12 @@ namespace VfxEditor.AvfxFormat {
             Linear = 1,
             Step = 2
         }
-        public enum AxisConnect {
+        public enum AxisConnect2 {
+            None = 0,
+            X_Y = 1,
+            Y_X = 2
+        }
+        public enum AxisConnect3 {
             None = 0,
             X_YZ = 1,
             X_Y = 2,

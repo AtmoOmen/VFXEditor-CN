@@ -14,14 +14,14 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat VfxScaleBias = new( "视效缩放偏移", "bVSb" );
         public readonly AvfxBool VfxScaleDepthOffset = new( "视效缩放深度偏移", "bVSd" );
         public readonly AvfxBool VfxScaleInterpolation = new( "视效缩放插值", "bVSi" );
-        public readonly AvfxBool TransformScale = new( "变换缩放", "bTSc" );
+        public readonly AvfxInt TransformScale = new( "变换缩放", "bTSc" );
         public readonly AvfxBool TransformScaleDepthOffset = new( "变换缩放深度偏移", "bTSd" );
         public readonly AvfxBool TransformScaleInterpolation = new( "变换缩放插值", "bTSi" );
         public readonly AvfxBool FollowingTargetOrientation = new( "跟随目标面向", "bFTO" );
         public readonly AvfxBool DocumentScaleEnabled = new( "启用文档缩放", "bDSE" );
         public readonly AvfxBool AdjustToScreenEnabled = new( "适应屏幕", "bATS" );
-        public readonly AvfxBool IFY_Unknown = new( "IFY (未知)", "bIFY" );
-        public readonly AvfxBool BET_Unknown = new( "BET (未知)", "bBET" );
+        public readonly AvfxBool IFY = new( "IFY", "bIFY" );
+        public readonly AvfxBool BET = new( "BET", "bBET" );
         public readonly AvfxInt Life = new( "生命周期", "Life" );
         public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "绑定器旋转类型", "RoTp" );
         public readonly AvfxBinderProperties PropStart = new( "起始属性", "PrpS" );
@@ -47,8 +47,8 @@ namespace VfxEditor.AvfxFormat {
                 FollowingTargetOrientation,
                 DocumentScaleEnabled,
                 AdjustToScreenEnabled,
-                IFY_Unknown,
-                BET_Unknown,
+                IFY,
+                BET,
                 Life,
                 BinderRotationType,
                 Type,
@@ -71,7 +71,8 @@ namespace VfxEditor.AvfxFormat {
                 FollowingTargetOrientation,
                 DocumentScaleEnabled,
                 AdjustToScreenEnabled,
-                BET_Unknown,
+                IFY,
+                BET,
                 Life,
                 BinderRotationType
             ] );
@@ -111,7 +112,7 @@ namespace VfxEditor.AvfxFormat {
                 BinderType.Linear => new AvfxBinderDataLinear(),
                 BinderType.Spline => new AvfxBinderDataSpline(),
                 BinderType.Camera => new AvfxBinderDataCamera(),
-                BinderType.Unknown_4 => new AvfxBinderDataUnknown4(),
+                BinderType.LinearAdjust => new AvfxBinderDataLinearAdjust(),
                 _ => null,
             };
             Data?.SetAssigned( true, false );

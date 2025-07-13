@@ -1,9 +1,10 @@
-﻿using static VfxEditor.AvfxFormat.Enums;
+using VFXEditor.Formats.AvfxFormat.Curve;
+using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataPointLight : AvfxDataWithParameters {
         public readonly AvfxCurveColor Color = new( "颜色" );
-        public readonly AvfxCurve DistanceScale = new( "距离缩放", "DstS" );
+        public readonly AvfxCurve1Axis DistanceScale = new( "距离缩放", "DstS" );
         public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle );
         public readonly AvfxCurve3Axis Position = new( "位置", "Pos" );
         public readonly AvfxEnum<PointLightAttenuation> PointLightAttenuationType = new( "点光源衰减", "Attn" );

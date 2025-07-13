@@ -1,4 +1,5 @@
-﻿using static VfxEditor.AvfxFormat.Enums;
+using VFXEditor.Formats.AvfxFormat.Curve;
+using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataPolyline : AvfxDataWithParameters {
@@ -17,17 +18,21 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsSpline = new( "是否为样条曲线", "bSpl" );
         public readonly AvfxBool IsLocal = new( "是否位于本地", "bLcl" );
 
-        public readonly AvfxCurve CF = new( "CF (未知)", "CF" );
-        public readonly AvfxCurve Width = new( "宽度", "Wd" );
-        public readonly AvfxCurve WidthRandom = new( "随机宽度", "WdR" );
-        public readonly AvfxCurve WidthBegin = new( "起始宽度", "WdB" );
-        public readonly AvfxCurve WidthCenter = new( "中心宽度", "WdC" );
-        public readonly AvfxCurve WidthEnd = new( "结束宽度", "WdE" );
-        public readonly AvfxCurve Length = new( "长度", "Len" );
-        public readonly AvfxCurve LengthRandom = new( "随机长度", "LenR" );
-        public readonly AvfxCurve Softness = new( "模糊度", "Sft" );
-        public readonly AvfxCurve SoftRandom = new( "随机模糊度", "SftR" );
-        public readonly AvfxCurve PnDs = new( "PnDs (未知)", "PnDs" );
+        public readonly AvfxCurve1Axis CF = new( "CF", "CF" );
+        public readonly AvfxCurve1Axis CFR = new( "随机 CF", "CFR" );
+        public readonly AvfxCurve1Axis Width = new( "宽度", "Wd" );
+        public readonly AvfxCurve1Axis WidthRandom = new( "随机宽度", "WdR" );
+        public readonly AvfxCurve1Axis WidthBegin = new( "起始宽度", "WdB" );
+        public readonly AvfxCurve1Axis WidthBeginRandom = new( "随机起始宽度", "WdBR" );
+        public readonly AvfxCurve1Axis WidthCenter = new( "中心宽度", "WdC" );
+        public readonly AvfxCurve1Axis WidthCenterRandom = new( "随机中心宽度", "WdCR" );
+        public readonly AvfxCurve1Axis WidthEnd = new( "结束宽度", "WdE" );
+        public readonly AvfxCurve1Axis WidthEndRandom = new( "随机结束宽度", "WdER" );
+        public readonly AvfxCurve1Axis Length = new( "长度", "Len" );
+        public readonly AvfxCurve1Axis LengthRandom = new( "随机长度", "LenR" );
+        public readonly AvfxCurve1Axis Softness = new( "模糊度", "Sft" );
+        public readonly AvfxCurve1Axis SoftRandom = new( "随机模糊度", "SftR" );
+        public readonly AvfxCurve1Axis PnDs = new( "PnDs (未知)", "PnDs" );
         public readonly AvfxCurveColor ColorBegin = new( name: "起始颜色", "ColB" );
         public readonly AvfxCurveColor ColorCenter = new( name: "中心颜色", "ColC" );
         public readonly AvfxCurveColor ColorEnd = new( name: "结束颜色", "ColE" );
@@ -52,11 +57,15 @@ namespace VfxEditor.AvfxFormat {
                 IsSpline,
                 IsLocal,
                 CF,
+                CFR,
                 Width,
                 WidthRandom,
                 WidthBegin,
+                WidthBeginRandom,
                 WidthCenter,
+                WidthCenterRandom,
                 WidthEnd,
+                WidthEndRandom,
                 Length,
                 LengthRandom,
                 Softness,
@@ -87,8 +96,11 @@ namespace VfxEditor.AvfxFormat {
 
             Tabs.Add( Width );
             Tabs.Add( WidthBegin );
+            Tabs.Add( WidthBeginRandom );
             Tabs.Add( WidthCenter );
+            Tabs.Add( WidthCenterRandom );
             Tabs.Add( WidthEnd );
+            Tabs.Add( WidthEndRandom );
             Tabs.Add( Length );
             Tabs.Add( LengthRandom );
 
@@ -100,6 +112,7 @@ namespace VfxEditor.AvfxFormat {
             Tabs.Add( ColorEdgeEnd );
 
             Tabs.Add( CF );
+            Tabs.Add( CFR );
             Tabs.Add( Softness );
             Tabs.Add( SoftRandom );
             Tabs.Add( PnDs );

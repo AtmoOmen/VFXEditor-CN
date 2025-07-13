@@ -32,7 +32,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedFloat AnimationStart = new( "动画起始帧" );
         private readonly ParsedFloat AnimationEnd = new( "动画结束帧" );
         private readonly TmbOffsetString Path = new( "路径" );
-        private readonly ParsedInt Unk5 = new( "未知 1" );
+        private readonly ParsedInt Unk2 = new( "未知 2" );
 
         public C010( TmbFile file ) : base( file ) { }
 
@@ -45,7 +45,7 @@ namespace VfxEditor.TmbFormat.Entries {
             AnimationStart,
             AnimationEnd,
             Path,
-            Unk5
+            Unk2
         ];
 
         public override void DrawBody() {
@@ -61,7 +61,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
             Unk1.Draw();
             Path.Draw();
-            Unk5.Draw();
+            Unk2.Draw();
         }
     }
 }

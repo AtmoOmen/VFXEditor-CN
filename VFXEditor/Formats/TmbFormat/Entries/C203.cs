@@ -6,7 +6,7 @@ namespace VfxEditor.TmbFormat.Entries {
     public enum SummonWeaponObjectControl {
         Weapon = 0,
         OffHand = 1,
-        Unknown_2 = 2,
+        Summon_or_Lemure = 2,
     }
 
     public class C203 : TmbEntry {
@@ -18,12 +18,12 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x2C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "持续时间" ); // chara/action/magic/2ff_sage/mgc007.tmb => 48
+        private readonly ParsedInt Duration = new( "持续时间" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
         private readonly ParsedInt BindPointId = new( "绑定点 ID" );
         private readonly ParsedInt Rotation = new( "旋转" );
         private readonly ParsedEnum<SummonWeaponObjectControl> ObjectControl = new( "物体控制" );
-        private readonly ParsedBool NoulithAlignment = new( "贤具对齐" );
+        private readonly ParsedBool NoFollow = new( "禁用跟随" );
         private readonly ParsedBool ScaleEnabled = new( "启用缩放", size: 2 );
         private readonly ParsedShort Unk3 = new( "未知 3" );
         private readonly ParsedFloat Scale = new( "缩放" );
@@ -38,7 +38,7 @@ namespace VfxEditor.TmbFormat.Entries {
             BindPointId,
             Rotation,
             ObjectControl,
-            NoulithAlignment,
+            NoFollow,
             ScaleEnabled,
             Unk3,
             Scale

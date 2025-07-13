@@ -6,6 +6,7 @@ using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -25,31 +26,32 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ParticleCount = new( "粒子数", "PrCn" );
         public readonly AvfxInt EmitterCount = new( "发射器数", "EmCn" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve CreateCount = new( "创建数", "CrC", locked: true );
-        public readonly AvfxCurve CreateCountRandom = new( "随机创建数", "CrCR" );
-        public readonly AvfxCurve CreateInterval = new( "创建数间隔", "CrI", locked: true );
-        public readonly AvfxCurve CreateIntervalRandom = new( "随机创建数间隔", "CrIR" );
-        public readonly AvfxCurve Gravity = new( "重力", "Gra" );
-        public readonly AvfxCurve GravityRandom = new( "随机重力", "GraR" );
-        public readonly AvfxCurve AirResistance = new( "空气阻力", "ARs", locked: true );
-        public readonly AvfxCurve AirResistanceRandom = new( "随机空气阻力", "ARsR" );
+        public readonly AvfxCurve1Axis CreateCount = new( "创建数", "CrC", locked: true );
+        public readonly AvfxCurve1Axis CreateCountRandom = new( "随机创建数", "CrCR" );
+        public readonly AvfxCurve1Axis CreateInterval = new( "创建数间隔", "CrI", locked: true );
+        public readonly AvfxCurve1Axis CreateIntervalRandom = new( "随机创建数间隔", "CrIR" );
+        public readonly AvfxCurve1Axis Gravity = new( "重力", "Gra" );
+        public readonly AvfxCurve1Axis GravityRandom = new( "随机重力", "GraR" );
+        public readonly AvfxCurve1Axis AirResistance = new( "空气阻力", "ARs", locked: true );
+        public readonly AvfxCurve1Axis AirResistanceRandom = new( "随机空气阻力", "ARsR" );
         public readonly AvfxCurveColor Color = new( "颜色", locked: true );
         public readonly AvfxCurve3Axis Position = new( "位置", "Pos", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Scale = new( "缩放", "Scl", locked: true );
 
-        public readonly AvfxCurve InjectionAngleX = new( "X 轴注入角度", "IAX", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomX = new( "随机 X 轴注入角度", "IAXR", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleX = new( "X 轴注入角度", "IAX", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandomX = new( "随机 X 轴注入角度", "IAXR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleY = new( "Y 轴注入角度", "IAY", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomY = new( "随机 Y 轴注入角度", "IAYR", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleY = new( "Y 轴注入角度", "IAY", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandomY = new( "随机 Y 轴注入角度", "IAYR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleZ = new( "Z 轴注入角度", "IAZ", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomZ = new( "随机 Z 轴注入角度", "IAZR", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleZ = new( "Z 轴注入角度", "IAZ", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandomZ = new( "随机 Z 轴注入角度", "IAZR", CurveType.Angle );
 
-        public readonly AvfxCurve VelocityRandomX = new( "随机 X 轴速度", "VRX" );
-        public readonly AvfxCurve VelocityRandomY = new( "随机 Y 轴速度", "VRY" );
-        public readonly AvfxCurve VelocityRandomZ = new( "随机 Z 轴速度", "VRZ" );
+        public readonly AvfxCurve1Axis VelocityRandomX = new( "随机 X 轴速度", "VRX" );
+        public readonly AvfxCurve1Axis VelocityRandomY = new( "随机 Y 轴速度", "VRY" );
+        public readonly AvfxCurve1Axis VelocityRandomZ = new( "随机 Z 轴速度", "VRZ" );
+
 
         private readonly List<AvfxBase> Parsed;
 

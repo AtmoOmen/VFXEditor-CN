@@ -4,6 +4,12 @@ using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public class C197 : TmbEntry {
+        public enum SpeakTmbType {
+            Normal = 0,
+            Whisper = 1,
+            Shout = 2,
+            Disabled = 3,
+        }
         public const string MAGIC = "C197";
         public const string DISPLAY_NAME = "语音台词";
         public override string DisplayName => DISPLAY_NAME;
@@ -16,7 +22,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "未知 2" );
         private readonly ParsedInt VoicelineNumber = new( "语音台词编号" );
         private readonly ParsedInt BindPointId = new( "绑定点 ID" );
-        private readonly ParsedInt Unk5 = new( "未知 5" );
+        private readonly ParsedEnum<SpeakTmbType> SpeakType = new( "语音类型" );
         private readonly ParsedInt Unk6 = new( "未知 6" );
 
         public C197( TmbFile file ) : base( file ) { }
@@ -28,7 +34,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk2,
             VoicelineNumber,
             BindPointId,
-            Unk5,
+            SpeakType,
             Unk6
         ];
     }

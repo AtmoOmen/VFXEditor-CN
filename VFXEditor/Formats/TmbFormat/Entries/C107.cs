@@ -5,16 +5,16 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C107 : TmbEntry {
         public const string MAGIC = "C107";
-        public const string DISPLAY_NAME = "";
+        public const string DISPLAY_NAME = "VFX 触发器";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "未知 1" );
+        private readonly ParsedInt Enabled = new( "启用" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt Unk3 = new( "未知 3" );
+        private readonly ParsedInt TriggerRow = new( "行" );
         private readonly ParsedInt Unk4 = new( "未知 4" );
 
         public C107( TmbFile file ) : base( file ) { }
@@ -22,9 +22,9 @@ namespace VfxEditor.TmbFormat.Entries {
         public C107( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => [
-            Unk1,
+            Enabled,
             Unk2,
-            Unk3,
+            TriggerRow,
             Unk4
         ];
     }

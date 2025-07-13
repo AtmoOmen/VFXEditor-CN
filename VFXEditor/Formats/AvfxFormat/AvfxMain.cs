@@ -36,6 +36,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat BiasZmaxDistance = new( "Z 轴最大距离偏移", "ZBMd" );
         public readonly AvfxBool IsCameraSpace = new( "摄像机空间", "bCmS" );
         public readonly AvfxBool IsFullEnvLight = new( "全局环境光", "bFEL" );
+        public readonly AvfxBool OSE = new( "OSE", "bOSE" );
         public readonly AvfxBool IsClipOwnSetting = new( "裁剪自身", "bOSt" );
         public readonly AvfxFloat NearClipBegin = new( "近裁剪起始位置", "NCB" );
         public readonly AvfxFloat NearClipEnd = new( "近裁剪结束位置", "NCE" );
@@ -119,6 +120,7 @@ namespace VfxEditor.AvfxFormat {
                 BiasZmaxDistance,
                 IsCameraSpace,
                 IsFullEnvLight,
+                OSE,
                 IsClipOwnSetting,
                 NearClipBegin,
                 NearClipEnd,
@@ -184,6 +186,7 @@ namespace VfxEditor.AvfxFormat {
                 BiasZmaxDistance,
                 IsCameraSpace,
                 IsFullEnvLight,
+                OSE,
                 IsClipOwnSetting,
                 NearClipBegin,
                 NearClipEnd,
@@ -202,7 +205,7 @@ namespace VfxEditor.AvfxFormat {
                 new UiFloat3( "内部淡化", FadeInnerX, FadeInnerY, FadeInnerZ ),
                 new UiFloat3( "外部淡化", FadeOuterX, FadeOuterY, FadeOuterZ ),
                 GlobalFogEnabled,
-                GlobalFogEnabled,
+                GlobalFogInfluence,
                 LTSEnabled,
                 AGSEnabled,
                 APRi,
@@ -304,7 +307,8 @@ namespace VfxEditor.AvfxFormat {
                 RevisedValuesScaleX.Value = ScaleCombined;
                 RevisedValuesScaleY.Value = ScaleCombined;
                 RevisedValuesScaleZ.Value = ScaleCombined;
-            };
+            }
+            ;
 
             ImGui.SameLine();
             UiUtils.HelpMarker( "修改后的位置、缩放和旋转仅会作用于未链接绑定器的效果。更多信息请查看\"绑定器\"一栏" );

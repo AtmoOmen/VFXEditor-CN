@@ -14,6 +14,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "未知节点 ID 8" ),
                 new ParsedUInt( "未知节点 ID 9" ),
                 new ParsedUInt( "未知节点 ID 10"),
+                new ParsedUInt( "未知节点 ID 11"),
             ] );
         }
     }

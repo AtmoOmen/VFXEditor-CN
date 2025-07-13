@@ -19,14 +19,13 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly PartListSelect PartListId;
         private readonly PartItemSelect PartId;
 
-        private readonly ParsedUInt Unknown1 = new( "未知 1", size: 2 );
         private readonly ParsedEnum<GridPartsType> GridParts = new( "网格组件类型", size: 1 );
         private readonly ParsedEnum<GridRenderType> GridRender = new( "网格渲染类型", size: 1 );
         private readonly ParsedShort TopOffset = new( "顶部偏移" );
         private readonly ParsedShort BottonOffset = new( "底部偏移" );
         private readonly ParsedShort LeftOffset = new( "左侧偏移" );
         private readonly ParsedShort RightOffset = new( "右侧偏移" );
-        private readonly ParsedInt Unknown2 = new( "未知 2", size: 1 );
+        private readonly ParsedEnum<UldDrawMode> DrawMode = new( "绘制模式", size: 1 );
         private readonly ParsedInt Unknown3 = new( "未知 3", size: 1 );
 
         public NineGridNodeData() {
@@ -43,7 +42,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Read( reader );
             LeftOffset.Read( reader );
             RightOffset.Read( reader );
-            Unknown2.Read( reader );
+            DrawMode.Read( reader );
             Unknown3.Read( reader );
         }
 
@@ -56,7 +55,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Write( writer );
             LeftOffset.Write( writer );
             RightOffset.Write( writer );
-            Unknown2.Write( writer );
+            DrawMode.Write( writer );
             Unknown3.Write( writer );
         }
 
@@ -93,7 +92,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Draw();
             LeftOffset.Draw();
             RightOffset.Draw();
-            Unknown2.Draw();
+            DrawMode.Draw();
             Unknown3.Draw();
         }
     }

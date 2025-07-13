@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedBool Enabled = new( "启用" );
         private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt Unk3 = new( "未知 3" );
+        private readonly ParsedInt BankId = new( "库 ID" );
 
         public C143( TmbFile file ) : base( file ) { }
 
@@ -23,7 +23,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => [
             Enabled,
             Unk2,
-            Unk3
+            BankId
         ];
     }
 }

@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using SharpDX;
 using System.IO;
 using VfxEditor.EidFormat.BindPoint;

@@ -29,11 +29,13 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
         private readonly List<INamedUiItem> DisplayTabs;
 
-        private static readonly Dictionary<int, string> BinderIds = new() {
+        private static readonly Dictionary< int, string > BinderIds = new()
+        {
             { 0, "未工作" },
             { 1, "头部" },
             { 3, "左手武器" },
             { 4, "右手武器" },
+            { 5, "武器尖端" },
             { 6, "右肩" },
             { 7, "左肩" },
             { 8, "右前臂" },
@@ -41,21 +43,30 @@ namespace VfxEditor.AvfxFormat {
             { 10, "右小腿" },
             { 11, "左小腿" },
             { 16, "角色前方" },
-            { 25, "头部" },
-            { 26, "头部" },
-            { 27, "头部" },
+            { 25, "头顶" },
+            { 26, "头部中央" },
+            { 27, "额头" },
             { 28, "颈部" },
             { 29, "角色中心" },
             { 30, "角色中心" },
-            { 31, "角色中心" },
+            { 31, "腰部" },
             { 32, "右手" },
             { 33, "左手" },
             { 34, "右脚" },
             { 35, "左脚" },
-            { 42, "角色上方?" },
+            { 42, "角色上方" },
             { 43, "头部 (偏右眼)" },
             { 44, "头部 (偏左眼)" },
-            { 77, "怪物武器" },
+            { 71, "角色原点" },
+            { 77, "右手武器" },
+            { 78, "左手武器" },
+            { 107, "投掷点" },
+            { 108, "贤者贤具3（前）/ 钐镰客颈部" },
+            { 109, "贤者贤具3（后）/ 钐镰客脊椎" },
+            { 110, "贤者贤具2（前）/ 钐镰客左手" },
+            { 111, "贤者贤具2（后）/ 钐镰客面部" },
+            { 112, "贤者贤具4（前）/ 钐镰客原点" },
+            { 113, "贤者贤具4（后）" },
         };
 
         public AvfxBinderProperties( string name, string avfxName ) : base( avfxName ) {

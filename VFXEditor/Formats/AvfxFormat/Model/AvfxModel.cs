@@ -1,5 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Interface.Utility.Raii;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
                 ( "法线", ImGuiTableColumnFlags.None, -1 ),
                 ( "颜色", ImGuiTableColumnFlags.None, - 1),
             ],
-            () => new( this, new(), new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
+            () => new( this, new(), new() ), ( item, add ) => RefreshModelPreview() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -207,7 +207,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "选择文件", "GLTF{.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "选择文件", "GLTF{.gltf,.glb},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
@@ -221,7 +221,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ExportDialog() {
-            FileBrowserManager.SaveFileDialog( "选择保存位置", ".gltf", "model", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".gltf", "model", "gltf", ( ok, res ) => {
                 if( !ok ) return;
                 GltfModel.ExportModel( this, res );
             } );

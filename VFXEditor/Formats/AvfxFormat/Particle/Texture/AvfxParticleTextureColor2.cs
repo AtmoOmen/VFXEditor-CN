@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "颜色计算方式", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "透明度计算方式", "TCAT" );
         public readonly AvfxInt TextureIdx = new( "材质索引", "TxNo", value: -1 );
-        public readonly AvfxBool UOS = new( "UOS", "bUOS" );
+        public readonly AvfxBool UOS = new( "使用角色肖像", "bUOS" );
 
         private readonly List<AvfxBase> Parsed;
 

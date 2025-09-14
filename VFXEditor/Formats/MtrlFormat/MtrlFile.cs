@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -106,7 +106,7 @@ namespace VfxEditor.Formats.MtrlFormat {
                 new() {
                     Icon = () => FontAwesomeIcon.Sync,
                     Remove = false,
-                    Action = ( string _ ) => UpdateShaderFile()
+                    Action = _ => UpdateShaderFile()
                 }
             } ) {
                 Value = FileUtils.ReadString( reader )
@@ -153,12 +153,13 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // ======== VIEWS =========
 
-            TextureView = new( "材质", Textures, false, ( MtrlTexture item, int idx ) => item.Text, () => new() );
-            UvSetView = new( "UV 集合", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
-            ColorSetView = new( "颜色集合", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
-            KeyView = new( "键", Keys, false, ( MtrlKey item, int idx ) => item.GetText( idx ), () => new() );
+            TextureView = new( "材质", Textures, false, ( item, idx ) => item.Text, () => new() );
+            UvSetView = new( "UV 集合", UvSets, false, ( item, idx ) => item.Name.Value, () => new() );
+            ColorSetView = new( "颜色集合", ColorSets, false, ( item, idx ) => item.Name.Value, () => new() );
+            KeyView = new( "键", Keys, false, ( item, idx ) => item.GetText( idx ), () => new() );
             MaterialParameterView = new( "持久", MaterialParameters, false, null, () => new( this ) );
-            SamplerView = new( "采样器", Samplers, false, ( MtrlSampler item, int idx ) => item.GetText( idx ), () => new( this ) );
+            SamplerView = new( "采样器", Samplers, false, ( item, idx ) => item.GetText( idx ), () => new( this ) );
+
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }

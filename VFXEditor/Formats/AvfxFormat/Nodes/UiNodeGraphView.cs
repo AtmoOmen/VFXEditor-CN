@@ -1,5 +1,5 @@
-﻿using Dalamud.Interface;
-using ImGuiNET;
+using Dalamud.Interface;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;

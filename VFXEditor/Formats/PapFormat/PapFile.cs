@@ -1,5 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Interface.Utility.Raii;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -153,7 +153,7 @@ namespace VfxEditor.PapFormat {
             Variant.Draw();
 
             if( ImGui.Button( $"导出 Havok" ) ) {
-                FileBrowserManager.SaveFileDialog( "选择保存位置", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( ok, res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
             }

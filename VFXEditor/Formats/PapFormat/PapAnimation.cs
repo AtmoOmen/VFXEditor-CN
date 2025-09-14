@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -17,6 +17,7 @@ namespace VfxEditor.PapFormat {
             "cbfp",
             "cbfa",
             "cbep",
+            "cbea", //emote add
             "cbba",
             "csnw",
             "cbbm",
@@ -24,6 +25,7 @@ namespace VfxEditor.PapFormat {
             "csxm",
             "cblw",
             "csbw",
+            "cslw", //some materials
             "cblm",
             "cbem",
             "cbna",
@@ -33,6 +35,7 @@ namespace VfxEditor.PapFormat {
             "cbew",
             "cbbw",
             "f",
+            "b", //cutscenes
             "cbnw",
             "cbnp",
             "cfxl",
@@ -137,7 +140,7 @@ namespace VfxEditor.PapFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "替换" ) ) {
-                    FileBrowserManager.OpenFileDialog( "选择文件", ".tmb,.*", ( bool ok, string res ) => {
+                    FileBrowserManager.OpenFileDialog( "选择文件", ".tmb,.*", ( ok, res ) => {
                         if( ok ) {
                             CommandManager.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
                             Dalamud.OkNotification( "Tmb data imported" );

@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -60,11 +60,11 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             Type = type;
             IsV7 = isV7;
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+            ConstantView = new( "Constant", Constants, false, ( item, idx ) => item.GetText(), () => new( type ) );
+            SamplerView = new( "Sampler", Samplers, false, ( item, idx ) => item.GetText(), () => new( type ) );
             if( HasResources ) {
-                ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
-                TextureView = new( "Texture", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+                ResourceView = new( "Resource", Resources, false, ( item, idx ) => item.GetText(), () => new( type ) );
+                TextureView = new( "Texture", Textures, false, ( item, idx ) => item.GetText(), () => new( type ) );
             }
         }
 

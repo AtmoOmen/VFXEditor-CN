@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using NAudio.Wave;
 using System;
 using System.IO;
@@ -260,7 +260,7 @@ namespace VfxEditor.ScdFormat {
         // ======================
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "导入文件", "音频文件{.ogg,.wav},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "导入文件", "Audio files{.ogg,.wav},.*", ( ok, res ) => {
                 if( ok ) {
                     Reset();
                     Entry.File.Import( res, Entry );
@@ -269,7 +269,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveWaveDialog() {
-            FileBrowserManager.SaveFileDialog( "选择保存位置", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".wav", "ExportedSound", "wav", ( ok, res ) => {
                 if( ok ) {
                     using var stream = Entry.Data.GetStream();
                     WaveFileWriter.CreateWaveFile( res, stream );
@@ -278,7 +278,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveOggDialog() {
-            FileBrowserManager.SaveFileDialog( "选择保存位置", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".ogg", "ExportedSound", "ogg", ( ok, res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;
                     File.WriteAllBytes( res, data.Data );

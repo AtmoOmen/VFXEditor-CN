@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {

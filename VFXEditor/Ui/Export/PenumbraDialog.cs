@@ -1,6 +1,6 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -75,7 +75,7 @@ namespace VfxEditor.Ui.Export {
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
-            FileBrowserManager.SaveFileDialog( "选择保存位置", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "选择保存位置", ".pmp,.*", ModName, "pmp", ( ok, res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();
@@ -84,9 +84,9 @@ namespace VfxEditor.Ui.Export {
 
         protected override void OnDraw() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            if( ImGui.BeginCombo( "##Group", Selected == null ? "Default Mod" : Selected.GetName() ) ) {
+            if( ImGui.BeginCombo( "##Group", Selected == null ? "默认模组" : Selected.GetName() ) ) {
                 using( var color = ImRaii.PushColor( ImGuiCol.Text, ImGui.GetColorU32( ImGuiCol.TextDisabled ) ) ) {
-                    if( ImGui.Selectable( "Default Mod" ) ) Selected = null;
+                    if( ImGui.Selectable( "默认模组" ) ) Selected = null;
                 }
 
                 foreach( var (group, idx) in Groups.WithIndex() ) {

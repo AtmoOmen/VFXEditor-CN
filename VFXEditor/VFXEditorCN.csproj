@@ -4,7 +4,7 @@
         <AssemblyTitle>VFXEditorCN</AssemblyTitle>
         <Product>VFXEditorCN</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.9.3.0</FileVersion>
+        <FileVersion>1.9.3.1</FileVersion>
         <AssemblyVersion>1.9.3.0</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

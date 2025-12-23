@@ -13,9 +13,9 @@
       },
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[13.0.0, )",
-        "resolved": "13.0.0",
-        "contentHash": "Mb3cUDSK/vDPQ8gQIeuCw03EMYrej1B4J44a1AvIJ9C759p9XeqdU9Hg4WgOmlnlPe0G7ILTD32PKSUpkQNa8w=="
+        "requested": "[14.0.1, )",
+        "resolved": "14.0.1",
+        "contentHash": "y0WWyUE6dhpGdolK3iKgwys05/nZaVf4ZPtIjpLhJBZvHxkkiE23zYRo7K7uqAgoK/QvK5cqF6l3VG5AbgC6KA=="
       },
       "DotNet.ReproducibleBuilds": {
         "type": "Direct",
@@ -107,11 +107,51 @@
         "resolved": "5.10.0",
         "contentHash": "ZRIIXQCluNlLoI4I4gNYuYXqb7p48OR1P2/LcL27owToR/A/IG0mH8Ks2HguB/Kjq4RpCinaVkyufpGxGspbTA=="
       },
+      "SharpDX": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "3pv0LFMvfK/dv1qISJnn8xBeeT6R/FRvr0EV4KI2DGsL84Qlv6P7isWqxGyU0LCwlSVCJN3jgHJ4Bl0KI2PJww==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
+        }
+      },
       "SharpDX.D3DCompiler": {
         "type": "Direct",
         "requested": "[4.2.0, )",
         "resolved": "4.2.0",
         "contentHash": "Rnsd6Ilp127xbXqhTit8WKFQUrXwWxqVGpglyWDNkIBCk0tWXNQEjrJpsl0KAObzyZaa33+EXAikLVt5fnd3GA==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "SharpDX": "4.2.0"
+        }
+      },
+      "SharpDX.Direct3D11": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "oTm/iT5X/IIuJ8kNYP+DTC/MhBhqtRF5dbgPPFgLBdQv0BKzNTzXQQXd7SveBFjQg6hXEAJ2jGCAzNYvGFc9LA==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "SharpDX": "4.2.0",
+          "SharpDX.DXGI": "4.2.0"
+        }
+      },
+      "SharpDX.DXGI": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "UjKqkgWc8U+SP+j3LBzFP6OB6Ntapjih7Xo+g1rLcsGbIb5KwewBrBChaUu7sil8rWoeVU/k0EJd3SMN4VqNZw==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "SharpDX": "4.2.0"
+        }
+      },
+      "SharpDX.Mathematics": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "R2pcKLgdsP9p5WyTjHmGOZ0ka0zASAZYc6P4L6rSvjYhf6klGYbent7MiVwbkwkt9dD44p5brjy5IwAnVONWGw==",
         "dependencies": {
           "NETStandard.Library": "1.6.1",
           "SharpDX": "4.2.0"
@@ -168,14 +208,6 @@
         "resolved": "0.10.4",
         "contentHash": "WYnil3DhQHzjCY0dM9I2B3r1vWip90AOuQd25KE4NrjPQBg0tBJFluRLm5YPnO5ZLDmwrfosY8jCQGQRmWI/Pg=="
       },
-      "SharpDX": {
-        "type": "Transitive",
-        "resolved": "4.2.0",
-        "contentHash": "3pv0LFMvfK/dv1qISJnn8xBeeT6R/FRvr0EV4KI2DGsL84Qlv6P7isWqxGyU0LCwlSVCJN3jgHJ4Bl0KI2PJww==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        }
-      },
       "SharpDX.Direct2D1": {
         "type": "Transitive",
         "resolved": "4.2.0",
@@ -184,34 +216,6 @@
           "NETStandard.Library": "1.6.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0"
-        }
-      },
-      "SharpDX.Direct3D11": {
-        "type": "Transitive",
-        "resolved": "4.2.0",
-        "contentHash": "oTm/iT5X/IIuJ8kNYP+DTC/MhBhqtRF5dbgPPFgLBdQv0BKzNTzXQQXd7SveBFjQg6hXEAJ2jGCAzNYvGFc9LA==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "SharpDX": "4.2.0",
-          "SharpDX.DXGI": "4.2.0"
-        }
-      },
-      "SharpDX.DXGI": {
-        "type": "Transitive",
-        "resolved": "4.2.0",
-        "contentHash": "UjKqkgWc8U+SP+j3LBzFP6OB6Ntapjih7Xo+g1rLcsGbIb5KwewBrBChaUu7sil8rWoeVU/k0EJd3SMN4VqNZw==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "SharpDX": "4.2.0"
-        }
-      },
-      "SharpDX.Mathematics": {
-        "type": "Transitive",
-        "resolved": "4.2.0",
-        "contentHash": "R2pcKLgdsP9p5WyTjHmGOZ0ka0zASAZYc6P4L6rSvjYhf6klGYbent7MiVwbkwkt9dD44p5brjy5IwAnVONWGw==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "SharpDX": "4.2.0"
         }
       },
       "SharpGLTF.Core": {

@@ -4,14 +4,13 @@
         <AssemblyTitle>VFXEditorCN</AssemblyTitle>
         <Product>VFXEditorCN</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.9.3.1</FileVersion>
         <AssemblyVersion>1.9.3.0</AssemblyVersion>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Deterministic>true</Deterministic>
-        <OutputType>Library</OutputType>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <Configurations>Debug;Release;Beta</Configurations>
     </PropertyGroup>
@@ -21,6 +20,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="SharpDX" Version="4.2.0" />
+        <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+        <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+        <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+        <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
+        <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.5" />
         <PackageReference Include="BCnEncoder.Net" Version="2.2.1" />
         <PackageReference Include="Google.FlatBuffers" Version="25.2.10" />
         <PackageReference Include="HelixToolkit" Version="2.27.0" />
@@ -35,8 +40,6 @@
         <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
         <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
         <PackageReference Include="Penumbra.Api" Version="5.10.0" />
-        <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
-        <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.5" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
     </ItemGroup>
 
@@ -171,9 +174,5 @@
     <ItemGroup>
       <Folder Include="Flatbuffer\Ephb\" />
       <Folder Include="lib\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="DalamudPackager" Version="13.0.0" />
     </ItemGroup>
 </Project>

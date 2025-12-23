@@ -1,4 +1,4 @@
-<Project Sdk="Dalamud.CN.NET.Sdk/13.1.0">
+<Project Sdk="Dalamud.CN.NET.Sdk/14.0.1">
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditorCN</AssemblyTitle>

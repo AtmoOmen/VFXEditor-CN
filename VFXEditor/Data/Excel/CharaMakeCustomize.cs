@@ -6,8 +6,10 @@ namespace VfxEditor.Data.Excel {
     // https://github.com/ktisis-tools/Ktisis/blob/748922b02395ef9a700e3fe446f2fa2d6db0a63f/Ktisis/Data/Excel/CharaMakeCustomize.cs
 
     [Sheet( "CharaMakeCustomize" )]
-    public struct CharaMakeCustomize( uint row ) : IExcelRow<CharaMakeCustomize> {
-        public readonly uint RowId => row;
+    public struct CharaMakeCustomize( ExcelPage page, uint offset, uint row ) : IExcelRow<CharaMakeCustomize> {
+        public ExcelPage ExcelPage => page;
+        public uint      RowOffset => offset;
+        public uint      RowId     => row;
 
         public string Name { get; set; } = "";
 
@@ -19,7 +21,7 @@ namespace VfxEditor.Data.Excel {
         public byte FaceType { get; set; }
 
         static CharaMakeCustomize IExcelRow<CharaMakeCustomize>.Create( ExcelPage page, uint offset, uint row ) {
-            return new CharaMakeCustomize( row ) {
+            return new CharaMakeCustomize( page, offset, row ) {
                 FeatureId = page.ReadColumn<byte>( 0, offset ),
                 Icon = page.ReadColumn<uint>( 1, offset ),
                 Data = page.ReadColumn<ushort>( 2, offset ),

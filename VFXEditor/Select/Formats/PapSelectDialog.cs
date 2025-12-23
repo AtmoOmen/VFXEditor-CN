@@ -1,7 +1,10 @@
 ﻿using VfxEditor.PapFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Character;
+using VfxEditor.Select.Tabs.Common;
 using VfxEditor.Select.Tabs.Emotes;
+using VfxEditor.Select.Tabs.Event;
+using VfxEditor.Select.Tabs.EventBase;
 using VfxEditor.Select.Tabs.Items;
 using VfxEditor.Select.Tabs.Job;
 using VfxEditor.Select.Tabs.Mounts;
@@ -19,6 +22,9 @@ namespace VfxEditor.Select.Formats {
                 new MountTabPap( this, "坐骑" ),
                 new CharacterTabPap( this, "角色" ),
                 new JobTab( this, "职业" ),
+                new EventTab (this, "过场剧情 (人类)" ),
+                new EventBaseTab (this, "背景 NPC (人类)" ),
+                new CommonTabPap (this, "一般" ),
             ] );
         }
     }

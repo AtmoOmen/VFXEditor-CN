@@ -71,7 +71,7 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "读取文件时发生错误" );
+                Dalamud.Error( e, $"读取文件时发生错误: {path}" );
                 Dalamud.ErrorNotification( "读取文件时发生错误" );
             }
         }
@@ -95,8 +95,8 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "读取文件时发生错误" );
-                Dalamud.ErrorNotification( "读取文件时发生错误" );
+                Dalamud.Error( e, $"读取文件时发生错误 {path}");
+                Dalamud.ErrorNotification( $"读取文件时发生错误 {path}");
             }
         }
 

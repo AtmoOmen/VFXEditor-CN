@@ -60,10 +60,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Position = new( "位置", "Pos", locked: true );
         public readonly AvfxCurve1Axis RotVelX = new( "X 轴旋转速度", "VRX" );
-        public readonly AvfxCurve1Axis RotVelY = new( "Y 轴旋转速度", "VRY" );
-        public readonly AvfxCurve1Axis RotVelZ = new( "Z 轴旋转速度", "VRZ" );
         public readonly AvfxCurve1Axis RotVelXRandom = new( "随机 X 轴旋转速度", "VRXR" );
+        public readonly AvfxCurve1Axis RotVelY = new( "Y 轴旋转速度", "VRY" );
         public readonly AvfxCurve1Axis RotVelYRandom = new( "随机 Y 轴旋转速度", "VRYR" );
+        public readonly AvfxCurve1Axis RotVelZ = new( "Z 轴旋转速度", "VRZ" );
         public readonly AvfxCurve1Axis RotVelZRandom = new( "随机 Z 轴旋转速度", "VRZR" );
         public readonly AvfxCurveColor Color = new( "颜色", locked: true );
 
@@ -156,10 +156,10 @@ namespace VfxEditor.AvfxFormat {
                 Rotation,
                 Position,
                 RotVelX,
-                RotVelY,
-                RotVelZ,
                 RotVelXRandom,
+                RotVelY,
                 RotVelYRandom,
+                RotVelZ,
                 RotVelZRandom,
                 Color
             ];

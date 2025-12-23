@@ -37,8 +37,17 @@ namespace VfxEditor.EidFormat {
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
-            Dropdown = new( "绑定点", BindPoints,
-                ( item, idx ) => $"绑定点 {item.GetName()}", () => new EidBindPointNew( this ) );
+            if( NewData )
+            {
+                Dropdown = new( "绑定点", BindPoints,
+                    ( EidBindPoint item, int idx ) => $"绑定点 {item.GetName()}", () => new EidBindPointNew( this ) );
+            }
+            else
+            {
+                Dropdown = new( "绑定点", BindPoints,
+                    ( EidBindPoint item, int idx ) => $"绑定点 {item.GetName()}", () => new EidBindPointOld( this ) );
+
+            }
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }

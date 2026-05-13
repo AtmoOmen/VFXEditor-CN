@@ -30,7 +30,7 @@ namespace VfxEditor.Ui.Components {
                 DrawBody();
                 ImGui.Separator();
 
-                if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
+                if( ImGui.Button( "确定", new Vector2( 120, 0 ) ) ) {
                     ImGui.CloseCurrentPopup();
                     Remove();
                     OnOk();

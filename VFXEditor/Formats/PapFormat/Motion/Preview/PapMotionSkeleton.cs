@@ -55,7 +55,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 100f );
-            if( ImGui.InputInt( "Frame", ref Frame ) ) {
+            if( ImGui.InputInt( "帧", ref Frame ) ) {
                 if( Frame < 0 ) Frame = 0;
                 if( Frame >= Motion.TotalFrames ) Frame = Motion.TotalFrames - 1;
             }

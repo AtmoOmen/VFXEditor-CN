@@ -13,14 +13,14 @@ namespace VfxEditor.PapFormat {
         private readonly string ImportPath;
         private int Index;
 
-        public PapAddModal( PapFile file, string importPath ) : base( "Animation Import Index", true ) {
+        public PapAddModal( PapFile file, string importPath ) : base( "动画导入索引", true ) {
             PapFile = file;
             ImportPath = importPath;
         }
 
         protected override void DrawBody() {
             ImGui.PushTextWrapPos( 240 );
-            ImGui.TextWrapped( "Select the index of the animation being imported" );
+            ImGui.TextWrapped( "选择要导入的动画索引" );
             ImGui.PopTextWrapPos();
 
             ImGui.InputInt( "##Index", ref Index );
@@ -65,7 +65,7 @@ namespace VfxEditor.PapFormat {
             };
             Command.AddAndExecute( new CompoundCommand( commands ) );
 
-            Dalamud.OkNotification( "Havok data added" );
+            Dalamud.OkNotification( "Havok 数据已添加" );
         }
     }
 }

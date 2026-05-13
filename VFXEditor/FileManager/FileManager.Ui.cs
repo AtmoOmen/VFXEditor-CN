@@ -37,7 +37,7 @@ namespace VfxEditor.FileManager {
 
             if( ActiveDocument == null ) { // No documents, make it clear how to add a new one
                 ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( (ImGui.GetContentRegionAvail().X - 150f) / 2f, 25f) );
-                if( ImGui.Button( "NEW", new( 150, 35 ) ) ) AddDocument();
+                if( ImGui.Button( "新建", new( 150, 35 ) ) ) AddDocument();
 
                 return;
             }
@@ -108,7 +108,7 @@ namespace VfxEditor.FileManager {
                     using var itemSpacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 8, 4 ) );
                     using( var popup = ImRaii.Popup( "ContextPopup" ) ) {
                         if( popup ) {
-                            if( ImGui.Selectable( "New Window" ) ) {
+                            if( ImGui.Selectable( "新建窗口" ) ) {
                                 Group.ToNewWindow( this, document );
                                 break;
                             }
@@ -147,7 +147,7 @@ namespace VfxEditor.FileManager {
 
             using var windowPopup = ImRaii.Popup( "WindowColorPicker" );
             if( windowPopup ) {
-                ImGui.Checkbox( "Use Custom Window Color", ref UseWindowColor );
+                ImGui.Checkbox( "使用自定义窗口颜色", ref UseWindowColor );
                 ImGui.ColorPicker4( "##Color", ref WindowColor, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.AlphaBar );
             }
         }

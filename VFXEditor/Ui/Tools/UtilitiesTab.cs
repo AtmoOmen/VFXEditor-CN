@@ -19,7 +19,7 @@ namespace VfxEditor.Ui.Tools {
                 ImGui.InputTextWithHint( "##Extract", "游戏路径", ref ExtractPath, 255 );
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Extract" ) ) {
+                if( ImGui.Button( "提取" ) ) {
                     var cleanedPath = ExtractPath.Trim().Replace( "\\", "/" );
                     if( Dalamud.DataManager.FileExists( cleanedPath ) ) {
                         try {

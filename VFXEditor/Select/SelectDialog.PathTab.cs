@@ -71,7 +71,7 @@ namespace VfxEditor.Select {
 
             ImGui.SameLine();
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                ImGui.InputTextWithHint( "##Search", "Search", ref LoggedFilesSearch, 255 );
+                ImGui.InputTextWithHint( "##Search", "搜索", ref LoggedFilesSearch, 255 );
 
                 ImGui.SameLine();
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );

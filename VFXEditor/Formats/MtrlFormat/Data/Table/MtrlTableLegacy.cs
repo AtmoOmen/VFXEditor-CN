@@ -60,7 +60,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
             ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();
-            if( ImGui.Selectable( stain == null ? "[NONE]" : stain.Name, Stain == stain ) ) {
+            if( ImGui.Selectable( stain == null ? "[无]" : stain.Name, Stain == stain ) ) {
                 Stain = stain;
                 foreach( var item in Rows ) item.SetPreviewStain( stain );
                 RowView.GetSelected()?.UpdateRender();

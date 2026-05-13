@@ -33,10 +33,10 @@ namespace VfxEditor.Formats.MtrlFormat {
                 SphereFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "sphere_d_array.tex" ) );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error loading files" );
+                Dalamud.Error( e, "文件加载出错" );
             }
 
-            if( TileDiffuseFile == null || TileNormalFile == null || SphereFile == null ) Dalamud.Error( "Could not load tile files" );
+            if( TileDiffuseFile == null || TileNormalFile == null || SphereFile == null ) Dalamud.Error( "无法加载瓷砖纹理文件" );
             else {
                 foreach( var layer in TileDiffuseFile.Layers ) {
                     TileDiffuse.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height ), layer ) );

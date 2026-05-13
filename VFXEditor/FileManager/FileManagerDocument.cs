@@ -352,12 +352,12 @@ namespace VfxEditor.FileManager {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
                     Manager.SetSource( Source );
-                    Dalamud.OkNotification( "Reloaded " + Source.Path );
+                    Dalamud.OkNotification( "已重新加载 " + Source.Path );
                 }
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
                     System.IO.File.WriteAllBytes( Source.Path, File.ToBytes() );
-                    Dalamud.OkNotification( "Exported to " + Source.Path );
+                    Dalamud.OkNotification( "已导出至 " + Source.Path );
                 }
             }
 

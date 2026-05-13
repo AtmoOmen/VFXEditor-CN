@@ -22,7 +22,7 @@ namespace VfxEditor.Formats.SklbFormat.Bones {
                     ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
                 }
                 ImGui.SameLine();
-                ImGui.Text( "Bones can be re-ordered by dragging them" );
+                ImGui.Text( "可通过拖拽重新排序骨骼" );
             }
 
             foreach( var (bone, idx) in Bones.WithIndex() ) {

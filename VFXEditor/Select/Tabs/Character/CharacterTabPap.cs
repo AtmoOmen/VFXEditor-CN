@@ -147,7 +147,7 @@ namespace VfxEditor.Select.Tabs.Character {
 
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Chair Sit" ) ) {
+            if( ImGui.BeginTabItem( "椅子坐姿" ) ) {
                 Dialog.DrawPaths( new Dictionary<string, string>() {
                     { "Chair Start", Loaded.ChairStart },
                     { "Chair Sit Default", Loaded.Sit },
@@ -158,7 +158,7 @@ namespace VfxEditor.Select.Tabs.Character {
 
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Fashion Accessory" ) ) {
+            if( ImGui.BeginTabItem( "时尚配饰" ) ) {
                 Dialog.DrawPaths( new Dictionary<string, string>() {
                     { "Move (Umbrella)", Loaded.Umbrella },
                     { "Move (Backpack)", Loaded.Pack },

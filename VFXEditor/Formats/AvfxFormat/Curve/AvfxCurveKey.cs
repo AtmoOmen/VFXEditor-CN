@@ -201,10 +201,10 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine();
             using var group = ImRaii.Group();
 
-            ImGui.Text( "Current" );
+            ImGui.Text( "当前" );
             ImGui.ColorButton( "##Current", new Vector4( currentColor, 1 ), ImGuiColorEditFlags.NoPicker, new Vector2( 60, 40 ) );
 
-            ImGui.Text( "Previous" );
+            ImGui.Text( "上一项" );
             if( ImGui.ColorButton( "##Previous", new Vector4( backupColor, 1 ), ImGuiColorEditFlags.NoPicker, new Vector2( 60, 40 ) ) ) {
                 color = backupColor;
                 ret = true;

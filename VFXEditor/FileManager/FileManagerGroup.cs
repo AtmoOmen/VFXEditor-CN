@@ -134,7 +134,7 @@ namespace VfxEditor.FileManager {
 
         public override void DrawCloseWindow( FileManagerBase manager ) {
             using var disable = ImRaii.Disabled( Managers.Count == 1 );
-            if( ImGui.MenuItem( "Close Window" ) ) {
+            if( ImGui.MenuItem( "关闭窗口" ) ) {
                 if( Managers.Contains( manager ) ) RemoveManager( ( M )manager );
             }
         }

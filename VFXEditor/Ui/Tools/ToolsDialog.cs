@@ -8,7 +8,7 @@ namespace VfxEditor.Ui.Tools {
         private readonly LoadedTab LoadedTab;
         private readonly LuaTab LuaTab;
 
-        public ToolsDialog() : base( "Tools", false, new( 300, 400 ), Plugin.WindowSystem ) {
+        public ToolsDialog() : base( "工具", false, new( 300, 400 ), Plugin.WindowSystem ) {
             ResourceTab = new ResourceTab();
             UtilitiesTab = new UtilitiesTab();
             LoadedTab = new LoadedTab();

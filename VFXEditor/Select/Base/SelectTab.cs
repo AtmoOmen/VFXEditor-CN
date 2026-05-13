@@ -77,7 +77,7 @@ namespace VfxEditor.Select {
 
             var resetScroll = false;
             DrawExtra();
-            if( ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 ) ) {
+            if( ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 ) ) {
                 Searched = [.. Items.Where( x => CheckMatch( x, SearchInput ) )];
                 resetScroll = true;
             }

@@ -130,7 +130,7 @@ namespace VfxEditor.AvfxFormat {
                 if( ImGui.Button( "替换" ) ) ImportDialog();
 
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace Emitters" ) ) ImportEmitDialog();
+                if( ImGui.Button( "替换发射器" ) ) ImportEmitDialog();
 
                 ImGui.SameLine();
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
@@ -149,7 +149,7 @@ namespace VfxEditor.AvfxFormat {
                 if( tab ) UvView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Vertex Order" ) ) {
+            using( var tab = ImRaii.TabItem( "顶点顺序" ) ) {
                 if( tab ) DrawVertexNumbers();
             }
 
@@ -180,12 +180,12 @@ namespace VfxEditor.AvfxFormat {
         private void DrawModel3D() {
             using var _ = ImRaii.PushId( "3DModel" );
 
-            if( ImGui.Checkbox( "Show Edges", ref Plugin.Configuration.ModelShowEdges ) ) Plugin.DirectXManager.Redraw();
+            if( ImGui.Checkbox( "显示边线", ref Plugin.Configuration.ModelShowEdges ) ) Plugin.DirectXManager.Redraw();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.Configuration.ModelShowEmitters ) ) Plugin.DirectXManager.Redraw();
+            if( ImGui.Checkbox( "显示发射器顶点", ref Plugin.Configuration.ModelShowEmitters ) ) Plugin.DirectXManager.Redraw();
 
-            if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) UpdateRender();
+            if( ImGui.RadioButton( "颜色", ref Mode, ( int )RenderMode.Color ) ) UpdateRender();
 
             ImGui.SameLine();
             if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) UpdateRender();
@@ -200,7 +200,7 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.RadioButton( "UV 4", ref Mode, ( int )RenderMode.Uv4 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
+            if( ImGui.RadioButton( "法线", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
 
             if( NeedsRender ) UpdateRender();
             Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );

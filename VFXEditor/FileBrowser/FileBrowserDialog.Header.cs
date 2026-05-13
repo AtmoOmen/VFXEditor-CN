@@ -120,7 +120,7 @@ namespace VfxEditor.FileBrowser {
             var cancelSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
 
             ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - checkSize - cancelSize );
-            ImGui.InputTextWithHint( "##NewFolder", "New Folder Name", ref NewFolderInput, 255 );
+            ImGui.InputTextWithHint( "##NewFolder", "新建文件夹名称", ref NewFolderInput, 255 );
 
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 

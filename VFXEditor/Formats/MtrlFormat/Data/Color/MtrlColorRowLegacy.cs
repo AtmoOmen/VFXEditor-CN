@@ -97,7 +97,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             if( Stain != null ) {
                 using var child = ImRaii.Child( "Child", new( -1, ImGui.GetFrameHeight() + ImGui.GetStyle().WindowPadding.Y * 2 ), true );
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-                if( StainTemplate == null ) ImGui.TextDisabled( "[NO DYE VALUE]" );
+                if( StainTemplate == null ) ImGui.TextDisabled( "[无染色数据]" );
                 else StainTemplate.Draw();
             }
 

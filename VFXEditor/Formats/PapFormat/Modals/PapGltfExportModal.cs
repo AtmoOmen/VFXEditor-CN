@@ -12,14 +12,14 @@ namespace VfxEditor.PapFormat {
 
         private bool SkipUnanimated = true;
 
-        public PapGltfExportModal( PapMotion motion, string animationName, string exportPath ) : base( "Animation Export", true ) {
+        public PapGltfExportModal( PapMotion motion, string animationName, string exportPath ) : base( "动画导出", true ) {
             Motion = motion;
             AnimationName = animationName;
             ExportPath = exportPath;
         }
 
         protected override void DrawBody() {
-            ImGui.Checkbox( "Skip Unanimated Bones", ref SkipUnanimated );
+            ImGui.Checkbox( "跳过未绑定动画的骨骼", ref SkipUnanimated );
         }
 
         protected override void OnCancel() { }
@@ -32,7 +32,7 @@ namespace VfxEditor.PapFormat {
                 SkipUnanimated,
                 ExportPath
             );
-            Dalamud.OkNotification( "Havok data exported" );
+            Dalamud.OkNotification( "Havok 数据已导出" );
         }
     }
 }

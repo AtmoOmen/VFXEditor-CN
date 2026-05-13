@@ -30,7 +30,7 @@ namespace VfxEditor.Ui.Import {
         protected PenumbraImportItem SelectedPenumbraMod;
         protected Dictionary<string, bool> SelectedTypes = [];
 
-        public PenumbraImportDialog() : base( "Import from Penumbra", false, new( 800, 600 ), Plugin.WindowSystem ) {
+        public PenumbraImportDialog() : base( "从 Penumbra 导入", false, new( 800, 600 ), Plugin.WindowSystem ) {
             foreach( var type in AllowedTypes ) {
                 SelectedTypes.Add( type, false );
             }
@@ -45,15 +45,15 @@ namespace VfxEditor.Ui.Import {
 
             DefaultWindowPadding = ImGui.GetStyle().WindowPadding;
 
-            ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
+            ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 );
             ImGui.Separator();
 
-            if( ImGui.CollapsingHeader( "Extensions" ) ) {
+            if( ImGui.CollapsingHeader( "扩展类型" ) ) {
                 DrawExtensionsBasic();
                 ImGui.SameLine();
                 DrawExtensionPicker();
             }
-            if( ImGui.CollapsingHeader( "Mods", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+            if( ImGui.CollapsingHeader( "Mod", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
                 using var table = ImRaii.Table( "ModsTable", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendY, new( -1, ImGui.GetContentRegionAvail().Y ) );
                 if( !table ) return;
@@ -71,7 +71,7 @@ namespace VfxEditor.Ui.Import {
 
                 ImGui.TableNextColumn();
                 ImGui.Separator();
-                if( SelectedPenumbraMod == null ) ImGui.Text( "Select a mod or double click it to import all options..." );
+                if( SelectedPenumbraMod == null ) ImGui.Text( "选择一个 Mod, 或双击以导入全部选项..." );
                 else {
                     DrawModDesc();
                     DrawButtonsDesc();
@@ -89,18 +89,18 @@ namespace VfxEditor.Ui.Import {
 
         private void DrawButtonsDesc() {
             ImGui.Separator();
-            var text = Reset ? "Import into Workspace" : "Append to Workspace";
+            var text = Reset ? "导入至工作区" : "追加至工作区";
             if( ImGui.Button( text ) ) {
                 OnImport();
             }
         }
 
         private void DrawExtensionButtons() {
-            if( ImGui.Button( "Select All" ) ) {
+            if( ImGui.Button( "全选" ) ) {
                 ExtensionSelectAll();
             }
             ImGui.SameLine();
-            if( ImGui.Button( "Unselect All" ) ) {
+            if( ImGui.Button( "全不选" ) ) {
                 ExtensionSelectNone();
             }
         }
@@ -134,18 +134,18 @@ namespace VfxEditor.Ui.Import {
                 SelectedTypes["atex"] = toggle;
                 RefreshLoadedMod();
             }
-            if( ImGui.Checkbox( "Animation", ref aniCheck ) ) {
+            if( ImGui.Checkbox( "动画", ref aniCheck ) ) {
                 var toggle = aniCheck;
                 SelectedTypes["tmb"] = toggle;
                 SelectedTypes["pap"] = toggle;
                 RefreshLoadedMod();
             }
-            if( ImGui.Checkbox( "Sound", ref sndCheck ) ) {
+            if( ImGui.Checkbox( "声音", ref sndCheck ) ) {
                 var toggle = sndCheck;
                 SelectedTypes["scd"] = toggle;
                 RefreshLoadedMod();
             }
-            if( ImGui.Checkbox( "Model", ref modCheck ) ) {
+            if( ImGui.Checkbox( "模型", ref modCheck ) ) {
                 var toggle = modCheck;
                 SelectedTypes["mdl"] = toggle;
                 SelectedTypes["mtrl"] = toggle;
@@ -159,11 +159,11 @@ namespace VfxEditor.Ui.Import {
         }
 
         private void DrawModBtn() {
-            if( ImGui.Button( "Select All" ) ) {
+            if( ImGui.Button( "全选" ) ) {
                 OptionsSelectAll();
             }
             ImGui.SameLine();
-            if( ImGui.Button( "Unselect All" ) ) {
+            if( ImGui.Button( "全不选" ) ) {
                 OptionsSelectNone();
             }
         }

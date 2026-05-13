@@ -62,15 +62,15 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
             // ======== CONTROLS ==========
 
-            if( ImGui.RadioButton( "Color", ref Plugin.Configuration.PapMaterialDisplay, 1 ) ) Plugin.Configuration.Save();
+            if( ImGui.RadioButton( "颜色", ref Plugin.Configuration.PapMaterialDisplay, 1 ) ) Plugin.Configuration.Save();
             ImGui.SameLine();
-            if( ImGui.RadioButton( "Graph", ref Plugin.Configuration.PapMaterialDisplay, 2 ) ) Plugin.Configuration.Save();
+            if( ImGui.RadioButton( "曲线图", ref Plugin.Configuration.PapMaterialDisplay, 2 ) ) Plugin.Configuration.Save();
             ImGui.SameLine();
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemSpacing with { X = ImGui.GetStyle().ItemInnerSpacing.X } ) ) {
-                if( ImGui.Button( "Export" ) ) ExportDialog( Motion.File.Animations[idx].GetName() );
+                if( ImGui.Button( "导出" ) ) ExportDialog( Motion.File.Animations[idx].GetName() );
                 ImGui.SameLine();
-                if( ImGui.Button( "Replace" ) ) ImportDialog( idx );
+                if( ImGui.Button( "替换" ) ) ImportDialog( idx );
                 ImGui.SameLine();
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
             }
@@ -78,7 +78,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             ImGui.Separator();
 
             if( IsColor ) {
-                if( ImGui.ColorEdit3( "Base Preview Color", ref Plugin.Configuration.PapMaterialBaseColor, ImGuiColorEditFlags.NoInputs ) ) {
+                if( ImGui.ColorEdit3( "基础预览颜色", ref Plugin.Configuration.PapMaterialBaseColor, ImGuiColorEditFlags.NoInputs ) ) {
                     Plugin.Configuration.Save();
                     UpdateRender();
                 }

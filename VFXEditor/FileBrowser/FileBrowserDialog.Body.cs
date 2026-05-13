@@ -53,10 +53,10 @@ namespace VfxEditor.FileBrowser {
 
             ImGui.TableSetupScrollFreeze( 0, 1 );
 
-            ImGui.TableSetupColumn( "  Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
-            ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, 100, 1 );
-            ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed, 75, 2 );
-            ImGui.TableSetupColumn( "Date  ", ImGuiTableColumnFlags.WidthFixed, -1, 3 );
+            ImGui.TableSetupColumn( "  文件名", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
+            ImGui.TableSetupColumn( "类型", ImGuiTableColumnFlags.WidthFixed, 100, 1 );
+            ImGui.TableSetupColumn( "大小", ImGuiTableColumnFlags.WidthFixed, 75, 2 );
+            ImGui.TableSetupColumn( "日期  ", ImGuiTableColumnFlags.WidthFixed, -1, 3 );
 
             ImGui.TableNextRow( ImGuiTableRowFlags.Headers );
             for( var column = 0; column < 4; column++ ) {

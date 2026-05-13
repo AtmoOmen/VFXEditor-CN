@@ -159,7 +159,7 @@ namespace VfxEditor.ScdFormat {
                 }
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Layout" ) ) {
+            if( ImGui.BeginTabItem( "布局" ) ) {
                 using( var child = ImRaii.Child( "Child" ) ) {
                     Layout.Draw();
                 }
@@ -201,7 +201,7 @@ namespace VfxEditor.ScdFormat {
                 }
                 ImGui.EndTabItem();
             }
-            if( IsEmptyLoop && ImGui.BeginTabItem( "Empty Loop" ) ) {
+            if( IsEmptyLoop && ImGui.BeginTabItem( "空白循环" ) ) {
                 using( var child = ImRaii.Child( "Child" ) ) {
                     EmptyLoop.Draw();
                 }

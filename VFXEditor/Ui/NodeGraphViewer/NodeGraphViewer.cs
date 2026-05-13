@@ -195,7 +195,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             var cursor = ImGui.GetCursorScreenPos();
 
             if( pTextBoxWidth != null ) ImGui.SetNextItemWidth( pTextBoxWidth.Value );
-            ImGui.InputTextWithHint( "", "Search", ref SearchInput, 200 );
+            ImGui.InputTextWithHint( "", "搜索", ref SearchInput, 200 );
             var tIsInputActive = ImGui.IsItemActive();
             var tIsItemPUOpened = false;
 

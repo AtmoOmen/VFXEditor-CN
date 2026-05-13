@@ -48,7 +48,7 @@ namespace VfxEditor.Tracker {
 
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error reading timeline" );
+                Dalamud.Error( e, "读取时间轴出错" );
             }
         }
 

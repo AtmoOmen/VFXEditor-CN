@@ -171,12 +171,12 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             if( Curves.Any( x => x.Type == CurveType.Angle ) ) {
                 ImGui.SameLine();
-                if( ImGui.RadioButton( "Radians", !Plugin.Configuration.UseDegreesForAngles ) ) {
+                if( ImGui.RadioButton( "弧度", !Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = false;
                     Plugin.Configuration.Save();
                 }
                 ImGui.SameLine();
-                if( ImGui.RadioButton( "Degrees", Plugin.Configuration.UseDegreesForAngles ) ) {
+                if( ImGui.RadioButton( "角度", Plugin.Configuration.UseDegreesForAngles ) ) {
                     Plugin.Configuration.UseDegreesForAngles = true;
                     Plugin.Configuration.Save();
                 }
@@ -190,19 +190,19 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                 var color = UiUtils.PARSED_GREEN;
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
 
-                ImGui.TextColored( color, "Ctrl+Left Click" );
+                ImGui.TextColored( color, "Ctrl+左键" );
                 ImGui.SameLine();
-                ImGui.Text( "to add a new point" );
+                ImGui.Text( "添加新点" );
 
-                ImGui.TextColored( color, "Left Click" );
+                ImGui.TextColored( color, "左键" );
                 ImGui.SameLine();
-                ImGui.Text( "to selected a point" );
+                ImGui.Text( "选中一个点" );
 
-                ImGui.Text( "Hold" );
+                ImGui.Text( "按住" );
                 ImGui.SameLine();
                 ImGui.TextColored( color, "Shift" );
                 ImGui.SameLine();
-                ImGui.Text( "to select multiple points" );
+                ImGui.Text( "多选多个点" );
 
                 ImGui.EndTooltip();
             }
@@ -212,7 +212,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                     if( idx > 0 && key.DisplayX < curve.Keys[idx - 1].DisplayX ) {
                         // Two points in the wrong order
                         ImGui.SameLine();
-                        if( UiUtils.RemoveButton( "Sort" ) ) {
+                        if( UiUtils.RemoveButton( "排序" ) ) {
                             var commands = new List<ICommand>();
                             foreach( var x in AssignedCurves ) x.Sort( commands );
                             CommandManager.Add( new CompoundCommand( commands, UpdateRender ) );

@@ -39,7 +39,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
             if( ImGui.Button( "导出" ) ) SaveDialog();
 
             ImGui.SameLine();
-            if( ImGui.Button( "Cancel" ) ) {
+            if( ImGui.Button( "取消" ) ) {
                 IsExporting = false;
             }
 

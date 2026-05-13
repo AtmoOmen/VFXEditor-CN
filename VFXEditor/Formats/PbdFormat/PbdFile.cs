@@ -137,7 +137,7 @@ namespace VfxEditor.Formats.PbdFormat {
 
             if( Selected != null ) {
                 using var color = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) Delete( Selected );
+                if( UiUtils.IconButton( FontAwesomeIcon.Trash, "删除" ) ) Delete( Selected );
             }
 
             Selected?.Item.Draw();

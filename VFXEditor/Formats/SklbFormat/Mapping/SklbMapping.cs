@@ -106,8 +106,8 @@ namespace VfxEditor.SklbFormat.Mapping {
 
             using var _ = ImRaii.PushId( "SimpleMappings" );
 
-            if( ImGui.Button( "Replace Skeleton" ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
+            if( ImGui.Button( "替换骨骼" ) ) {
+                FileBrowserManager.OpenFileDialog( "选择骨骼", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
                     if( !ok ) return;
 
                     var hkxPath = res;
@@ -124,11 +124,11 @@ namespace VfxEditor.SklbFormat.Mapping {
             ImGui.SameLine();
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                if( ImGui.Button( "Generate" ) ) {
+                if( ImGui.Button( "生成" ) ) {
                     GenerateMapping( idx, Plugin.Configuration.SklbMappingUpdateExisting );
                 }
                 ImGui.SameLine();
-                if( ImGui.Checkbox( "Update Existing", ref Plugin.Configuration.SklbMappingUpdateExisting ) ) Plugin.Configuration.Save();
+                if( ImGui.Checkbox( "更新已有映射", ref Plugin.Configuration.SklbMappingUpdateExisting ) ) Plugin.Configuration.Save();
             }
 
             ImGui.Separator();

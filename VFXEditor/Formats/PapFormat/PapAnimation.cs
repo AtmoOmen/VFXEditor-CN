@@ -111,7 +111,7 @@ namespace VfxEditor.PapFormat {
                     ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
                 }
                 ImGui.SameLine();
-                ImGui.TextWrapped( "Animation name must start with a valid prefix, such as cbbm_" );
+                ImGui.TextWrapped( "动画名称必须以有效前缀开头, 例如 cbbm_" );
             }
 
             Type.Draw();
@@ -143,7 +143,7 @@ namespace VfxEditor.PapFormat {
                     FileBrowserManager.OpenFileDialog( "选择文件", ".tmb,.*", ( ok, res ) => {
                         if( ok ) {
                             CommandManager.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
-                            Dalamud.OkNotification( "Tmb data imported" );
+                            Dalamud.OkNotification( "Tmb 数据已导入" );
                         }
                     } );
                 }

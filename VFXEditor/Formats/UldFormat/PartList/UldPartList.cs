@@ -7,19 +7,22 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartList : UldWorkspaceItem {
+        private readonly UldFile File;
         public readonly List<UldPartItem> Parts = [];
 
         private int Offset => 12 + Parts.Count * 12;
 
-        public UldPartList( uint id ) : base( id ) { }
+        public UldPartList( UldFile file, uint id ) : base( id ) {
+            File = file;
+        }
 
-        public UldPartList( BinaryReader reader ) : this( 0 ) {
+        public UldPartList( UldFile file, BinaryReader reader ) : this( file, 0 ) {
             Id.Read( reader );
             var partCount = reader.ReadInt32();
             reader.ReadInt32(); // skip offset
 
             for( var i = 0; i < partCount; i++ ) {
-                Parts.Add( new UldPartItem( reader ) );
+                Parts.Add( new UldPartItem( file, reader ) );
             }
         }
 
@@ -53,8 +56,8 @@ namespace VfxEditor.UldFormat.PartList {
                 }
             }
 
-            if( ImGui.Button( "+ 新建" ) ) { // NEW
-                CommandManager.Add( new ListAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
+            if( ImGui.Button( "+ New" ) ) { // NEW
+                CommandManager.Add( new ListAddCommand<UldPartItem>( Parts, new UldPartItem( File ) ) );
             }
         }
 

@@ -7,7 +7,7 @@ namespace VfxEditor.TmbFormat.Entries {
     [Flags]
     public enum SoundFlags {
         Stop_on_Movement = 0x01,
-        Overlap_Sounds = 0x02,
+        Use_Bind_Position = 0x02,
         Unknown_1 = 0x04,
         Unknown_2 = 0x08,
         Unknown_3 = 0x10,
@@ -25,12 +25,12 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "未知 1" );
-        private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedShort SoundId1 = new( "音频 ID 1" );
-        private readonly ParsedShort SoundId2 = new( "音频 ID 2" );
-        private readonly ParsedShort Unk3 = new( "未知 3" );
-        private readonly ParsedFlag<SoundFlags> Flags = new( "标识", size: 2 );
+        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort BindId = new( "Bind Id" );
+        private readonly ParsedShort SoundId = new( "Sound Id" );
+        private readonly ParsedShort Unk3 = new( "Unknown 3" );
+        private readonly ParsedFlag<SoundFlags> Flags = new( "Flags", size: 2 );
 
         public C053( TmbFile file ) : base( file ) { }
 
@@ -39,8 +39,8 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => [
             Unk1,
             Unk2,
-            SoundId1,
-            SoundId2,
+            BindId,
+            SoundId,
             Unk3,
             Flags,
         ];

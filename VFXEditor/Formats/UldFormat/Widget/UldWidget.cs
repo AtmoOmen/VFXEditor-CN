@@ -10,7 +10,7 @@ using VfxEditor.UldFormat.Component.Node;
 
 namespace VfxEditor.UldFormat.Widget {
     public enum AlignmentType : int {
-        Unknown = 0xFF,
+        Unknown1 = 0xFF,
         TopLeft = 0x0,
         Top = 0x1,
         TopRight = 0x2,
@@ -20,22 +20,28 @@ namespace VfxEditor.UldFormat.Widget {
         BottomLeft = 0x6,
         Bottom = 0x7,
         BottomRight = 0x8,
+        Unknown2 = 256, //Journal, StorySupport
+        Unknown3 = 258, //ActionMenu, Social
+        Unknown4 = 260, //AdventureNoteBook, Alarm, BuddySkill, etc.
+        Unknown5 = 264, //ActionDetail, LFG
     }
 
     public class UldWidget : UldWorkspaceItem {
-        public readonly ParsedEnum<AlignmentType> AlignmentType = new( "对齐类型" );
+        private readonly UldFile File;
+        public readonly ParsedEnum<AlignmentType> AlignmentType = new( "Alignment Type" );
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
 
         public readonly List<UldNode> Nodes = [];
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
-        public UldWidget( uint id, List<UldComponent> components ) : base( id ) {
+        public UldWidget( UldFile file, uint id, List<UldComponent> components ) : base( id ) {
+            File = file;
             NodeSplitView = new( "Node", Nodes, true,
-                ( item, idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
+                ( item, idx ) => item.GetText(), () => new( File, GetNextId( Nodes ), components, this, NodeSplitView ) );
         }
 
-        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
+        public UldWidget( UldFile file, BinaryReader reader, List<UldComponent> components ) : this( file, 0, components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -45,7 +51,7 @@ namespace VfxEditor.UldFormat.Widget {
             var nodeCount = reader.ReadUInt16();
             var size = reader.ReadUInt16();
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, NodeSplitView ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( File, reader, components, this, NodeSplitView ) );
 
             reader.BaseStream.Position = pos + size;
         }

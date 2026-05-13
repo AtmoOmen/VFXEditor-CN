@@ -34,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly AvfxDisplaySplitView<AvfxBinderProperties> PropSplitDisplay;
         private readonly UiDisplayList Parameters;
 
-        public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor, "BnVr" ) {
+        public AvfxBinder( AvfxFile file ) : base( file, NAME, AvfxNodeGroupSet.BinderColor, "BnVr" ) {
             Parsed = [
                 StartToGlobalDirection,
                 VfxScaleEnabled,
@@ -58,8 +58,8 @@ namespace VfxEditor.AvfxFormat {
                 PropGoal
             ];
 
-            Parameters = new( "参数", [
-                new UiNodeGraphView( this ),
+            Parameters = new( "Parameters", [
+                new UiNodeGraphView( file, this ),
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,

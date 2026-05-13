@@ -1,0 +1,62 @@
+attribute "fs_serializer";
+
+namespace VfxEditor.Flatbuffer;
+
+table EphbUnknown {
+
+}
+
+struct Vec3 {
+  x: float;
+  y: float;
+  z: float;
+}
+
+table EphbDelta {
+    unknown1: uint;
+    unknown2: float;
+    unknown3: Vec3;
+}
+
+table EphbEta {
+    unknown1: uint;
+    unknown2: Vec3;
+}
+
+table EphbGamma {
+    bone: uint;
+    a: EphbEta;
+    b: EphbUnknown;
+    c: uint; // default
+    d: uint; // default
+    e: EphbEta;
+    f: EphbDelta;
+}
+
+table EphbBeta {
+    gamma: [EphbGamma];
+}
+
+table EphbZeta {
+    unknown1: uint; // default
+    unknown2: float;
+    unknown3: float;
+}
+
+table EphbAlpha {
+    beta:[EphbBeta];
+    a: string;
+    b: string;
+    c: uint; // default
+    d: EphbUnknown;
+    e: EphbZeta;
+}
+
+table EphbData (fs_serializer) {
+    unknown1: uint;
+    unknown2: uint;
+    alpha: [EphbAlpha];
+}
+
+file_identifier "EPHB";
+root_type EphbData;

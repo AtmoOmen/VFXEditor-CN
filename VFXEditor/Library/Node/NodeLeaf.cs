@@ -44,9 +44,9 @@ namespace VfxEditor.Library.Node {
         }
 
         protected override void DrawImport() {
-            var importDisabled = Plugin.AvfxManager.File == null;
+            var importDisabled = Plugin.AvfxManager.LastFocusedManager?.ActiveFile == null;
             using var disabled = ImRaii.Disabled( importDisabled );
-            if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "导入" ) && !importDisabled ) Plugin.AvfxManager.Import( Path );
+            if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "Import" ) && !importDisabled ) Plugin.AvfxManager.LastFocusedManager?.Import( Path );
         }
 
         protected override void DrawBody() { }

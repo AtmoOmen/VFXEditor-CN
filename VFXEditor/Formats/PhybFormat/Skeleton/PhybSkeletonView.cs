@@ -1,3 +1,5 @@
+using HelixToolkit.Geometry;
+using HelixToolkit.SharpDX;
 using HelixToolkit.SharpDX.Core;
 using System.Linq;
 using VfxEditor.Interop.Havok.Ui;
@@ -6,12 +8,12 @@ namespace VfxEditor.PhybFormat.Skeleton {
     public class PhybSkeletonView : SkeletonView {
         private readonly PhybFile File;
 
-        public PhybSkeletonView( PhybFile file, string sourcePath ) : base( file, Plugin.DirectXManager.PhybPreview, sourcePath, "phyb" ) {
+        public PhybSkeletonView( PhybFile file, string sourcePath ) : base( file, file.Instance, sourcePath, "phyb" ) {
             File = file;
         }
 
         protected override void DrawData() {
-            if( File.PhysicsUpdated ) UpdateData();
+            if( File.PhysicsUpdated ) Plugin.DirectXManager.BoneNameRenderer.NeedsUpdate = true;
         }
 
         protected override void UpdateData() {
@@ -25,7 +27,13 @@ namespace VfxEditor.PhybFormat.Skeleton {
             };
 
             File.AddPhysicsObjects( meshes, Bones.BoneMatrixes );
-            Preview.LoadWireframe( meshes.Collision.ToMesh(), meshes.Simulation.ToMesh(), meshes.Spring.ToMesh() );
+            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame(
+                RenderId,
+                Instance,
+                meshes.Collision.ToMeshGeometry3D(),
+                meshes.Simulation.ToMeshGeometry3D(),
+                meshes.Spring.ToMeshGeometry3D()
+            );
 
             var boneList = Bones.BoneList.Select( x => x.Name ).ToList();
             if( File.Extended != null ) {

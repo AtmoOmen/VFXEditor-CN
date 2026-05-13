@@ -1,12 +1,13 @@
 using VfxEditor.FileManager;
+using VfxEditor.Formats.PhybFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat {
     public class PhybManager : FileManager<PhybDocument, PhybFile, WorkspaceMetaBasic> {
-        public PhybManager() : base( "Phyb Editor", "Phyb" ) {
-            SourceSelect = new PhybSelectDialog( "选择文件 [原始]##PHYB", this, true );
-            ReplaceSelect = new PhybSelectDialog( "选择文件 [替换]##PHYB", this, false );
+        public PhybManager( PhybManagerGroup group ) : base( group ) {
+            SourceSelect = new PhybSelectDialog( "Phyb Select [LOADED]", this, true );
+            ReplaceSelect = new PhybSelectDialog( "Phyb Select [REPLACED]", this, false );
         }
 
         protected override PhybDocument GetNewDocument() => new( this, NewWriteLocation );

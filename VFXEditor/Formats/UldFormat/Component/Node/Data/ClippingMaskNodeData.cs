@@ -6,8 +6,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly PartListSelect PartListId;
         private readonly PartItemSelect PartId;
 
-        public ClippingMaskNodeData() {
-            PartListId = new();
+        public ClippingMaskNodeData( UldFile file ) {
+            PartListId = new( file );
             PartId = new( PartListId );
         }
 

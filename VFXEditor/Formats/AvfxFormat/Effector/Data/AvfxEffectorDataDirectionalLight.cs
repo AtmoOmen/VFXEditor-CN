@@ -2,13 +2,16 @@ using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataDirectionalLight : AvfxData {
-        public readonly AvfxCurveColor Ambient = new( "环境", "Amb" );
-        public readonly AvfxCurveColor Color = new( "颜色" );
-        public readonly AvfxCurve1Axis Power = new( "强度", "Pow" );
-        public readonly AvfxCurve1Axis PowerRandom = new( "随机强度", "PowR" );
-        public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle );
+        public readonly AvfxCurveColor Ambient;
+        public readonly AvfxCurveColor Color;
+        public readonly AvfxCurve1Axis Power = new( "Power", "Pow" );
+        public readonly AvfxCurve1Axis PowerRandom = new( "Power Random", "PowR" );
+        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
 
-        public AvfxEffectorDataDirectionalLight() : base() {
+        public AvfxEffectorDataDirectionalLight( AvfxFile file ) : base() {
+            Ambient = new( file, "Ambient", "Amb" );
+            Color = new( file, "Color" );
+
             Parsed = [
                 Ambient,
                 Color,

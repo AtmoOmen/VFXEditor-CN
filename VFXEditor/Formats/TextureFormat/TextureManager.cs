@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -12,9 +13,12 @@ using VfxEditor.Select;
 using VfxEditor.Ui;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VfxEditor.Formats.TextureFormat {
-    public class TextureManager : DalamudWindow, IFileManager {
+    public class TextureManager : DalamudWindow, IFileManagerGroup, IFileManagerSelect {
+        private static string WORKSPACE_KEY = "Tex";
+
         private int TEX_ID = 0;
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.atex" ).Replace( '\\', '/' );
         public static string TempPng => Path.Combine( Plugin.Configuration.WriteLocation, "temp_png.png" ).Replace( '\\', '/' );
@@ -42,7 +46,9 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public string GetName() => "tex";
 
-        public bool IsWindowOpen() => IsOpen;
+        public int GetWindowId() => 1;
+
+        public bool AnyWindowsOpen() => IsOpen;
 
         public void ReplaceTexture( string importPath, string gamePath ) {
             var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
@@ -117,9 +123,9 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public bool FileExists( string path ) => IFileManager.FileExist( this, path );
+        public bool FileExists( string path ) => IFileManagerGroup.FileExist( this, path );
 
-        public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
+        public bool GetReplacePath( string path, out string replacePath ) => IFileManagerGroup.GetReplacePath( this, path, out replacePath );
 
         public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
 
@@ -146,18 +152,22 @@ namespace VfxEditor.Formats.TextureFormat {
         // ===================
 
         public void WorkspaceImport( JObject meta, string loadLocation ) {
-            var items = WorkspaceUtils.ReadFromMeta<WorkspaceMetaTex>( meta, "Tex" );
+            var items = WorkspaceUtils.ReadFromMeta<WorkspaceMetaTex>( meta, WORKSPACE_KEY );
             if( items == null ) return;
+
             foreach( var item in items ) {
-                var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
+                var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, WORKSPACE_KEY ) );
                 var newReplace = new TextureReplace( GetNewWriteLocation( item.ReplacePath ), item );
                 newReplace.ImportFile( fullPath );
                 Textures.Add( newReplace );
             }
+
+            var windows = WorkspaceUtils.GetWindowData( meta, WORKSPACE_KEY );
+            SetMeta( windows?[0] );
         }
 
-        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) {
-            var texRootPath = Path.Combine( saveLocation, "Tex" );
+        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation, Dictionary<string, WorkspaceWindow[]> windows ) {
+            var texRootPath = Path.Combine( saveLocation, WORKSPACE_KEY );
             Directory.CreateDirectory( texRootPath );
 
             var idx = 0;
@@ -166,12 +176,14 @@ namespace VfxEditor.Formats.TextureFormat {
                 texMeta.Add( texture.WorkspaceExport( texRootPath, idx ) );
                 idx++;
             }
-            WorkspaceUtils.WriteToMeta( meta, texMeta.ToArray(), "Tex" );
+            WorkspaceUtils.WriteToMeta( meta, texMeta.ToArray(), WORKSPACE_KEY );
+
+            windows[WORKSPACE_KEY] = [ToMeta()];
         }
 
         // ================
 
-        public void Reset( ResetType type ) {
+        public void Reset( bool pluginClosing ) {
             Textures.Clear();
             Previews.Clear();
 
@@ -230,5 +242,15 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public WindowSystem GetWindowSystem() => WindowSystem;
+
+        public bool CanImport( string path )
+        {
+            return path.EndsWith( "atex" );
+        }
+
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile )
+        {
+            ReplaceTexture( selectedFile.Path, replacedFile.Name );
+        }
     }
 }

@@ -1,3 +1,4 @@
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop {
@@ -10,7 +11,7 @@ namespace VfxEditor.Interop {
             GetResourceAsyncHook = Dalamud.Hooks.HookFromSignature<GetResourceAsyncPrototype>( Constants.GetResourceAsyncSig, GetResourceAsyncDetour );
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( Dalamud.SigScanner.ScanText( Constants.ReadFileSig ) );
 
-            var staticVfxCreateAddress = Dalamud.SigScanner.ScanText( Constants.StaticVfxCreateSig );
+            var staticVfxCreateAddress = Dalamud.SigScanner.ScanText( VfxObject.Addresses.Create.String );
             var staticVfxRemoveAddress = Dalamud.SigScanner.ScanText( Constants.StaticVfxRemoveSig );
             var actorVfxCreateAddress = Dalamud.SigScanner.ScanText( Constants.ActorVfxCreateSig );
             var actorVfxRemoveAddresTemp = Dalamud.SigScanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
@@ -20,9 +21,9 @@ namespace VfxEditor.Interop {
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
             StaticVfxRemove = Marshal.GetDelegateForFunctionPointer<StaticVfxRemoveDelegate>( staticVfxRemoveAddress );
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( Dalamud.SigScanner.ScanText( Constants.StaticVfxRunSig ) );
-            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
+            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<VfxObject.Delegates.Create>( staticVfxCreateAddress );
 
-            StaticVfxCreateHook = Dalamud.Hooks.HookFromAddress<StaticVfxCreateDelegate>( staticVfxCreateAddress, StaticVfxNewDetour );
+            StaticVfxCreateHook = Dalamud.Hooks.HookFromAddress<VfxObject.Delegates.Create>( staticVfxCreateAddress, StaticVfxNewDetour );
             StaticVfxRemoveHook = Dalamud.Hooks.HookFromAddress<StaticVfxRemoveDelegate>( staticVfxRemoveAddress, StaticVfxRemoveDetour );
             ActorVfxCreateHook = Dalamud.Hooks.HookFromAddress<ActorVfxCreateDelegate>( actorVfxCreateAddress, ActorVfxNewDetour );
             ActorVfxRemoveHook = Dalamud.Hooks.HookFromAddress<ActorVfxRemoveDelegate>( actorVfxRemoveAddress, ActorVfxRemoveDetour );

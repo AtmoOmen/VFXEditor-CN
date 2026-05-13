@@ -2,33 +2,36 @@ using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataDisc : AvfxDataWithParameters {
-        public readonly AvfxInt PartsCount = new( "组件数量", "PrtC" );
-        public readonly AvfxInt PartsCountU = new( "水平组件数量", "PCnU" );
-        public readonly AvfxInt PartsCountV = new( "垂直组件数量", "PCnV" );
-        public readonly AvfxFloat PointIntervalFactoryV = new( "垂直点间隔因子", "PIFU" );
-        public readonly AvfxCurve1Axis Angle = new( "角度", "Ang", CurveType.Angle );
-        public readonly AvfxCurve1Axis AngleRandom = new( "角度随机值", "AngR", CurveType.Angle );
-        public readonly AvfxCurve1Axis HeightBeginInner = new( "内部起始高度", "HBI" );
-        public readonly AvfxCurve1Axis HeightBeginInnerRandom = new( "随机内部起始高度", "HBIR" );
-        public readonly AvfxCurve1Axis HeightEndInner = new( "内部结束高度", "HEI" );
-        public readonly AvfxCurve1Axis HeightEndInnerRandom = new( "随机内部结束高度", "HEIR" );
-        public readonly AvfxCurve1Axis HeightBeginOuter = new( "外部开始高度", "HBO" );
-        public readonly AvfxCurve1Axis HeightBeginOuterRandom = new( "随机外部开始高度", "HBOR" );
-        public readonly AvfxCurve1Axis HeightEndOuter = new( "外部结束高度", "HEO" );
-        public readonly AvfxCurve1Axis HeightEndOuterRandom = new( "随机外部结束高度", "HEOR" );
-        public readonly AvfxCurve1Axis WidthBegin = new( "起始宽度", "WB" );
-        public readonly AvfxCurve1Axis WidthBeginRandom = new( "随机起始宽度", "WBR" );
-        public readonly AvfxCurve1Axis WidthEnd = new( "结束宽度", "WE" );
-        public readonly AvfxCurve1Axis WidthEndRandom = new( "随机结束宽度", "WER" );
-        public readonly AvfxCurve1Axis RadiusBegin = new( "半径起始点", "RB" );
-        public readonly AvfxCurve1Axis RadiusBeginRandom = new( "随机半径起始点", "RBR" );
-        public readonly AvfxCurve1Axis RadiusEnd = new( "半径结束点", "RE" );
-        public readonly AvfxCurve1Axis RadiusEndRandom = new( "随机半径结束点", "RER" );
-        public readonly AvfxCurveColor ColorEdgeInner = new( name: "内部边缘颜色", "CEI" );
-        public readonly AvfxCurveColor ColorEdgeOuter = new( name: "外部边缘颜色", "CEO" );
-        public readonly AvfxInt SS = new( "缩放比例", "SS" );
+        public readonly AvfxInt PartsCount = new( "Parts Count", "PrtC" );
+        public readonly AvfxInt PartsCountU = new( "Parts Count U", "PCnU" );
+        public readonly AvfxInt PartsCountV = new( "Parts Count V", "PCnV" );
+        public readonly AvfxFloat PointIntervalFactoryV = new( "Point Interval Factor V", "PIFU" );
+        public readonly AvfxCurve1Axis Angle = new( "Angle", "Ang", CurveType.Angle );
+        public readonly AvfxCurve1Axis AngleRandom = new( "Angle Random", "AngR", CurveType.Angle );
+        public readonly AvfxCurve1Axis HeightBeginInner = new( "Height Begin Inner", "HBI" );
+        public readonly AvfxCurve1Axis HeightBeginInnerRandom = new( "Height Begin Inner Random", "HBIR" );
+        public readonly AvfxCurve1Axis HeightEndInner = new( "Height End Inner", "HEI" );
+        public readonly AvfxCurve1Axis HeightEndInnerRandom = new( "Height End Inner Random", "HEIR" );
+        public readonly AvfxCurve1Axis HeightBeginOuter = new( "Height Begin Outer", "HBO" );
+        public readonly AvfxCurve1Axis HeightBeginOuterRandom = new( "Height Begin Outer Random", "HBOR" );
+        public readonly AvfxCurve1Axis HeightEndOuter = new( "Height End Outer", "HEO" );
+        public readonly AvfxCurve1Axis HeightEndOuterRandom = new( "Height End Outer Random", "HEOR" );
+        public readonly AvfxCurve1Axis WidthBegin = new( "Width Begin", "WB" );
+        public readonly AvfxCurve1Axis WidthBeginRandom = new( "Width Begin Random", "WBR" );
+        public readonly AvfxCurve1Axis WidthEnd = new( "Width End", "WE" );
+        public readonly AvfxCurve1Axis WidthEndRandom = new( "Width End Random", "WER" );
+        public readonly AvfxCurve1Axis RadiusBegin = new( "Radius Begin", "RB" );
+        public readonly AvfxCurve1Axis RadiusBeginRandom = new( "Radius Begin Random", "RBR" );
+        public readonly AvfxCurve1Axis RadiusEnd = new( "Radius End", "RE" );
+        public readonly AvfxCurve1Axis RadiusEndRandom = new( "Radius End Random", "RER" );
+        public readonly AvfxCurveColor ColorEdgeInner;
+        public readonly AvfxCurveColor ColorEdgeOuter;
+        public readonly AvfxInt SS = new( "Scaling Scale", "SS" );
 
-        public AvfxParticleDataDisc() : base() {
+        public AvfxParticleDataDisc( AvfxFile file ) : base() {
+            ColorEdgeInner = new( file, name: "Color Edge Inner", "CEI" );
+            ColorEdgeOuter = new( file, name: "Color Edge Outer", "CEO" );
+
             Parsed = [
                 PartsCount,
                 PartsCountU,

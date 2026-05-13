@@ -41,9 +41,11 @@ namespace VfxEditor.UldFormat.Component {
     }
 
     public class UldComponent : UldWorkspaceItem, IItemWithData<UldGenericData> {
-        public readonly ParsedByteBool IgnoreInput = new( "忽略输入" );
-        public readonly ParsedByteBool DragArrow = new( "拖拽箭头" );
-        public readonly ParsedByteBool DropArrow = new( "放置箭头" );
+        private readonly UldFile File;
+
+        public readonly ParsedByteBool IgnoreInput = new( "Ignore Input" );
+        public readonly ParsedByteBool DragArrow = new( "Drag Arrow" );
+        public readonly ParsedByteBool DropArrow = new( "Drop Arrow" );
 
         public readonly ParsedDataEnum<ComponentType, UldGenericData> Type;
         public UldGenericData Data;
@@ -51,14 +53,15 @@ namespace VfxEditor.UldFormat.Component {
         public readonly List<UldNode> Nodes = [];
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
-        public UldComponent( uint id, List<UldComponent> components ) : base( id ) {
+        public UldComponent( UldFile file, uint id, List<UldComponent> components ) : base( id ) {
+            File = file;
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( item, idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
+                ( item, idx ) => item.GetText(), () => new UldNode( File, GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
         }
 
-        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
+        public UldComponent( UldFile file, BinaryReader reader, List<UldComponent> components ) : this( file, 0, components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -80,7 +83,7 @@ namespace VfxEditor.UldFormat.Component {
 
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, NodeSplitView ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( File, reader, components, this, NodeSplitView ) );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -207,7 +210,7 @@ namespace VfxEditor.UldFormat.Component {
         }
 
         private int NumNodesReferencing =>
-            Plugin.UldManager.File.Components.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum() +
-            Plugin.UldManager.File.Widgets.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum();
+            File.Components.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum() +
+            File.Widgets.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum();
     }
 }

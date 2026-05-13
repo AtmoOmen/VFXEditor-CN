@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly UiDisplayList Parameters;
 
-        public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor, "EfVT" ) {
+        public AvfxEffector( AvfxFile file ) : base( file, NAME, AvfxNodeGroupSet.EffectorColor, "EfVT" ) {
             Parsed = [
                 Type,
                 RotationOrder,
@@ -31,8 +31,8 @@ namespace VfxEditor.AvfxFormat {
                 LoopPointEnd
             ];
 
-            Parameters = new( "参数", [
-                new UiNodeGraphView( this ),
+            Parameters = new( "Parameters", [
+                new UiNodeGraphView( file, this ),
                 RotationOrder,
                 CoordComputeOrder,
                 AffectOtherVfx,
@@ -65,8 +65,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override void UpdateData() {
             Data = Type.Value switch {
-                EffectorType.PointLight => new AvfxEffectorDataPointLight(),
-                EffectorType.DirectionalLight => new AvfxEffectorDataDirectionalLight(),
+                EffectorType.PointLight => new AvfxEffectorDataPointLight( File ),
+                EffectorType.DirectionalLight => new AvfxEffectorDataDirectionalLight( File ),
                 EffectorType.RadialBlur => new AvfxEffectorDataRadialBlur(),
                 EffectorType.BlackHole => null,
                 EffectorType.CameraQuake_Variable or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),

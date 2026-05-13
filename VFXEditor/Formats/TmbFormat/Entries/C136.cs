@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C136 : TmbEntry {
         public const string MAGIC = "C136";
-        public const string DISPLAY_NAME = "";
+        public const string DISPLAY_NAME = "Local Wind Scale";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

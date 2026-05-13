@@ -6,11 +6,12 @@ using VfxEditor.Ui;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerBase : DalamudWindow, IFileManagerSelect {
-        public readonly string Id;
-        public readonly string Title;
-        public readonly string Extension;
-        public readonly string WorkspaceKey;
-        public readonly string WorkspacePath;
+        public readonly FileManagerGroupBase Group;
+        public string FormatName => Group.FormatName;
+        public string Title => Group.Title;
+        public string Extension => Group.Extension;
+
+        public readonly int WindowId;
 
         public readonly ManagerConfiguration Configuration;
 
@@ -23,15 +24,12 @@ namespace VfxEditor.FileManager {
         public SelectDialog SourceSelect { get; protected set; }
         public SelectDialog ReplaceSelect { get; protected set; }
 
-        protected FileManagerBase( string title, string id, string extension, string workspaceKey, string workspacePath ) :
-            base( title, true, new( 800, 1000 ), Plugin.WindowSystem, isMainWindow: true ) {
+        protected FileManagerBase( FileManagerGroupBase group ) :
+            base( $"{group.Title}##{group.WindowId}", true, new( 800, 1000 ), group.WindowSystem, isMainWindow: true ) {
 
-            Title = title;
-            Extension = extension;
-            WorkspaceKey = workspaceKey;
-            WorkspacePath = workspacePath;
-            Id = id;
-            Configuration = Plugin.Configuration.GetManagerConfig( Id );
+            Group = group;
+            WindowId = group.NewWindowId;
+            Configuration = Plugin.Configuration.GetManagerConfig( FormatName );
         }
 
         public ManagerConfiguration GetConfig() => Configuration;
@@ -44,10 +42,10 @@ namespace VfxEditor.FileManager {
 
         public abstract void SetReplace( SelectResult result );
 
-        public string GetId() => Id;
-
-        public string GetName() => Id.ToLower();
+        public string GetId() => FormatName;
 
         public WindowSystem GetWindowSystem() => WindowSystem;
+
+        public int GetWindowId() => WindowId;
     }
 }

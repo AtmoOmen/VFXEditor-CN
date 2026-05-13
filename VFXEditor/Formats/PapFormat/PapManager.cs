@@ -1,12 +1,13 @@
 using VfxEditor.FileManager;
+using VfxEditor.Formats.PapFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapManager : FileManager<PapDocument, PapFile, WorkspaceMetaBasic> {
-        public PapManager() : base( "Pap Editor", "Pap" ) {
-            SourceSelect = new PapSelectDialog( "选择动画 [原始]##PAP", this, true );
-            ReplaceSelect = new PapSelectDialog( "选择动画 [替换]##PAP", this, false );
+        public PapManager( PapManagerGroup group ) : base( group ) {
+            SourceSelect = new PapSelectDialog( "Pap Select [LOADED]", this, true );
+            ReplaceSelect = new PapSelectDialog( "Pap Select [REPLACED]", this, false );
         }
 
         protected override PapDocument GetNewDocument() => new( this, NewWriteLocation );

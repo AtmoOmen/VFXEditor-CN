@@ -4,9 +4,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SkpFormat {
     public unsafe class SkpManager : FileManager<SkpDocument, SkpFile, WorkspaceMetaBasic> {
-        public SkpManager() : base( "Skp Editor", "Skp" ) {
-            SourceSelect = new SkpSelectDialog( "选择文件 [原始]##SKP", this, true );
-            ReplaceSelect = new SkpSelectDialog( "选择文件 [替换]##SKP", this, false );
+        public SkpManager( SkpManagerGroup group ) : base( group ) {
+            SourceSelect = new SkpSelectDialog( "Skp Select [LOADED]", this, true );
+            ReplaceSelect = new SkpSelectDialog( "Skp Select [REPLACED]", this, false );
         }
 
         protected override SkpDocument GetNewDocument() => new( this, NewWriteLocation );

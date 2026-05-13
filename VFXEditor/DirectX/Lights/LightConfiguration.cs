@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System;
 using System.Numerics;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.DirectX.Lights {
     [Serializable]
@@ -19,8 +19,8 @@ namespace VfxEditor.DirectX.Lights {
         }
 
         public LightData GetData() => new() {
-            Position = DirectXManager.ToVec3( Position ),
-            Color = DirectXManager.ToVec3( Color ),
+            Position = Position,
+            Color = Color,
             Radius = Radius,
             Falloff = Falloff
         };

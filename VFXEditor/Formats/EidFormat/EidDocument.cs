@@ -15,12 +15,13 @@ namespace VfxEditor.EidFormat {
 
         protected override EidFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
 
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Disabled = Disabled
+            Disabled = Disabled,
+            WindowIndex = windowIdx
         };
     }
 }

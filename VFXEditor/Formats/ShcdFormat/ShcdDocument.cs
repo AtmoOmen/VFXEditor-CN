@@ -15,12 +15,13 @@ namespace VfxEditor.Formats.ShcdFormat {
 
         protected override ShcdFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
 
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Disabled = Disabled
+            Disabled = Disabled,
+            WindowIndex = windowIdx
         };
     }
 }

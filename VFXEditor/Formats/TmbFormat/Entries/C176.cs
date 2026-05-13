@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
@@ -14,15 +15,13 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x28;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "持续时间" );
-        private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedInt TmfcId = new( "F 曲线 ID" );
-        private readonly ParsedByte Unk4 = new( "未知 4" );
-        private readonly ParsedByte Unk5 = new( "未知 5" );
-        private readonly ParsedShort Unk6 = new( "未知 6" );
-        private readonly ParsedInt Unk7 = new( "未知 7" );
-        private readonly ParsedInt Unk8 = new( "未知 8" );
-        private readonly ParsedInt Unk9 = new( "未知 9" );
+        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedInt TmfcId = new( "F-Curve Id" );
+        private readonly ParsedIntByte4 Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Unk5 = new( "Unknown 5" );
+        private readonly ParsedInt Unk6 = new( "Unknown 6" );
+        private readonly ParsedInt Unk7 = new( "Unknown 7" );
 
         public C176( TmbFile file ) : base( file ) { }
 
@@ -36,8 +35,6 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk5,
             Unk6,
             Unk7,
-            Unk8,
-            Unk9
         ];
     }
 }

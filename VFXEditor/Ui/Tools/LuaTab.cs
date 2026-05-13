@@ -64,8 +64,8 @@ namespace VfxEditor.Ui.Tools {
             if( !combo ) return;
 
             foreach( var item in Dalamud.Objects ) {
-                if( item.ObjectKind != ObjectKind.Player &&
-                    item.ObjectKind != ObjectKind.MountType &&
+                if( item.ObjectKind != ObjectKind.Pc &&
+                    item.ObjectKind != ObjectKind.Mount &&
                     item.ObjectKind != ObjectKind.EventNpc &&
                     item.ObjectKind != ObjectKind.Companion &&
                     item.ObjectKind != ObjectKind.BattleNpc ) continue;

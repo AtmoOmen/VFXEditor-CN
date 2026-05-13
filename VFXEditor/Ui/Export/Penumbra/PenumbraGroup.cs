@@ -18,7 +18,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
         }
 
         // Used for workspace imports
-        public PenumbraGroup( PenumbraGroupStruct workspaceGroup, Dictionary<IFileManager, int> offsets ) : this() {
+        public PenumbraGroup( PenumbraGroupStruct workspaceGroup, Dictionary<IFileManagerGroup, int> offsets ) : this() {
             Name = workspaceGroup.Name;
             Type = workspaceGroup.Type;
             Priority = workspaceGroup.Priority;
@@ -57,7 +57,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
             Priority = Priority,
             Type = Type,
             DefaultSettings = GetDefault(),
-            Options = Options.Select( x => x.Export( modFolder, Name ) ).ToList()
+            Options = [.. Options.Select( x => x.Export( modFolder, Name ) )]
         };
 
         public PenumbraGroupStruct WorkspaceExport() => new() {
@@ -65,7 +65,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
             Priority = Priority,
             Type = Type,
             DefaultSettings = GetDefault(),
-            Options = Options.Select( x => x.WorkspaceExport() ).ToList()
+            Options = [.. Options.Select( x => x.WorkspaceExport() )]
         };
 
         private uint GetDefault() {

@@ -49,14 +49,14 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class ScdSoundEntry : ScdEntry, IUiItem {
-        public readonly ParsedByte BusNumber = new( "总线编号" );
-        public readonly ParsedByte Priority = new( "优先级" );
-        public readonly ParsedEnum<SoundType> Type = new( "类型", size: 1 );
-        public readonly ParsedFlag<SoundAttribute> Attributes = new( "属性" );
-        public readonly ParsedFloat Volume = new( "音量" );
-        public readonly ParsedShort LocalNumber = new( "本地编号" ); // TODO: ushort
-        public readonly ParsedByte UserId = new( "用户 ID" );
-        public readonly ParsedByte PlayHistory = new( "播放历史" ); // TODO: sbyte
+        public readonly ParsedByte BusNumber = new( "Bus Number" );
+        public readonly ParsedByte Priority = new( "Priority" );
+        public readonly ParsedEnum<SoundType> Type = new( "Type", size: 1 );
+        public readonly ParsedFlag<SoundAttribute> Attributes = new( "Attributes" );
+        public readonly ParsedFloat Volume = new( "Volume" );
+        public readonly ParsedShort LocalNumber = new( "Local Number" ); // TODO: ushort
+        public readonly ParsedByte UserId = new( "User Id" );
+        public readonly ParsedSByte PlayHistory = new( "Play History" );
 
         public readonly SoundRoutingInfo RoutingInfo = new(); // include sendInfos, soundEffectParam
         public SoundBusDucking BusDucking = new();

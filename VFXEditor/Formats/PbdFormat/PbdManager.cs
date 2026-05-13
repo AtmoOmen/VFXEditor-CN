@@ -4,7 +4,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PbdFormat {
     public class PbdManager : FileManager<PbdDocument, PbdFile, WorkspaceMetaBasic> {
-        public PbdManager() : base( "Pbd Editor", "Pbd" ) {
+        public PbdManager( PbdManagerGroup group ) : base( group ) {
             SourceSelect = new PbdSelectDialog( "Pbd Select [LOADED]", this, true );
             ReplaceSelect = new PbdSelectDialog( "Pbd Select [REPLACED]", this, false );
         }

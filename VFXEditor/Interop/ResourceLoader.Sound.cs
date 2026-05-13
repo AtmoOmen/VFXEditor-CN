@@ -1,4 +1,6 @@
-﻿using Dalamud.Hooking;
+using Dalamud.Hooking;
+using FFXIVClientStructs.FFXIV.Client.Sound;
+using InteropGenerator.Runtime;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -35,16 +37,16 @@ namespace VfxEditor.Interop {
 
         // ====== INIT SOUND =========
 
-        public delegate IntPtr InitSoundPrototype( IntPtr a1, IntPtr path, float volume, int idx, int a5, uint a6, uint a7 );
+        public delegate SoundData* InitSoundPrototype( SoundManager* manager, CStringPointer path, float volume, uint soundIdx, uint unk1, bool unk2, SoundVolumeCategory category );
 
         public Hook<InitSoundPrototype> InitSoundHook { get; private set; }
 
-        private IntPtr InitSoundDetour( IntPtr a1, IntPtr path, float volume, int idx, int a5, uint a6, uint a7 ) {
-            if( path != IntPtr.Zero && path == OverridenSound ) {
-                return InitSoundHook.Original( a1, path, volume, OverridenSoundIdx, a5, a6, a7 );
+        private SoundData* InitSoundDetour( SoundManager* manager, CStringPointer path, float volume, uint soundIdx, uint unk1, bool unk2, SoundVolumeCategory category ) {
+            if( path.HasValue && (nint)path.Value == OverridenSound ) {
+                return InitSoundHook.Original( manager, path, volume, ( uint )OverridenSoundIdx , unk1, unk2, category );
             }
 
-            return InitSoundHook.Original( a1, path, volume, idx, a5, a6, a7 );
+            return InitSoundHook.Original( manager, path, volume, soundIdx, unk1, unk2, category );
         }
     }
 }

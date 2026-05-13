@@ -29,7 +29,7 @@ namespace VfxEditor {
     }
 
     [Serializable]
-    public class Configuration : DalamudWindow, IPluginConfiguration {
+    public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
@@ -167,7 +167,7 @@ namespace VfxEditor {
         [NonSerialized]
         public bool WriteLocationError = false;
 
-        public Configuration() : base( "Settings", false, new( 300, 200 ), Plugin.WindowSystem ) { }
+        public Configuration() { }
 
         public void Setup() {
             UpdateHideSettings();
@@ -254,7 +254,7 @@ namespace VfxEditor {
 
         // =================
 
-        public override void DrawBody() {
+        public void DrawBody() {
             using var _ = ImRaii.PushId( "Settings" );
 
             using var tabBar = ImRaii.TabBar( "栏" );
@@ -424,7 +424,7 @@ namespace VfxEditor {
 
             if( ImGui.CollapsingHeader( "材质" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
-                DrawDirectXMaterials();
+                DrawDirectXMaterial();
             }
 
             if( ImGui.CollapsingHeader( "VFX" ) ) {
@@ -445,7 +445,7 @@ namespace VfxEditor {
             if( ImGui.ColorEdit4( "连接线颜色", ref SkeletonBoneLineColor ) ) Save();
         }
 
-        public void DrawDirectXMaterials() {
+        public void DrawDirectXMaterial() {
             var updated = false;
             updated |= ImGui.ColorEdit3( "背景颜色", ref MaterialAmbientColor );
 
@@ -462,7 +462,7 @@ namespace VfxEditor {
             }
 
             if( updated ) {
-                Plugin.DirectXManager.RedrawMaterials();
+                Plugin.DirectXManager.Redraw();
                 Save();
             }
         }
@@ -470,8 +470,8 @@ namespace VfxEditor {
         public void DrawDirectXVfx() {
             if( ImGui.InputFloat2( "预览金字塔大小", ref ModelEmittersSize ) ) {
                 Save();
-                Plugin.DirectXManager.ModelPreview.UpdatePyramidMesh();
-                Plugin.DirectXManager.ModelPreview.Draw();
+                Plugin.DirectXManager.ModelRenderer.UpdatePyramidMesh();
+                Plugin.DirectXManager.Redraw();
             }
         }
 

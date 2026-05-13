@@ -1,12 +1,13 @@
 using VfxEditor.FileManager;
+using VfxEditor.Formats.EidFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.EidFormat {
     public unsafe class EidManager : FileManager<EidDocument, EidFile, WorkspaceMetaBasic> {
-        public EidManager() : base( "Eid Editor", "Eid" ) {
-            SourceSelect = new EidSelectDialog( "选择角色 [原始]##EID", this, true );
-            ReplaceSelect = new EidSelectDialog( "选择角色 [替换]##EID", this, false );
+        public EidManager( EidManagerGroup group ) : base( group ) {
+            SourceSelect = new EidSelectDialog( "Eid Select [LOADED]", this, true );
+            ReplaceSelect = new EidSelectDialog( "Eid Select [REPLACED]", this, false );
 
             /*if( Plugin.ClientState?.LocalPlayer != null ) {
                 var a = ( GameObject* )Plugin.ClientState.LocalPlayer.Address;

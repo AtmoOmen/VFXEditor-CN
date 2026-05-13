@@ -8,10 +8,14 @@ using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
+using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxFile : FileManagerFile {
         public readonly AvfxMain Main;
+        public readonly GradientInstance GradientInstance = new();
+        public readonly ModelInstance ModelInstance = new();
 
         public readonly UiEffectorView EffectorView;
         public readonly UiEmitterView EmitterView;
@@ -27,7 +31,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxExport ExportUi;
 
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
-            Main = AvfxMain.FromStream( reader );
+            Main = AvfxMain.FromStream( this, reader );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
@@ -48,6 +52,11 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void Draw() {
+            if( ExportUi.IsExporting ) {
+                ExportUi.Draw();
+                return;
+            }
+
             using var _ = ImRaii.PushId( "Main" );
 
             using var tabBar = ImRaii.TabBar( "栏", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -148,6 +157,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Dispose() {
             NodeGroupSet?.Dispose();
+            GradientInstance.Dispose();
+            ModelInstance.Dispose();
         }
 
         // ========== WORKSPACE ==========

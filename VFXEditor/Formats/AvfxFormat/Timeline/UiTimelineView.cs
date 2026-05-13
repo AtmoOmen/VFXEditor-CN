@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
         public override void OnSelect( AvfxTimeline item ) { }
 
         public override AvfxTimeline Read( BinaryReader reader, int size ) {
-            var item = new AvfxTimeline( File.NodeGroupSet );
+            var item = new AvfxTimeline( File, File.NodeGroupSet );
             item.Read( reader, size );
             return item;
         }

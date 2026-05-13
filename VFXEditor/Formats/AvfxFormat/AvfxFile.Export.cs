@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
             var newPath = Plugin.LibraryManager.GetNodePath( newId );
             Export( node, newPath, true );
             Dalamud.OkNotification( "Saved item to library" );
-            Plugin.LibraryManager.AddNode( node.GetText(), newId, Plugin.AvfxManager.ActiveDocument.SourceDisplay, newPath );
+            Plugin.LibraryManager.AddNode( node.GetText(), newId, Plugin.AvfxManager.LastFocusedManager?.ActiveDocument?.SourceDisplay ?? "", newPath );
         }
 
         public static void Export( AvfxNode node, string path, bool exportDependencies ) => Export( [node], path, exportDependencies );

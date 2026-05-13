@@ -8,7 +8,7 @@ namespace VfxEditor.Formats.AvfxFormat.Nodes {
         protected AvfxData? Data;
         protected AvfxDataEnum<T> Type;
 
-        public AvfxNodeWithData( string avfxName, uint graphColor, string typeAvfxName ) : base( avfxName, graphColor ) {
+        public AvfxNodeWithData( AvfxFile file, string avfxName, uint graphColor, string typeAvfxName ) : base( file, avfxName, graphColor ) {
             Type = new( this, "Type", typeAvfxName );
         }
 

@@ -1,38 +1,38 @@
 using Dalamud.Bindings.ImGui;
-using Dalamud.Bindings.ImGuizmo;
-using Dalamud.Bindings.ImPlot;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using System.Collections.Generic;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Data;
 using VfxEditor.DirectX;
-using VfxEditor.EidFormat;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats.AvfxFormat;
+using VfxEditor.Formats.EidFormat;
 using VfxEditor.Formats.KdbFormat;
 using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MtrlFormat;
+using VfxEditor.Formats.PapFormat;
 using VfxEditor.Formats.PbdFormat;
+using VfxEditor.Formats.PhybFormat;
+using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
+using VfxEditor.Formats.SklbFormat;
 using VfxEditor.Formats.SkpFormat;
 using VfxEditor.Formats.TextureFormat;
+using VfxEditor.Formats.TmbFormat;
+using VfxEditor.Formats.UldFormat;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Penumbra;
 using VfxEditor.Library;
-using VfxEditor.PapFormat;
-using VfxEditor.PhybFormat;
-using VfxEditor.ScdFormat;
-using VfxEditor.SklbFormat;
 using VfxEditor.Spawn;
-using VfxEditor.TmbFormat;
 using VfxEditor.Tracker;
 using VfxEditor.Ui.Export;
+using VfxEditor.Ui.Import;
 using VfxEditor.Ui.Tools;
-using VfxEditor.UldFormat;
 
 namespace VfxEditor {
     public unsafe partial class Plugin : IDalamudPlugin {
@@ -41,15 +41,16 @@ namespace VfxEditor {
         public static Configuration Configuration { get; private set; }
         public static TrackerManager TrackerManager { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
-        public static TexToolsDialog TexToolsDialog { get; private set; }
+        public static TexToolsDialog TexToolsExportDialog { get; private set; }
         public static LibraryManager LibraryManager { get; private set; }
 
         public static PenumbraIpc PenumbraIpc { get; private set; }
-        public static PenumbraDialog PenumbraDialog { get; private set; }
+        public static PenumbraDialog PenumbraExportDialog { get; private set; }
+        public static PenumbraImportDialog PenumbraImportDialog { get; private set; }
 
         public static WindowSystem WindowSystem { get; private set; }
 
-        public static List<IFileManager> Managers => [
+        public static List<IFileManagerGroup> Groups => [
             TextureManager,
             AvfxManager,
             TmbManager,
@@ -69,23 +70,23 @@ namespace VfxEditor {
             PbdManager,
         ];
 
-        public static AvfxManager AvfxManager { get; private set; }
+        public static AvfxManagerGroup AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
-        public static TmbManager TmbManager { get; private set; }
-        public static PapManager PapManager { get; private set; }
-        public static ScdManager ScdManager { get; private set; }
-        public static EidManager EidManager { get; private set; }
-        public static UldManager UldManager { get; private set; }
-        public static PhybManager PhybManager { get; private set; }
-        public static SklbManager SklbManager { get; private set; }
-        public static AtchManager AtchManager { get; private set; }
-        public static SkpManager SkpManager { get; private set; }
-        public static ShpkManager ShpkManager { get; private set; }
-        public static ShcdManager ShcdManager { get; private set; }
-        public static MtrlManager MtrlManager { get; private set; }
-        public static MdlManager MdlManager { get; private set; }
-        public static KdbManager KdbManager { get; private set; }
-        public static PbdManager PbdManager { get; private set; }
+        public static TmbManagerGroup TmbManager { get; private set; }
+        public static PapManagerGroup PapManager { get; private set; }
+        public static ScdManagerGroup ScdManager { get; private set; }
+        public static EidManagerGroup EidManager { get; private set; }
+        public static UldManagerGroup UldManager { get; private set; }
+        public static PhybManagerGroup PhybManager { get; private set; }
+        public static SklbManagerGroup SklbManager { get; private set; }
+        public static AtchManagerGroup AtchManager { get; private set; }
+        public static SkpManagerGroup SkpManager { get; private set; }
+        public static ShpkManagerGroup ShpkManager { get; private set; }
+        public static ShcdManagerGroup ShcdManager { get; private set; }
+        public static MtrlManagerGroup MtrlManager { get; private set; }
+        public static MdlManagerGroup MdlManager { get; private set; }
+        public static KdbManagerGroup KdbManager { get; private set; }
+        public static PbdManagerGroup PbdManager { get; private set; }
 
         public static string RootLocation { get; private set; }
 #if BETA
@@ -97,6 +98,8 @@ namespace VfxEditor {
         private static bool ClearKeyState = false;
         public static bool IsImguiSafe { get; set; } = false;
 
+        private static ConfigurationWindow ConfigWindow;
+
         public Plugin( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
@@ -105,15 +108,11 @@ namespace VfxEditor {
             RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
             OtterTex.NativeDll.Initialize( pluginInterface.AssemblyLocation.DirectoryName );
 
-            ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
-            ImPlot.SetCurrentContext( ImPlot.CreateContext() );
-            ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
-
             WindowSystem = new();
 
             Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
-            Configuration.Hide();
+            ConfigWindow = new( Configuration );
 
             TextureManager.LoadLibrary();
             TextureManager = new();
@@ -133,15 +132,17 @@ namespace VfxEditor {
             MdlManager = new();
             KdbManager = new();
             PbdManager = new();
+            AddDefaultDocuments();
 
             ToolsDialog = new();
             PenumbraIpc = new();
-            PenumbraDialog = new();
-            TexToolsDialog = new();
+            PenumbraExportDialog = new();
+            TexToolsExportDialog = new();
             ResourceLoader = new();
             DirectXManager = new();
             TrackerManager = new();
             LibraryManager = new();
+            PenumbraImportDialog = new();
 
             Dalamud.Framework.Update += FrameworkOnUpdate;
             Dalamud.PluginInterface.UiBuilder.Draw += Draw;
@@ -168,7 +169,7 @@ namespace VfxEditor {
                 AvfxManager?.Show();
                 return;
             }
-            if( Managers.FindFirst( x => rawArgs.ToLower().Equals( x.GetId().ToLower() ), out var manager ) ) manager.Show();
+            if( Groups.FindFirst( x => rawArgs.ToLower().Equals( x.GetId().ToLower() ), out var manager ) ) manager.Show();
         }
 
         public void Dispose() {
@@ -178,8 +179,6 @@ namespace VfxEditor {
             Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfigUi;
 
-            ImPlot.DestroyContext();
-
             Dalamud.CommandManager.RemoveHandler( CommandName );
             PenumbraIpc?.Dispose();
 
@@ -187,7 +186,7 @@ namespace VfxEditor {
             ResourceLoader = null;
 
             TextureManager.FreeLibrary();
-            Managers.ForEach( x => x?.Reset( ResetType.PluginClosing ) );
+            Groups.ForEach( x => x?.Reset( true ) );
             DirectXManager?.Dispose();
 
             WindowSystem.RemoveAllWindows();

@@ -1,8 +1,11 @@
-﻿using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
+using HelixToolkit;
+using HelixToolkit.Geometry;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace VfxEditor.Interop.Havok.SkeletonBuilder {
     public abstract class SkeletonMeshBuilder {
@@ -14,7 +17,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
         protected readonly List<float> BoneScales = [];
 
-        protected readonly MeshGeometry3D SingleBone;
+        protected readonly Geometry3D SingleBone;
         protected readonly MeshBuilder SphereBuilder;
 
         protected int Offset = 0;
@@ -24,7 +27,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
             var singleBoneBuilder = new MeshBuilder( true, false );
             singleBoneBuilder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitZ, Vector3.UnitX, 1, 0, true );
-            SingleBone = singleBoneBuilder.ToMesh();
+            SingleBone = singleBoneBuilder.ToMeshGeometry3D();
 
             Positions = new Vector3Collection( Bones.Count * SingleBone.Positions.Count );
             Tris = new IntCollection( Bones.Count * SingleBone.Indices.Count );
@@ -51,7 +54,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
             for( var i = 0; i < Bones.Count; i++ ) { PopulateSpheres( i ); }
 
-            Positions.AddRange( SphereBuilder.Positions );
+            Positions.AddRange( SphereBuilder.Positions.Select( Clean ) );
             Tris.AddRange( SphereBuilder.TriangleIndices.Select( x => x + Offset ) );
 
             // =================
@@ -61,7 +64,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
                 Indices = Tris,
                 Colors = Colors
             };
-            mesh.Normals = mesh.CalculateNormals();
+            mesh.UpdateNormals();
             return mesh;
         }
 
@@ -73,28 +76,31 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
 
         protected abstract Color4 GetColor( int idx );
 
-        protected void AddPyramid( float scale, Matrix startMatrix, Matrix endMatrix ) {
+        protected void AddPyramid( float scale, Matrix4x4 startMatrix, Matrix4x4 endMatrix ) {
             Tris.AddRange( SingleBone.Indices.Select( x => x + Offset ) );
 
             var j = 0;
             for( ; j < SingleBone.Positions.Count - 6; j += 3 ) { // iterate over everything but last 2 faces
-                Positions.Add( Vector3.TransformCoordinate( SingleBone.Positions[j] * scale, startMatrix ) );
-                Positions.Add( Vector3.TransformCoordinate( SingleBone.Positions[j + 1] * scale, startMatrix ) );
-                Positions.Add( endMatrix.TranslationVector );
+                Positions.Add( Clean( Vector3Helper.TransformCoordinate( SingleBone.Positions[j] * scale, startMatrix ) ) );
+                Positions.Add( Clean( Vector3Helper.TransformCoordinate( SingleBone.Positions[j + 1] * scale, startMatrix ) ) );
+
+                MatrixHelper.DecomposeUniformScale( endMatrix, out var _, out var _, out var translationVector );
+
+                Positions.Add( Clean( translationVector ) );
             }
             for( ; j < SingleBone.Positions.Count; ++j ) {
-                Positions.Add( Vector3.TransformCoordinate( SingleBone.Positions[j] * scale, startMatrix ) );
+                Positions.Add( Clean( Vector3Helper.TransformCoordinate( SingleBone.Positions[j] * scale, startMatrix ) ) );
             }
             Offset += SingleBone.Positions.Count;
         }
 
-        protected void AddSphere( int idx, Matrix matrix, float width ) {
+        protected void AddSphere( int idx, Matrix4x4 matrix, float width ) {
             var color = GetColor( idx );
             var count = SphereBuilder.Positions.Count;
             SphereBuilder.AddSphere( Vector3.Zero, width / 2, 12, 12 );
 
             for( var j = count; j < SphereBuilder.Positions.Count; ++j ) {
-                SphereBuilder.Positions[j] = Vector3.TransformCoordinate( SphereBuilder.Positions[j], matrix );
+                SphereBuilder.Positions[j] = Vector3Helper.TransformCoordinate( SphereBuilder.Positions[j], matrix );
             }
 
             PushColor( color, SphereBuilder.Positions.Count - count );
@@ -103,5 +109,11 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
         protected void PushColor( Color4 color, int n ) {
             for( var i = 0; i < n; i++ ) Colors.Add( color );
         }
+
+        protected static Vector3 Clean( Vector3 v ) => new() {
+            X = ( float.IsNaN( v.X ) || float.IsInfinity (v.X ) ) ? 0 : v.X,
+            Y = ( float.IsNaN( v.Y ) || float.IsInfinity( v.Y ) ) ? 0 : v.Y,
+            Z = ( float.IsNaN( v.Z ) || float.IsInfinity( v.Z ) ) ? 0 : v.Z,
+        };
     }
 }

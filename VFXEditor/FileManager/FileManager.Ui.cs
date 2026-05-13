@@ -1,20 +1,20 @@
-﻿using Dalamud.Interface;
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
 using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public abstract partial class FileManager<T, R, S> : FileManagerBase where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        private T DraggingItem;
-
+    public abstract partial class FileManager<D, F, S> : FileManagerBase where D : FileManagerDocument<F, S> where F : FileManagerFile {
         protected virtual void DrawEditMenuItems() { }
 
         public override void DrawBody() {
+            if( ImGui.IsWindowFocused() ) Group.SetLastFocusedManager( this );
+
             using var copy = new CopyRaii( Copy );
-            using var command = new CommandRaii( File?.Command );
+            using var command = new CommandRaii( ActiveFile?.Command );
 
             CheckKeybinds();
 
@@ -26,13 +26,20 @@ namespace VfxEditor.FileManager {
                 Title
 #endif
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
-                + $"##{Title}";
+                + $"###{Title}-{WindowId}";
 
-            using var _ = ImRaii.PushId( Id );
+            using var _ = ImRaii.PushId( $"{FormatName}-{WindowId}" );
             DrawMenu();
             if( Plugin.Configuration.ShowTabBar ) {
                 DrawTabs();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+            }
+
+            if( ActiveDocument == null ) { // No documents, make it clear how to add a new one
+                ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( (ImGui.GetContentRegionAvail().X - 150f) / 2f, 25f) );
+                if( ImGui.Button( "NEW", new( 150, 35 ) ) ) AddDocument();
+
+                return;
             }
 
             ActiveDocument?.Draw();
@@ -42,7 +49,7 @@ namespace VfxEditor.FileManager {
             var menu = ImGui.BeginMenuBar();
             if( !menu ) return;
 
-            Plugin.DrawFileMenu();
+            Plugin.DrawFileMenu( this, Group );
 
             if( ImGui.BeginMenu( "编辑" ) ) {
                 CommandManager.Draw();
@@ -62,7 +69,7 @@ namespace VfxEditor.FileManager {
         private void DrawTabs() {
             DrawTabsDropdown();
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 2 ) );
+            using var smallItemSpacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 2 ) );
 
             var drawlist = ImGui.GetWindowDrawList();
             var color = ImGui.GetColorU32( ImGuiCol.TabActive );
@@ -76,7 +83,7 @@ namespace VfxEditor.FileManager {
             using var _ = ImRaii.PushId( "Tabs" );
 
             var size = ImGui.GetContentRegionAvail().X;
-            var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) - ImGui.GetStyle().ItemInnerSpacing.X;
+            var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) + UiUtils.GetPaddedIconSize( FontAwesomeIcon.PaintBrush );
 
             using( var child = ImRaii.Child( "子级", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
                 using var tabs = ImRaii.TabBar( "TabBar", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -92,16 +99,21 @@ namespace VfxEditor.FileManager {
 
                     if( ImGui.BeginTabItem( $"{document.DisplayName}##Tab{idx}", ref open, flags ) ) ImGui.EndTabItem();
 
-                    if( UiUtils.DrawDragDrop( Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENT-TABS", false ) ) break;
-
-                    if( !open && Documents.Count > 1 ) ImGui.OpenPopup( "DeletePopup" );
+                    if( Group.DrawDragDrop( this, document, document.DisplayName ) ) break;
+                    if( !open ) ImGui.OpenPopup( "DeletePopup" );
 
                     if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && open ) SelectDocument( document );
-                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "RenamePopup" );
+                    if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "ContextPopup" );
 
                     using var itemSpacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 8, 4 ) );
-                    using( var popup = ImRaii.Popup( "RenamePopup" ) ) {
-                        if( popup ) document.DrawRename();
+                    using( var popup = ImRaii.Popup( "ContextPopup" ) ) {
+                        if( popup ) {
+                            if( ImGui.Selectable( "New Window" ) ) {
+                                Group.ToNewWindow( this, document );
+                                break;
+                            }
+                            document.DrawRename();
+                        }
                     }
                     using( var popup = ImRaii.Popup( "DeletePopup" ) ) {
                         if( popup ) {
@@ -114,14 +126,30 @@ namespace VfxEditor.FileManager {
                 }
 
                 if( ImGui.TabItemButton( "+", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoReorder | ImGuiTabItemFlags.NoTooltip ) ) AddDocument();
+                if( Documents.Count == 0 ) Group.DrawDragDrop( this, null, null ); // in case the window has no documents
             }
 
             ImGui.SameLine();
             var prePopoutPos = ImGui.GetCursorScreenPos();
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            using var transparentButtonStyle = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) );
-            if( ImGui.Button( FontAwesomeIcon.ArrowUpRightFromSquare.ToIconString() ) ) DocumentWindow.Show();
-            drawlist.AddLine( new Vector2( prePopoutPos.X, preDropdownPos.Y ), new Vector2( prePopoutPos.X + popupSize, preDropdownPos.Y ), color, 1 );
+            using( var transparentButtonStyle = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) ) )
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( FontAwesomeIcon.ArrowUpRightFromSquare.ToIconString() ) ) DocumentWindow.Show();
+
+                using( var buttonColor = ImRaii.PushColor( ImGuiCol.Text, WindowColor, UseWindowColor )) {
+                    ImGui.SameLine();
+                    if( ImGui.Button( FontAwesomeIcon.PaintBrush.ToIconString() ) ) ImGui.OpenPopup( "WindowColorPicker" );
+                }
+
+                drawlist.AddLine( new Vector2( prePopoutPos.X, preDropdownPos.Y ), new Vector2( prePopoutPos.X + popupSize, preDropdownPos.Y ), color, 1 );
+            }
+
+            smallItemSpacing.Pop();
+
+            using var windowPopup = ImRaii.Popup( "WindowColorPicker" );
+            if( windowPopup ) {
+                ImGui.Checkbox( "Use Custom Window Color", ref UseWindowColor );
+                ImGui.ColorPicker4( "##Color", ref WindowColor, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.AlphaBar );
+            }
         }
 
         private void DrawTabsDropdown() {
@@ -141,16 +169,21 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        public override void PreDraw() {
+        public override unsafe void PreDraw() {
             base.PreDraw();
-            if( !Configuration.UseCustomWindowColor ) return;
-            ImGui.PushStyleColor( ImGuiCol.TitleBg, Configuration.TitleBg );
-            ImGui.PushStyleColor( ImGuiCol.TitleBgActive, Configuration.TitleBgActive );
-            ImGui.PushStyleColor( ImGuiCol.TitleBgCollapsed, Configuration.TitleBgCollapsed );
+
+            ImGui.PushStyleColor( ImGuiCol.TitleBg, UseWindowColor ? WindowColor :
+                ( Configuration.UseCustomWindowColor ? Configuration.TitleBg : *ImGui.GetStyleColorVec4(ImGuiCol.TitleBg) ) );
+
+            ImGui.PushStyleColor( ImGuiCol.TitleBgActive, UseWindowColor ? WindowColor :
+                ( Configuration.UseCustomWindowColor ? Configuration.TitleBgActive : *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgActive ) ) );
+
+            ImGui.PushStyleColor( ImGuiCol.TitleBgCollapsed, UseWindowColor ? WindowColor :
+                ( Configuration.UseCustomWindowColor ? Configuration.TitleBgCollapsed : *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgCollapsed ) ) );
         }
 
         public override void PostDraw() {
-            if( !Configuration.UseCustomWindowColor ) return;
+            base.PostDraw();
             ImGui.PopStyleColor( 3 );
         }
     }

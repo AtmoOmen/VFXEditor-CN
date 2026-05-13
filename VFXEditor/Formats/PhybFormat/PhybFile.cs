@@ -1,7 +1,7 @@
-﻿using Dalamud.Interface.Utility.Raii;
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -15,6 +15,9 @@ using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.PhybFormat.Skeleton;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
+using VfxEditor.Utils.PackStruct;
+using HelixToolkit.Geometry;
+using VfxEditor.DirectX.Bone;
 
 namespace VfxEditor.PhybFormat {
     public class MeshBuilders {
@@ -24,8 +27,10 @@ namespace VfxEditor.PhybFormat {
     }
 
     public class PhybFile : FileManagerFile, IPhysicsObject {
-        public readonly ParsedIntByte4 Version = new( "版本" );
-        public readonly ParsedUInt DataType = new( "数据类型" );
+        public readonly BoneNameInstance Instance = new();
+
+        public readonly ParsedIntByte4 Version = new( "Version" );
+        public readonly ParsedUInt DataType = new( "Data Type" );
 
         public readonly PhybCollision Collision;
         public readonly PhybSimulation Simulation;
@@ -34,6 +39,7 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
+        public const uint ExtendedType = 'E' | ( ( uint )'P' << 8 ) | ( ( uint )'H' << 16 ) | ( ( uint )'B' << 24 );
         public readonly PhybExtended Extended;
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
@@ -52,11 +58,13 @@ namespace VfxEditor.PhybFormat {
             var diff = 0;
             var ephbPos = reader.BaseStream.Length;
 
-            reader.BaseStream.Position = reader.BaseStream.Length <= 0x18 ? 0 : reader.BaseStream.Length - 0x18;
-            if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
-                Extended = new( reader, out ephbPos, out var ephbSize );
-                ignoreRange = [(( int )ephbPos, ( int )reader.BaseStream.Length)];
-                diff = ephbSize - Extended.Table.Export().SerializeToBinary().Length;
+            var packReader = new PackReader( reader );
+            if( packReader.TryGetPrior( ExtendedType, out var extendedData ) ) {
+                Extended = new( extendedData );
+                ignoreRange = [(( int )packReader.StartPos, ( int )reader.BaseStream.Length)];
+                diff = extendedData.Data.Length - Extended.GetEphbData().Length;
+                Dalamud.Log( $"Flatbuffer diff is: {diff}" );
+                ephbPos = packReader.StartPos;
             }
 
             reader.BaseStream.Position = simOffset;
@@ -83,6 +91,12 @@ namespace VfxEditor.PhybFormat {
             Version.Write( writer );
             DataType.Write( writer );
 
+            if( DataType.Value == 0 ) {
+                writer.Write( 0x10u );
+                writer.Write( 0x10u );
+                return;
+            }
+
             var offsetPos = writer.BaseStream.Position; // coming back here later
             writer.Write( 0 ); // placeholders
             writer.Write( 0 );
@@ -91,7 +105,8 @@ namespace VfxEditor.PhybFormat {
             Collision.Write( writer );
 
             var simOffset = writer.BaseStream.Position;
-            var simWriter = new SimulationWriter();
+            var simWriter = new SimulationWriter( simOffset );
+
             Simulation.Write( simWriter );
             simWriter.WriteTo( writer );
 
@@ -99,8 +114,11 @@ namespace VfxEditor.PhybFormat {
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
 
-            writer.BaseStream.Position = writer.BaseStream.Length;
-            Extended?.Write( writer );
+            if( Extended != null ) {
+                writer.BaseStream.Position = writer.BaseStream.Length;
+                FileUtils.PadTo( writer, 16 );
+                Extended.Write( writer );
+            }
         }
 
         public override void Draw() {
@@ -152,6 +170,12 @@ namespace VfxEditor.PhybFormat {
 
         public override void OnChange() {
             PhysicsUpdated = true;
+            base.OnChange();
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            Instance.Dispose();
         }
     }
 }

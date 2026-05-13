@@ -51,13 +51,13 @@ namespace VfxEditor.Ui.Export {
         protected abstract void OnRemoveDocument( IFileDocument document );
 
         public static void Reset() {
-            Plugin.PenumbraDialog.OnReset();
-            Plugin.TexToolsDialog.OnReset();
+            Plugin.PenumbraExportDialog.OnReset();
+            Plugin.TexToolsExportDialog.OnReset();
         }
 
         public static void RemoveDocument( IFileDocument document ) {
-            Plugin.PenumbraDialog.OnRemoveDocument( document );
-            Plugin.TexToolsDialog.OnRemoveDocument( document );
+            Plugin.PenumbraExportDialog.OnRemoveDocument( document );
+            Plugin.TexToolsExportDialog.OnRemoveDocument( document );
         }
     }
 }

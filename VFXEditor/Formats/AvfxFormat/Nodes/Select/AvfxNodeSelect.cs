@@ -8,11 +8,13 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxNodeSelect : IUiItem {
+        public readonly AvfxFile File;
         public readonly AvfxNode Node;
         protected bool OnChangeLinked = false;
 
         public AvfxNodeSelect( AvfxNode node ) {
             Node = node;
+            File = node.File;
         }
 
         public abstract void UpdateLiteral();
@@ -191,7 +193,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
-                if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected );
+                if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) File.SelectItem( Selected );
             }
 
             UiUtils.Tooltip( "导航至选中的节点" );

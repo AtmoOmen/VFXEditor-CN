@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using VfxEditor.DirectX;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.PapFormat;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Utils;
+using VfxEditor.DirectX;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public class PapMotionMaterialData {
@@ -40,8 +40,9 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     }
 
     public unsafe class PapMotionMaterial : PapMotionPreview {
-        private static GradientRenderer Preview => Plugin.DirectXManager.PapMaterialPreview;
-        public readonly int RenderId = Renderer.NewId;
+        public readonly PapFile File;
+
+        public readonly int RenderId = RenderInstance.NewId;
 
         private static int MATERIAL_ID = 0;
         private readonly int Id = MATERIAL_ID++;
@@ -52,11 +53,12 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         private double[] AllFrames;
         private Dictionary<string, PapMotionMaterialData> Data;
 
-        public PapMotionMaterial( PapMotion motion ) : base( motion ) { }
+        public PapMotionMaterial( PapFile file, PapMotion motion ) : base( motion ) {
+            File = file;
+        }
 
         public override void Draw( int idx ) {
             if( Data == null ) Update();
-            if( Preview.CurrentRenderId != RenderId ) UpdatePreview();
 
             // ======== CONTROLS ==========
 
@@ -78,7 +80,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( IsColor ) {
                 if( ImGui.ColorEdit3( "Base Preview Color", ref Plugin.Configuration.PapMaterialBaseColor, ImGuiColorEditFlags.NoInputs ) ) {
                     Plugin.Configuration.Save();
-                    UpdatePreview();
+                    UpdateRender();
                 }
             }
             else {
@@ -101,7 +103,9 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
             ImPlot.SetNextAxisLimits( ImAxis.X1, 0, Motion.TotalFrames, ImPlotCond.Once );
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
-            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle | ( IsColor ? ImPlotFlags.NoLegend : ImPlotFlags.None ) ) ) {
+
+            using var plot = ImRaii.Plot( "##CurveEditor", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle | ( IsColor ? ImPlotFlags.NoLegend : ImPlotFlags.None ) );
+            if( plot ) {
                 if( IsColor ) ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None,
                     IsColor ? ( ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel ) : ImPlotAxisFlags.NoLabel );
@@ -112,7 +116,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                     var topLeft = new ImPlotPoint { X = 0, Y = 1 };
                     var bottomRight = new ImPlotPoint { X = Motion.TotalFrames, Y = -1 };
 
-                    ImPlot.PlotImage( "##Gradient", new ImTextureID( Preview.Output ), topLeft, bottomRight );
+                    Plugin.DirectXManager.GradientRenderer.UpdateTexture( RenderId, File.GradientInstance, UpdateRender );
+                    ImPlot.PlotImage( "##Gradient", new ImTextureID( File.GradientInstance.Output ), topLeft, bottomRight );
 
                     for( var i = 0; i < Data.Count - 1; i++ ) {
                         var yPos = -1f + 2f * ( i + 1f ) / ( Data.Count );
@@ -132,9 +137,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                     ImPlot.SetNextLineStyle( new( 0, 0, 1, 1 ), 3 );
                     ImPlot.PlotLine( "B", ref AllFrames[0], ref element.B[0], AllFrames.Length );
                 }
-
-                ImPlot.EndPlot();
             }
+
             ImPlot.PopStyleVar( 1 );
         }
 
@@ -172,13 +176,12 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             }
 
             AllFrames = [.. allFrames];
-            UpdatePreview();
+            UpdateRender();
         }
 
-        private void UpdatePreview() {
-            Preview.SetGradient(
-                RenderId,
-                Data.Select( x => x.Value.Color.Select( y => (y.Item1, y.Item2 + Plugin.Configuration.PapMaterialBaseColor) ).ToList() ).ToList()
+        private void UpdateRender() {
+            Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.GradientInstance,
+                [.. Data.Select( x => x.Value.Color.Select( y => (y.Item1, y.Item2 + Plugin.Configuration.PapMaterialBaseColor) ).ToList() )]
             );
         }
     }

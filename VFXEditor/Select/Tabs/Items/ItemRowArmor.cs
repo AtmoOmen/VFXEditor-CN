@@ -31,7 +31,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public string Prefix => IsAccessory ? "accessory" : "equipment";
 
-        public ItemRowArmor( Glasses glasses ) : base( glasses.Name.ToString(), glasses.RowId + 9999, ( uint )glasses.Icon, new( glasses.Unknown_70_7 ), new( 0u ), null ) {
+        public ItemRowArmor( Glasses glasses ) : base( glasses.Name.ToString(), glasses.RowId + 9999, ( uint )glasses.Icon, new( glasses.Model ), new( 0u ), null ) {
             ModelString = ( IsAccessory ? "a" : "e" ) + $"{Ids.Id1:D4}";
         }
 

@@ -4,9 +4,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ShpkFormat {
     public unsafe class ShpkManager : FileManager<ShpkDocument, ShpkFile, WorkspaceMetaBasic> {
-        public ShpkManager() : base( "Shpk Editor", "Shpk" ) {
-            SourceSelect = new ShpkSelectDialog( "选择文件 [原始]##SHPK", this, true );
-            ReplaceSelect = new ShpkSelectDialog( "选择文件 [替换]##SHPK", this, false );
+        public ShpkManager( ShpkManagerGroup group ) : base( group ) {
+            SourceSelect = new ShpkSelectDialog( "Shpk Select [LOADED]", this, true );
+            ReplaceSelect = new ShpkSelectDialog( "Shpk Select [REPLACED]", this, false );
         }
 
         protected override ShpkDocument GetNewDocument() => new( this, NewWriteLocation );

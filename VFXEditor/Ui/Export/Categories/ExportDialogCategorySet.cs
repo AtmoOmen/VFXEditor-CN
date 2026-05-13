@@ -7,7 +7,7 @@ namespace VfxEditor.Ui.Export.Categories {
         public readonly List<ExportDialogCategory> Categories = [];
 
         public ExportDialogCategorySet() {
-            Categories.AddRange( Plugin.Managers.Where( x => x != null ).Select( x => new ExportDialogCategory( x ) ) );
+            Categories.AddRange( Plugin.Groups.Where( x => x != null ).Select( x => new ExportDialogCategory( x ) ) );
         }
 
         public void Draw() => Categories.ForEach( x => x.Draw() );
@@ -30,7 +30,7 @@ namespace VfxEditor.Ui.Export.Categories {
             return ret;
         }
 
-        public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManager, int> offsets ) {
+        public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManagerGroup, int> offsets ) {
             foreach( var category in Categories ) category.WorkspaceImport( files, offsets );
         }
     }

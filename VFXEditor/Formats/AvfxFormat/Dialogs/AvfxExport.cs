@@ -6,6 +6,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Dialogs {
     public class AvfxExport {
+        public bool IsExporting { get; private set; } = false;
         private readonly List<AvfxExportCategory> Categories;
         private bool ExportDependencies = true;
 
@@ -37,12 +38,17 @@ namespace VfxEditor.AvfxFormat.Dialogs {
             ImGui.SameLine();
             if( ImGui.Button( "导出" ) ) SaveDialog();
 
+            ImGui.SameLine();
+            if( ImGui.Button( "Cancel" ) ) {
+                IsExporting = false;
+            }
+
             using var child = ImRaii.Child( "Child", new( -1, -1 ), true );
             Categories.ForEach( cat => cat.Draw() );
         }
 
         public void Show( AvfxNode node ) {
-            Plugin.AvfxManager?.ExportDialog.Show();
+            IsExporting = true;
             Reset();
             foreach( var category in Categories ) {
                 if( category.Belongs( node ) ) {
@@ -62,7 +68,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
             FileBrowserManager.SaveFileDialog( "选择保存位置", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( ok, res ) => {
                 if( !ok ) return;
                 AvfxFile.Export( GetSelected(), res, ExportDependencies );
-                Plugin.AvfxManager?.ExportDialog.Hide();
+                IsExporting = false;
             } );
         }
     }

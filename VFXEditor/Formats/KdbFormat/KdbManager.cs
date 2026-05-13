@@ -4,7 +4,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat {
     public class KdbManager : FileManager<KdbDocument, KdbFile, WorkspaceMetaBasic> {
-        public KdbManager() : base( "Kdb Editor", "Kdb" ) {
+        public KdbManager( KdbManagerGroup group ) : base( group ) {
             SourceSelect = new KdbSelectDialog( "Kdb Select [LOADED]", this, true );
             ReplaceSelect = new KdbSelectDialog( "Kdb Select [REPLACED]", this, false );
         }

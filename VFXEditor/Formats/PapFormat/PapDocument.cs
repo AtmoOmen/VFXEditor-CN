@@ -18,12 +18,13 @@ namespace VfxEditor.PapFormat {
 
         protected override PapFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Disabled = Disabled
+            Disabled = Disabled,
+            WindowIndex = windowIdx
         };
 
         public override void Dispose() {

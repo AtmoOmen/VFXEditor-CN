@@ -1,4 +1,6 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 
@@ -21,5 +23,13 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public abstract void Write( BinaryWriter writer );
 
         public abstract int GetSubInfoSize();
+
+        public delegate ScdAudioEntry GetAudioEntryDelegate( string path, ScdAudioEntry oldEntry );
+
+        public abstract Dictionary<string, GetAudioEntryDelegate> GetImportActions();
+
+        public abstract string GetDefaultExtension();
+
+        public abstract byte[] GetDefaultExtensionData();
     }
 }

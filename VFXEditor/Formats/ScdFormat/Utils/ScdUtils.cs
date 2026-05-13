@@ -1,24 +1,20 @@
 ﻿using System.IO;
 using VfxEditor.Interop;
-using VfxEditor.ScdFormat;
 
 namespace VfxEditor.Formats.ScdFormat.Utils {
     public static class ScdUtils {
         public static string VorbisHeader => Path.Combine( Plugin.RootLocation, "Files", "vorbis_header.bin" );
 
         public static void ConvertWavToOgg( string wavPath ) {
-            Cleanup();
-            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdManager.ConvertOgg}\" \"{wavPath}\"", false, out var _ );
+            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdManagerGroup.ConvertOgg}\" \"{wavPath}\"", false, out var _ );
         }
 
         public static void ConvertToAdpcm( string wavPath ) {
-            Cleanup();
-            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdManager.ConvertWav}\"", false, out var _ );
+            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdManagerGroup.ConvertWav}\"", false, out var _ );
         }
 
-        public static void Cleanup() {
-            if( File.Exists( ScdManager.ConvertWav ) ) File.Delete( ScdManager.ConvertWav );
-            if( File.Exists( ScdManager.ConvertOgg ) ) File.Delete( ScdManager.ConvertOgg );
+        public static void ConvertToHca( string wavPath ) {
+            InteropUtils.Run( "VGAudioCli.exe", $"\"{wavPath}\" \"{ScdManagerGroup.ConvertHca}\"", false, out var _ );
         }
 
         public static void XorDecode( byte[] vorbisHeader, byte encodeByte ) {
@@ -27,7 +23,7 @@ namespace VfxEditor.Formats.ScdFormat.Utils {
             }
         }
 
-        public static void XorDecodeFromTable( byte[] dataFile, int dataLength ) {
+        public static void XorDecodeFromTableVorbis( byte[] dataFile, int dataLength ) {
             var byte1 = dataLength & 0xFF & 0x7F;
             var byte2 = byte1 & 0x3F;
             for( var i = 0; i < dataFile.Length; i++ ) {
@@ -37,6 +33,29 @@ namespace VfxEditor.Formats.ScdFormat.Utils {
                 xorByte ^= byte1;
                 dataFile[i] = ( byte )xorByte;
             }
+        }
+
+        public static byte[] XorDecodeFromTableHca( byte[] data, int blockSize, int dataLength, int seed ) {
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            var v47 = dataLength & 0x3F;
+            var v48 = dataLength & 0x7F;
+
+            var pos = 0;
+            var currentBlockStart = 0;
+
+            while( pos + blockSize <= data.Length ) {
+                for( var i = 0; i < blockSize; i++ ) {
+                    var tableIdx = ( seed + i + currentBlockStart + v47 ) & 0xFF;
+                    var value = data[pos + i];
+                    writer.Write( ( byte )( value ^ XORTABLE[tableIdx] ^ v48 ) ); // write decoded
+                }
+                pos += blockSize;
+                currentBlockStart = ( currentBlockStart + blockSize ) & 0xFF;
+            }
+
+            return ms.ToArray();
         }
 
         public static readonly int[] XORTABLE = [

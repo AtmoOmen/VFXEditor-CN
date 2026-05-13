@@ -183,12 +183,12 @@ namespace VfxEditor.Ui.Export {
                 DefaultMod = new() {
                     Files = DefaultMod.WorkspaceExport()
                 },
-                Groups = Groups.Select( x => x.WorkspaceExport() ).ToList()
+                Groups = [.. Groups.Select( x => x.WorkspaceExport() )]
             };
             meta["penumbra"] = JsonConvert.SerializeObject( data );
         }
 
-        public void WorkspaceImport( JObject meta, Dictionary<IFileManager, int> offsets ) {
+        public void WorkspaceImport( JObject meta, Dictionary<IFileManagerGroup, int> offsets ) {
             if( !meta.ContainsKey( "penumbra" ) ) return;
             var data = JsonConvert.DeserializeObject<PenumbraWorkspace>( meta["penumbra"].ToString() );
 

@@ -4,9 +4,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat {
     public unsafe class MdlManager : FileManager<MdlDocument, MdlFile, WorkspaceMetaBasic> {
-        public MdlManager() : base( "Mdl Editor", "Mdl" ) {
-            SourceSelect = new MdlSelectDialog( "选择文件 [原始]##MDL", this, true );
-            ReplaceSelect = new MdlSelectDialog( "选择文件 [替换]##MDL", this, false );
+        public MdlManager( MdlManagerGroup group ) : base( group ) {
+            SourceSelect = new MdlSelectDialog( "Mdl Select [LOADED]", this, true );
+            ReplaceSelect = new MdlSelectDialog( "Mdl Select [REPLACED]", this, false );
         }
 
         protected override MdlDocument GetNewDocument() => new( this, NewWriteLocation );

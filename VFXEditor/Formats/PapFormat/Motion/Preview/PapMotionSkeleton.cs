@@ -1,24 +1,24 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
-using HelixToolkit.SharpDX.Core.Animations;
-using Dalamud.Bindings.ImGui;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.InteropServices;
-using VfxEditor.DirectX;
-using VfxEditor.DirectX.Pap;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
+using VfxEditor.PapFormat;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Utils;
+using VfxEditor.DirectX;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public unsafe class PapMotionSkeleton : PapMotionPreview {
-        private static PapBonePreview Preview => Plugin.DirectXManager.PapPreview;
-
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
+        public readonly PapFile File;
 
         private List<Bone> Data;
         private int Frame = 0;
@@ -26,16 +26,17 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         private bool Playing = false;
         private DateTime LastTime = DateTime.Now;
 
-        public PapMotionSkeleton( PapMotion motion ) : base( motion ) { }
+        public PapMotionSkeleton( PapFile file, PapMotion motion ) : base( motion ) {
+            File = file;
+        }
 
         public override void Draw( int idx ) {
-            if( Data == null ) {
-                UpdateFrameData();
+            if( Data == null ) { // Init
+                UpdateRender();
             }
-            else if( Preview.CurrentRenderId != RenderId ) {
+            else if( File.BoneInstance.CurrentRenderId != RenderId ) { // Just switched
                 Frame = 0;
                 Playing = false;
-                UpdateFrameData();
             }
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
@@ -82,7 +83,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 }
             }
 
-            if( Frame != lastFrame ) UpdateFrameData();
+            if( Frame != lastFrame ) UpdateRender();
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
@@ -92,12 +93,12 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
-            Preview.DrawInline();
+            Plugin.DirectXManager.BoneRenderer.DrawTexture( RenderId, File.BoneInstance, UpdateRender, Plugin.Configuration.DrawDirectXSkeleton );
         }
 
         // ======== UPDATING ===========
 
-        private void UpdateFrameData() {
+        private void UpdateRender() {
             Motion.AnimationControl->LocalTime = Frame * ( 1 / 30f );
 
             var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
@@ -107,8 +108,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             Data = [];
 
             var parents = new List<int>();
-            var refPoses = new List<Matrix>();
-            var bindPoses = new List<Matrix>();
+            var refPoses = new List<Matrix4x4>();
+            var bindPoses = new List<Matrix4x4>();
 
             for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
                 var transform = transforms[i];
@@ -116,7 +117,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 var rot = transform.Rotation;
                 var scl = transform.Scale;
 
-                var matrix = HavokUtils.CleanMatrix( Matrix.AffineTransformation(
+                var matrix = HavokUtils.CleanMatrix( MatrixHelper.AffineTransformation(
                     scl.X,
                     new Quaternion( rot.X, rot.Y, rot.Z, rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )
@@ -124,13 +125,13 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
                 parents.Add( Motion.Skeleton->ParentIndices[i] );
                 refPoses.Add( matrix );
-                bindPoses.Add( Matrix.Identity );
+                bindPoses.Add( Matrix4x4.Identity );
             }
 
             for( var target = 0; target < Motion.Skeleton->Bones.Length; target++ ) {
                 var current = target;
                 while( current >= 0 ) {
-                    bindPoses[target] = Matrix.Multiply( bindPoses[target], refPoses[current] );
+                    bindPoses[target] = Matrix4x4.Multiply( bindPoses[target], refPoses[current] );
                     current = parents[current];
                 }
             }
@@ -148,15 +149,11 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             Marshal.FreeHGlobal( ( nint )transforms );
             Marshal.FreeHGlobal( ( nint )floats );
 
-            UpdatePreview();
-        }
-
-        private void UpdatePreview() {
             if( Data == null || Data.Count == 0 || Motion.TotalFrames == 0 ) {
-                Preview.LoadEmpty( this );
+                Plugin.DirectXManager.BoneRenderer.SetEmpty( RenderId, File.BoneInstance );
             }
             else {
-                Preview.LoadSkeleton( this, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
+                Plugin.DirectXManager.BoneRenderer.SetSkeleton( RenderId, File.BoneInstance, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
             }
         }
     }

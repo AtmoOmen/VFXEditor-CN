@@ -3,26 +3,24 @@ using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Mesh;
-using VfxEditor.DirectX.Pap;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class DirectXManager {
-        private Device Device;
-        private DeviceContext Ctx;
+        public readonly Device Device;
+        public readonly DeviceContext Ctx;
 
-        public readonly ModelPreview ModelPreview;
-        public readonly GradientRenderer GradientView;
-        public readonly PapBonePreview PapPreview;
-        public readonly GradientRenderer PapMaterialPreview;
-        public readonly BoneNamePreview PhybPreview;
-        public readonly BoneNamePreview SklbPreview;
-        public readonly BoneNamePreview EidPreview;
-        public readonly MaterialPreviewLegacy MaterialPreviewLegacy;
-        public readonly MeshPreview MeshPreview;
+        public readonly GradientRenderer GradientRenderer;
+        public readonly ModelPreview ModelRenderer;
+        public readonly BonePreview<ModelInstance> BoneRenderer;
+        public readonly BoneNamePreview BoneNameRenderer;
+        public readonly MaterialPreviewLegacy MaterialRenderer;
+        public readonly MeshPreview MeshRenderer;
 
-        private readonly List<ModelRenderer> Renderers = [];
+        public readonly List<RenderInstance> Instances = [];
+        public readonly List<Renderer> Renderers = [];
 
         public static Include IncludeHandler { get; private set; }
 
@@ -32,44 +30,38 @@ namespace VfxEditor.DirectX {
             Device = new Device( Dalamud.PluginInterface.UiBuilder.DeviceHandle );
             Ctx = Device.ImmediateContext;
 
-            ModelPreview = new( Device, Ctx, shaderPath );
-            GradientView = new( Device, Ctx, shaderPath );
-            PapPreview = new( Device, Ctx, shaderPath );
-            PapMaterialPreview = new( Device, Ctx, shaderPath );
-            PhybPreview = new( Device, Ctx, shaderPath );
-            SklbPreview = new( Device, Ctx, shaderPath );
-            EidPreview = new( Device, Ctx, shaderPath );
-            MaterialPreviewLegacy = new( Device, Ctx, shaderPath );
-            MeshPreview = new( Device, Ctx, shaderPath );
+            GradientRenderer = new( Device, Ctx, shaderPath );
+            ModelRenderer = new( Device, Ctx, shaderPath );
+            BoneRenderer = new( Device, Ctx, shaderPath );
+            BoneNameRenderer = new( Device, Ctx, shaderPath );
+            MaterialRenderer = new( Device, Ctx, shaderPath );
+            MeshRenderer = new( Device, Ctx, shaderPath );
 
-            Renderers = [
-                ModelPreview,
-                PapPreview,
-                PhybPreview,
-                SklbPreview,
-                EidPreview,
-                MaterialPreviewLegacy,
-                MeshPreview,
-            ];
+            Renderers.AddRange( [
+                GradientRenderer,
+                ModelRenderer,
+                BoneRenderer,
+                BoneNameRenderer,
+                MaterialRenderer,
+                MeshRenderer
+            ] );
         }
 
-        public void RedrawMaterials() {
-            MaterialPreviewLegacy.Redraw();
+        public void Redraw() {
+            foreach( var instance in Instances ) instance.NeedsRender = true;
+            foreach( var renderer in Renderers ) renderer.NeedsUpdate = true;
         }
-
-        public void Redraw() => Renderers.ForEach( x => x.Redraw() );
 
         public void Dispose() {
-            Renderers.ForEach( x => x.Dispose() );
+            GradientRenderer.Dispose();
+            ModelRenderer.Dispose();
+            BoneRenderer.Dispose();
+            BoneNameRenderer.Dispose();
+            MaterialRenderer.Dispose();
+            MeshRenderer.Dispose();
+
+            Instances.Clear();
             Renderers.Clear();
-
-            GradientView.Dispose();
-            PapMaterialPreview.Dispose();
-
-            Device = null;
-            Ctx = null;
         }
-
-        public static SharpDX.Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }
 }

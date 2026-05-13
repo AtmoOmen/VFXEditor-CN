@@ -9,7 +9,7 @@ namespace VfxEditor.AvfxFormat.Model {
         public AvfxModelImportCommand( AvfxModel model, List<AvfxIndex> newIndex, List<AvfxVertex> newVertex ) {
             Model = model;
             State = (newIndex, newVertex);
-            PrevState = (new( Model.Indexes.Indexes ), new( Model.Vertexes.Vertexes ));
+            PrevState = ([.. Model.Indexes.Indexes], [.. Model.Vertexes.Vertexes]);
             SetState( State );
         }
 
@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat.Model {
             Model.Vertexes.Vertexes.Clear();
             Model.Indexes.Indexes.AddRange( state.Item1 );
             Model.Vertexes.Vertexes.AddRange( state.Item2 );
-            Model.RefreshModelPreview();
+            Model.Updated();
         }
     }
 }

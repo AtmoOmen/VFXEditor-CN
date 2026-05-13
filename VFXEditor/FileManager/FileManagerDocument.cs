@@ -173,7 +173,7 @@ namespace VfxEditor.FileManager {
             ReplaceTextInput = "";
 
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
-            if( File != null ) File.Verified = VerifiedStatus.WORKSPACE;
+            File?.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }
 
@@ -201,14 +201,14 @@ namespace VfxEditor.FileManager {
             modOffset += modData.Length;
         }
 
-        public abstract S GetWorkspaceMeta( string newPath );
+        public abstract S GetWorkspaceMeta( string newPath, int windowIdx );
 
-        public void WorkspaceExport( List<S> meta, string rootPath, string newPath ) {
+        public void WorkspaceExport( List<S> meta, string rootPath, string newPath, int windowIdx ) {
             if( File == null ) return;
 
             var newFullPath = Path.Combine( rootPath, newPath );
             System.IO.File.WriteAllBytes( newFullPath, File.ToBytes() );
-            meta.Add( GetWorkspaceMeta( newPath ) );
+            meta.Add( GetWorkspaceMeta( newPath, windowIdx ) );
         }
 
         // ====== DRAWING ==========
@@ -344,18 +344,7 @@ namespace VfxEditor.FileManager {
                 if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveSource();
             }
 
-            // Input
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( inputSize );
-            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Source != null ) ) {
-                if( ImGui.InputTextWithHint( "", SourceDisplay, ref SourceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
-                    var cleanedPath = SourceTextInput.Trim().Replace( "\\", "/" );
-                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[游戏] {cleanedPath}", cleanedPath );
-                    SetSource( result );
-                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
-                }
-            }
-            DrawCopy( Source );
+            if( DrawBar( inputSize, SourceDisplay, ref SourceTextInput, Source, Manager.SourceSelect.Focused, out var result ) ) SetSource( result );
 
             // Local files
             using( var disabled = ImRaii.Disabled( !LocalSource ) )
@@ -388,24 +377,34 @@ namespace VfxEditor.FileManager {
                 if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveReplace();
             }
 
-            // Input
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( inputSize );
-            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Replace != null ) ) {
-                if( ImGui.InputTextWithHint( "", ReplaceDisplay, ref ReplaceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
-                    var cleanedPath = ReplaceTextInput.Trim().Replace( "\\", "/" );
-                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[游戏] {cleanedPath}", cleanedPath );
-                    SetReplace( result );
-                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
-                }
-            }
-            DrawCopy( Replace );
+            if( DrawBar( inputSize, ReplaceDisplay, ref ReplaceTextInput, Replace, Manager.ReplaceSelect.Focused, out var result ) ) SetReplace( result );
 
             // Search
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();
             }
+        }
+
+        private bool DrawBar( float inputSize, string display, ref string inputText, SelectResult selectResult, bool highlight, out SelectResult result ) {
+            using var border = ImRaii.PushStyle( ImGuiStyleVar.FrameBorderSize, 2f, highlight );
+            using var borderColor = ImRaii.PushColor( ImGuiCol.Border, UiUtils.DALAMUD_YELLOW, highlight );
+
+            var edited = false;
+            result = null;
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( inputSize );
+            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, selectResult != null ) ) {
+                if( ImGui.InputTextWithHint( "", display, ref inputText, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
+                    var cleanedPath = inputText.Trim().Replace( "\\", "/" );
+                    result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath );
+                    edited = true;
+                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
+                }
+            }
+            DrawCopy( selectResult );
+            return edited;
         }
 
         private static void DrawCopy( SelectResult result ) {

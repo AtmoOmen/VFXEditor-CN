@@ -24,7 +24,7 @@ namespace VfxEditor.AvfxFormat {
             ( "开始时间", ImGuiTableColumnFlags.None, -1 )
         ];
 
-        public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
+        public AvfxScheduler( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( file, NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
             Parsed = [

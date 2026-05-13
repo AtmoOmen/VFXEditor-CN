@@ -18,7 +18,8 @@ namespace VfxEditor.ScdFormat {
         Vorbis = 0x06,
         Xma = 0x0B,
         MsAdPcm = 0x0C,
-        Atrac3Too = 0x0D
+        Atrac3Too = 0x0D,
+        HCA = 0x1A
     }
 
     [Flags]
@@ -98,6 +99,7 @@ namespace VfxEditor.ScdFormat {
             Data = Format switch {
                 SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, subInfoSize - AuxDataSize, this ),
                 SscfWaveFormat.Vorbis => new ScdVorbis( reader, this ),
+                SscfWaveFormat.HCA => new ScdHca( reader, this ),
                 _ => null
             };
         }

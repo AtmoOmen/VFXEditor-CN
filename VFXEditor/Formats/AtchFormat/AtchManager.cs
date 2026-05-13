@@ -4,9 +4,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AtchFormat {
     public unsafe class AtchManager : FileManager<AtchDocument, AtchFile, WorkspaceMetaBasic> {
-        public AtchManager() : base( "Atch Editor", "Atch" ) {
-            SourceSelect = new AtchSelectDialog( "选择文件 [原始]##ATCH", this, true );
-            ReplaceSelect = new AtchSelectDialog( "选择文件 [替换]###ATCH", this, false );
+        public AtchManager( AtchManagerGroup group ) : base( group ) {
+            SourceSelect = new AtchSelectDialog( "Atch Select [LOADED]", this, true );
+            ReplaceSelect = new AtchSelectDialog( "Atch Select [REPLACED]", this, false );
         }
 
         protected override AtchDocument GetNewDocument() => new( this, NewWriteLocation );

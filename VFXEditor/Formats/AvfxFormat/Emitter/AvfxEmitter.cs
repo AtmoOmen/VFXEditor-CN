@@ -26,18 +26,18 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ParticleCount = new( "粒子数", "PrCn" );
         public readonly AvfxInt EmitterCount = new( "发射器数", "EmCn" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve1Axis CreateCount = new( "创建数", "CrC", locked: true );
-        public readonly AvfxCurve1Axis CreateCountRandom = new( "随机创建数", "CrCR" );
-        public readonly AvfxCurve1Axis CreateInterval = new( "创建数间隔", "CrI", locked: true );
-        public readonly AvfxCurve1Axis CreateIntervalRandom = new( "随机创建数间隔", "CrIR" );
-        public readonly AvfxCurve1Axis Gravity = new( "重力", "Gra" );
-        public readonly AvfxCurve1Axis GravityRandom = new( "随机重力", "GraR" );
-        public readonly AvfxCurve1Axis AirResistance = new( "空气阻力", "ARs", locked: true );
-        public readonly AvfxCurve1Axis AirResistanceRandom = new( "随机空气阻力", "ARsR" );
-        public readonly AvfxCurveColor Color = new( "颜色", locked: true );
-        public readonly AvfxCurve3Axis Position = new( "位置", "Pos", locked: true );
-        public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle, locked: true );
-        public readonly AvfxCurve3Axis Scale = new( "缩放", "Scl", locked: true );
+        public readonly AvfxCurve1Axis CreateCount = new( "Create Count", "CrC", locked: true );
+        public readonly AvfxCurve1Axis CreateCountRandom = new( "Create Count Random", "CrCR" );
+        public readonly AvfxCurve1Axis CreateInterval = new( "Create Count Interval", "CrI", locked: true );
+        public readonly AvfxCurve1Axis CreateIntervalRandom = new( "Create Count Interval Random", "CrIR" );
+        public readonly AvfxCurve1Axis Gravity = new( "Gravity", "Gra" );
+        public readonly AvfxCurve1Axis GravityRandom = new( "Gravity Random", "GraR" );
+        public readonly AvfxCurve1Axis AirResistance = new( "Air Resistance", "ARs", locked: true );
+        public readonly AvfxCurve1Axis AirResistanceRandom = new( "Air Resistance Random", "ARsR" );
+        public readonly AvfxCurveColor Color;
+        public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
+        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
+        public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
 
         public readonly AvfxCurve1Axis InjectionAngleX = new( "X 轴注入角度", "IAX", CurveType.Angle );
         public readonly AvfxCurve1Axis InjectionAngleRandomX = new( "随机 X 轴注入角度", "IAXR", CurveType.Angle );
@@ -69,8 +69,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiEmitterSplitView ParticleSplit;
         private readonly List<IUiItem> Parameters;
 
-        public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
+        public AvfxEmitter( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( file, NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
             NodeGroups = groupSet;
+
+            Color = new( File, "Color", locked: true );
 
             Parsed = [
                 Sound,
@@ -140,7 +142,7 @@ namespace VfxEditor.AvfxFormat {
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
             ParticleSplit = new( "Create Particles", Particles, this, true );
 
-            NodeView = new UiNodeGraphView( this );
+            NodeView = new UiNodeGraphView( file, this );
 
             Parameters = [
                 LoopStart,

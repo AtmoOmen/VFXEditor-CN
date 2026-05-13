@@ -19,12 +19,13 @@ namespace VfxEditor.SklbFormat {
 
         protected override SklbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Disabled = Disabled
+            Disabled = Disabled,
+            WindowIndex = windowIdx
         };
 
         public override void Dispose() {

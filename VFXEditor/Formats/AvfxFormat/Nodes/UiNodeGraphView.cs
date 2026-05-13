@@ -6,6 +6,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class UiNodeGraphView : IUiItem {
+        public AvfxFile File;
         public AvfxNode Node;
         private static readonly uint BgColor = ImGui.GetColorU32( new Vector4( 0.13f, 0.13f, 0.13f, 1 ) );
         private static readonly uint BgColor2 = ImGui.GetColorU32( new Vector4( 0.3f, 0.3f, 0.3f, 1 ) );
@@ -25,7 +26,8 @@ namespace VfxEditor.AvfxFormat {
         private Vector2 LastDragPos;
         private Vector2 OFFSET = new( -30, -50 );
 
-        public UiNodeGraphView( AvfxNode node ) {
+        public UiNodeGraphView( AvfxFile file, AvfxNode node ) {
+            File = file;
             Node = node;
         }
 
@@ -107,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
 
                 drawList.AddText( UiBuilder.IconFont, 12, buttonPos, buttonOver ? BgColor : 0xFFFFFFFF, FontAwesomeIcon.Share.ToIconString() );
                 if( buttonOver && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsItemFocused() ) {
-                    Plugin.AvfxManager.File.SelectItem( node ); // navigate to node
+                    File.SelectItem( node ); // navigate to node
                 }
 
                 if( item.Level > 0 ) { // right node

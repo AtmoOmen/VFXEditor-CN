@@ -7,6 +7,9 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEmitterItem : GenericWorkspaceItem {
+        private int? SavedCreateProbability = null;
+        private int? SavedCreateCount = null;
+
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;
 
@@ -148,6 +151,24 @@ namespace VfxEditor.AvfxFormat {
         public override string GetWorkspaceId() {
             var type = IsParticle ? "Ptcl" : "Emit";
             return $"{Emitter.GetWorkspaceId()}/{type}{GetIdx()}";
+        }
+
+        public bool GetEnabledToggle() { // is the toggle enabled?
+            return CreateCount.Value > 0 || CreateProbability.Value > 0;
+        }
+
+        public void SetEnableToggle( bool enabled ) {
+            if( enabled ) { // restore from saved value
+                CreateCount.Value = SavedCreateCount ?? 1;
+                CreateProbability.Value = SavedCreateProbability ?? 100;
+            }
+            else { // disable, save for now
+                SavedCreateCount = CreateCount.Value;
+                SavedCreateProbability = CreateProbability.Value;
+
+                CreateCount.Value = 0;
+                CreateProbability.Value = 0;
+            }
         }
     }
 }

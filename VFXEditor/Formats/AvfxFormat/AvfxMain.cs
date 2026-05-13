@@ -9,8 +9,8 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxMain : AvfxDrawable {
-        public static AvfxMain FromStream( BinaryReader reader ) {
-            var main = new AvfxMain();
+        public static AvfxMain FromStream( AvfxFile file, BinaryReader reader ) {
+            var main = new AvfxMain( file );
             reader.ReadInt32();
             var size = reader.ReadInt32();
             main.Read( reader, size );
@@ -19,23 +19,25 @@ namespace VfxEditor.AvfxFormat {
 
         // ============
 
-        public readonly AvfxInt Version = new( "版本", "Ver", value: 0x20110913 );
-        public readonly AvfxBool IsDelayFastParticle = new( "延迟快速粒子", "bDFP" );
-        public readonly AvfxBool IsFitGround = new( "适应地面", "bFG" );
-        public readonly AvfxBool IsTranformSkip = new( "跳过变换", "bTS" );
-        public readonly AvfxBool IsAllStopOnHide = new( "隐藏时全部停止", "bASH" );
-        public readonly AvfxBool CanBeClippedOut = new( "可被裁剪", "bCBC" );
-        public readonly AvfxBool ClipBoxenabled = new( "启用裁剪框", "bCul" );
-        public readonly AvfxFloat ClipBoxX = new( "裁剪框 X 坐标", "CBPx" );
-        public readonly AvfxFloat ClipBoxY = new( "裁剪框 Y 坐标", "CBPy" );
-        public readonly AvfxFloat ClipBoxZ = new( "裁剪框 Z 坐标", "CBPz" );
-        public readonly AvfxFloat ClipBoxSizeX = new( "裁剪框 X 轴尺寸", "CBSx" );
-        public readonly AvfxFloat ClipBoxSizeY = new( "裁剪框 Y 轴尺寸", "CBSy" );
-        public readonly AvfxFloat ClipBoxSizeZ = new( "裁剪框 Z 轴尺寸", "CBSz" );
-        public readonly AvfxFloat BiasZmaxScale = new( "Z 轴最大缩放值偏移", "ZBMs" );
-        public readonly AvfxFloat BiasZmaxDistance = new( "Z 轴最大距离偏移", "ZBMd" );
-        public readonly AvfxBool IsCameraSpace = new( "摄像机空间", "bCmS" );
-        public readonly AvfxBool IsFullEnvLight = new( "全局环境光", "bFEL" );
+        public readonly AvfxFile File;
+
+        public readonly AvfxInt Version = new( "Version", "Ver", value: 0x20110913 );
+        public readonly AvfxBool IsDelayFastParticle = new( "Delay Fast Particle", "bDFP" );
+        public readonly AvfxBool IsFitGround = new( "Fit Ground", "bFG" );
+        public readonly AvfxBool IsTranformSkip = new( "Transform Skip", "bTS" );
+        public readonly AvfxBool IsAllStopOnHide = new( "All Stop on Hide", "bASH" );
+        public readonly AvfxBool CanBeClippedOut = new( "Can be Clipped Out", "bCBC" );
+        public readonly AvfxBool ClipBoxenabled = new( "Clip Box Enabled", "bCul" );
+        public readonly AvfxFloat ClipBoxX = new( "Clip Box X", "CBPx" );
+        public readonly AvfxFloat ClipBoxY = new( "Clip Box Y", "CBPy" );
+        public readonly AvfxFloat ClipBoxZ = new( "Clip Box Z", "CBPz" );
+        public readonly AvfxFloat ClipBoxSizeX = new( "Clip Box Size X", "CBSx" );
+        public readonly AvfxFloat ClipBoxSizeY = new( "Clip Box Size Y", "CBSy" );
+        public readonly AvfxFloat ClipBoxSizeZ = new( "Clip Box Size Z", "CBSz" );
+        public readonly AvfxFloat BiasZmaxScale = new( "Bias Z Max Scale", "ZBMs" );
+        public readonly AvfxFloat BiasZmaxDistance = new( "Bias Z Max Distance", "ZBMd" );
+        public readonly AvfxBool IsCameraSpace = new( "Camera Space", "bCmS" );
+        public readonly AvfxBool IsFullEnvLight = new( "Full Env Light", "bFEL" );
         public readonly AvfxBool OSE = new( "OSE", "bOSE" );
         public readonly AvfxBool IsClipOwnSetting = new( "裁剪自身", "bOSt" );
         public readonly AvfxFloat NearClipBegin = new( "近裁剪起始位置", "NCB" );
@@ -83,6 +85,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat SBVa = new( "SBVa", "SBVa" );
         public readonly AvfxBool SSVEnabled = new( "启用 SSV", "bSSV" );
         public readonly AvfxFloat SSVa = new( "SSVa", "SSVa" );
+        public readonly AvfxInt SPHP = new( "SPHP", "SPHP" ); //only 0 so far
 
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
@@ -101,7 +104,9 @@ namespace VfxEditor.AvfxFormat {
         private readonly int[] UiVersion = new int[4];
         private float ScaleCombined = 1.0f;
 
-        public AvfxMain() : base( "AVFX" ) {
+        public AvfxMain( AvfxFile file ) : base( "AVFX" ) {
+            File = file;
+
             Parsed = [
                 Version,
                 IsDelayFastParticle,
@@ -127,6 +132,7 @@ namespace VfxEditor.AvfxFormat {
                 FarClipBegin,
                 FarClipEnd,
                 SoftParticleFadeRange,
+                SPHP,
                 SoftKeyOffset,
                 DrawLayerType,
                 DrawOrderType,
@@ -193,6 +199,7 @@ namespace VfxEditor.AvfxFormat {
                 FarClipBegin,
                 FarClipEnd,
                 SoftParticleFadeRange,
+                SPHP,
                 SoftKeyOffset,
                 DrawLayerType,
                 DrawOrderType,
@@ -224,42 +231,42 @@ namespace VfxEditor.AvfxFormat {
             ReadNested( reader, ( _reader, _name, _size ) => {
                 switch( _name ) {
                     case AvfxScheduler.NAME:
-                        var Scheduler = new AvfxScheduler( NodeGroupSet );
+                        var Scheduler = new AvfxScheduler( File, NodeGroupSet );
                         Scheduler.Read( _reader, _size );
                         Schedulers.Add( Scheduler );
                         break;
                     case AvfxTimeline.NAME:
-                        var Timeline = new AvfxTimeline( NodeGroupSet );
+                        var Timeline = new AvfxTimeline( File, NodeGroupSet );
                         Timeline.Read( _reader, _size );
                         Timelines.Add( Timeline );
                         break;
                     case AvfxEmitter.NAME:
-                        var Emitter = new AvfxEmitter( NodeGroupSet );
+                        var Emitter = new AvfxEmitter( File, NodeGroupSet );
                         Emitter.Read( _reader, _size );
                         Emitters.Add( Emitter );
                         break;
                     case AvfxParticle.NAME:
-                        var Particle = new AvfxParticle( NodeGroupSet );
+                        var Particle = new AvfxParticle( File, NodeGroupSet );
                         Particle.Read( _reader, _size );
                         Particles.Add( Particle );
                         break;
                     case AvfxEffector.NAME:
-                        var Effector = new AvfxEffector();
+                        var Effector = new AvfxEffector( File );
                         Effector.Read( _reader, _size );
                         Effectors.Add( Effector );
                         break;
                     case AvfxBinder.NAME:
-                        var Binder = new AvfxBinder();
+                        var Binder = new AvfxBinder( File );
                         Binder.Read( _reader, _size );
                         Binders.Add( Binder );
                         break;
                     case AvfxTexture.NAME:
-                        var Texture = new AvfxTexture();
+                        var Texture = new AvfxTexture( File );
                         Texture.Read( _reader, _size );
                         Textures.Add( Texture );
                         break;
                     case AvfxModel.NAME:
-                        var Model = new AvfxModel();
+                        var Model = new AvfxModel( File );
                         Model.Read( _reader, _size );
                         Models.Add( Model );
                         break;

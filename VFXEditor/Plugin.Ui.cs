@@ -11,12 +11,13 @@ using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
+using VfxEditor.FileManager;
 
 namespace VfxEditor {
     public unsafe partial class Plugin {
         public static bool InGpose => Dalamud.ClientState.IsGPosing;
         public static IGameObject GposeTarget => Dalamud.Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
-        public static IGameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
+        public static IGameObject PlayerObject => InGpose ? GposeTarget : Dalamud.Objects?.LocalPlayer;
         public static IGameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
 
         private static readonly List<string> ModalsToOpen = [];
@@ -29,6 +30,10 @@ namespace VfxEditor {
             CheckWorkspaceKeybinds();
 
             WindowSystem.Draw();
+            foreach( var group in Groups ) {
+                if( group is FileManagerGroupBase g ) g.Draw();
+            }
+
             TrackerManager.Draw();
 
             CheckAutoSave();
@@ -46,10 +51,14 @@ namespace VfxEditor {
             if( Configuration.SaveAsKeybind.KeyPressed() ) SaveAsWorkspace();
         }
 
-        public static void DrawFileMenu() {
+        public static void DrawFileMenu( FileManagerBase manager, FileManagerGroupBase group ) {
             using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.BeginMenu( "文件" ) ) {
+                if( ImGui.MenuItem( "新建窗口" ) ) group.NewWindow();
+                group.DrawCloseWindow( manager );
+
+                ImGui.Separator();
                 if( ImGui.MenuItem( "新建" ) ) NewWorkspace();
                 if( ImGui.MenuItem( "打开" ) ) OpenWorkspace( true );
                 if( ImGui.BeginMenu( "打开最近" ) ) {
@@ -71,7 +80,14 @@ namespace VfxEditor {
                 if( ImGui.MenuItem( "另存为" ) ) SaveAsWorkspace();
 
                 ImGui.Separator();
-                if( ImGui.MenuItem( "设置" ) ) Configuration.Show();
+                if( ImGui.MenuItem( "设置" ) ) ConfigWindow.Show();
+                if( ImGui.BeginMenu( "Penumbra" ) ) {
+                    if( ImGui.MenuItem( "打开 Mod" ) ) OpenWorkspacePenumbra( true );
+                    if( ImGui.MenuItem( "追加 Mod" ) ) OpenWorkspacePenumbra( false );
+                    ImGui.EndMenu();
+                }
+
+                ImGui.Separator();
                 if( ImGui.MenuItem( "工具" ) ) ToolsDialog.Show();
                 if( ImGui.BeginMenu( "帮助" ) ) {
                     if( ImGui.MenuItem( "GitHub" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor" );
@@ -84,8 +100,8 @@ namespace VfxEditor {
             }
 
             if( ImGui.BeginMenu( "导出" ) ) {
-                if( ImGui.MenuItem( "Penumbra" ) ) PenumbraDialog.Show();
-                if( ImGui.MenuItem( "TexTools" ) ) TexToolsDialog.Show();
+                if( ImGui.MenuItem( "Penumbra" ) ) PenumbraExportDialog.Show();
+                if( ImGui.MenuItem( "TexTools" ) ) TexToolsExportDialog.Show();
                 ImGui.EndMenu();
             }
         }
@@ -94,22 +110,22 @@ namespace VfxEditor {
             using var _ = ImRaii.PushId( "Menu" );
 
             // Manually specify the order since it's different than the load order
-            var categories = new List<IFileManager[]> {
-                new IFileManager[]{
+            var categories = new List<IFileManagerGroup[]> {
+                new IFileManagerGroup[]{
                     AvfxManager,
                     TextureManager
                 },
-                new IFileManager[]{
+                new IFileManagerGroup[]{
                     TmbManager,
                     PapManager,
                 },
-                new IFileManager[]{
+                new IFileManagerGroup[]{
                     ScdManager
                 },
-                new IFileManager[]{
+                new IFileManagerGroup[]{
                     UldManager
                 },
-                new IFileManager[]{
+                new IFileManagerGroup[]{
                     SklbManager,
                     SkpManager,
                     PhybManager,
@@ -118,7 +134,7 @@ namespace VfxEditor {
                     KdbManager,
                     PbdManager,
                 },
-                new IFileManager[]{
+                new IFileManagerGroup[]{
                     MdlManager,
                     MtrlManager,
                     ShpkManager,
@@ -157,6 +173,12 @@ namespace VfxEditor {
         public static void AddModal( Modal modal ) {
             Modals[modal.Title] = modal;
             ModalsToOpen.Add( modal.Title ); // To eliminate Imgui ID weirdness
+        }
+
+        public static void AddDefaultDocuments() {
+            foreach( var group in Groups ) {
+                if( group is FileManagerGroupBase g ) g.AddDefaultDocument();
+            }
         }
     }
 }

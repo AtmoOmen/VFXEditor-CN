@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
@@ -9,21 +9,21 @@ using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public abstract partial class FileManager<T, R, S> : FileManagerBase, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        public T ActiveDocument { get; protected set; }
-        public R? File => ActiveDocument?.File;
+    public abstract partial class FileManager<D, F, S> : FileManagerBase, IFileManager where D : FileManagerDocument<F, S> where F : FileManagerFile {
+        public D ActiveDocument { get; protected set; }
+        public F? ActiveFile => ActiveDocument?.File;
 
         private int DOC_ID = 0;
-        public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
+        public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{FormatName}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
 
-        private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
-        public readonly List<T> Documents = [];
+        private readonly FileManagerDocumentWindow<D, F, S> DocumentWindow;
+        public readonly List<D> Documents = [];
 
-        public FileManager( string title, string id ) : this( title, id, id.ToLower(), id, id ) { }
+        private bool UseWindowColor = false;
+        private Vector4 WindowColor = new( 1, 0, 0, 1 ); // TODO: pick a random one
 
-        public FileManager( string title, string id, string extension, string workspaceKey, string workspacePath ) : base( title, id, extension, workspaceKey, workspacePath ) {
-            AddDocument();
-            DocumentWindow = new( title, this );
+        public FileManager( FileManagerGroupBase group ) : base( group ) {
+            DocumentWindow = new( Title, this );
         }
 
         // ===================
@@ -49,83 +49,88 @@ namespace VfxEditor.FileManager {
 
         // ====================
 
-        protected abstract T GetNewDocument();
+        protected abstract D GetNewDocument();
 
         public void AddDocument() {
             ActiveDocument = GetNewDocument();
             Documents.Add( ActiveDocument );
         }
 
-        public void SelectDocument( T document ) {
+        public void SelectDocument( D document ) {
             ActiveDocument = document;
         }
 
-        public bool RemoveDocument( T document ) {
-            Documents.Remove( document );
-            document.Dispose();
-
-            DraggingItem = null;
+        public void RemoveDocument( D document, bool dispose = true ) {
+            if( !Documents.Contains( document ) ) return;
             DocumentWindow.Reset();
 
+            Documents.Remove( document );
+            if( dispose ) document.Dispose();
             ExportDialog.RemoveDocument( document );
 
-            if( document == ActiveDocument ) {
-                ActiveDocument = Documents[0];
-                return true;
+            if( ActiveDocument == document ) ActiveDocument = Documents.Count > 0 ? Documents[0] : null;
+
+            if( ActiveDocument == null ) {
+                SourceSelect?.Hide();
+                ReplaceSelect?.Hide();
             }
-            return false;
         }
 
-        // ====================
+        public void MoveDocumentAfter( D document, D targetDocument ) {
+            if( !Documents.Contains( targetDocument ) ) return;
+            Documents.Remove( document );
+            Documents.Insert( Documents.IndexOf( targetDocument ), document );
+        }
+
+        public void InsertDocument( D document, int idx ) {
+            if( Documents.Contains( document ) ) return;
+            Documents.Insert( idx, document );
+            ActiveDocument = document;
+        }
+
+        public void InsertDocument( D document ) {
+            if( Documents.Contains( document ) ) return;
+            Documents.Add( document );
+            ActiveDocument = document;
+        }
 
         public IEnumerable<IFileDocument> GetDocuments() => Documents;
 
-        public void WorkspaceImport( JObject meta, string loadLocation ) {
-            var items = WorkspaceUtils.ReadFromMeta<S>( meta, WorkspaceKey );
-            if( items == null || items.Length == 0 ) {
-                AddDocument();
-                return;
-            }
-            foreach( var item in items ) {
-                var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, WorkspacePath ) );
-                ActiveDocument = newDocument;
-                Documents.Add( newDocument );
-            }
+        public void WorkspaceImport( S item, string loadLocation, string path ) {
+            var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, path ) );
+            ActiveDocument = newDocument;
+            Documents.Add( newDocument );
         }
 
-        protected abstract T GetWorkspaceDocument( S data, string localPath );
+        protected abstract D GetWorkspaceDocument( S data, string localPath );
 
-        public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation ) {
-            var rootPath = Path.Combine( saveLocation, WorkspacePath );
-            Directory.CreateDirectory( rootPath );
-
-            List<S> documentMeta = [];
-            foreach( var (document, idx) in Documents.WithIndex() ) {
-                document.WorkspaceExport( documentMeta, rootPath, $"{Id}Temp{idx}.{Extension}" );
-            }
-
-            WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
-        }
-
-        // ====================
-
-        public bool FileExists( string path ) => IFileManager.FileExist( this, path );
-
-        public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
-
-        public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
-
-        public virtual void Reset( ResetType type ) {
+        public virtual void Reset( bool pluginClosing ) {
             Documents.ForEach( x => x.Dispose() );
             Documents.Clear();
             SourceSelect?.Hide();
             ReplaceSelect?.Hide();
 
             ActiveDocument = null;
-            DraggingItem = null;
             DocumentWindow.Reset();
+        }
 
-            if( type == ResetType.ToDefault ) AddDocument(); // Default document
+        public bool CanImport( string path ) => path.EndsWith( Extension );
+
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile ) {
+            SetSource( selectedFile );
+            SetReplace( replacedFile );
+            AddDocument();
+        }
+
+        public override WorkspaceWindow ToMeta() => base.ToMeta() with {
+            UseWindowColor = UseWindowColor,
+            WindowColor = WindowColor
+        };
+
+        public override void SetMeta( WorkspaceWindow? meta ) {
+            base.SetMeta( meta );
+            UseWindowColor = meta?.UseWindowColor ?? UseWindowColor;
+            WindowColor = meta?.WindowColor ?? WindowColor;
         }
     }
 }

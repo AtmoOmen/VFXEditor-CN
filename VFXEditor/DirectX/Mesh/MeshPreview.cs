@@ -1,15 +1,15 @@
-﻿using SharpDX;
+using HelixToolkit.Maths;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.DirectX.Renderers;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Mesh {
-    public class MeshPreview : ModelDeferredRenderer {
+    public class MeshPreview : ModelDeferredRenderer<ModelDeferredInstance> {
         private readonly D3dDrawable Model;
 
         private readonly HashSet<Buffer> ToCleanUp = [];
@@ -20,8 +20,8 @@ namespace VfxEditor.DirectX.Mesh {
         protected VSMaterialBuffer VSBufferData;
 
         public MeshPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialPixelShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialVertexShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             PSBufferData = new() { };
             VSBufferData = new() { };
@@ -41,24 +41,23 @@ namespace VfxEditor.DirectX.Mesh {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void LoadMesh( MdlMeshDrawable mesh ) {
-            CurrentRenderId = mesh.RenderId;
+        public void SetMesh( int renderId, ModelDeferredInstance instance, MdlMeshDrawable mesh ) {
+            OnUpdate( renderId, instance );
+
             if( mesh == null ) return;
             var buffer = mesh.GetBuffer( Device );
             Model.SetVertexes( buffer, ( int )mesh.GetIndexCount() );
             ToCleanUp.Add( buffer );
-
-            UpdateDraw();
         }
 
-        protected override void OnDrawUpdate() {
+        protected override void OnRenderUpdate( ModelDeferredInstance instance ) {
             var psBuffer = PSBufferData with {
-                AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
-                EyePosition = CameraPosition,
+                AmbientColor = Plugin.Configuration.MaterialAmbientColor,
+                EyePosition = instance.CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
-                InvViewMatrix = Matrix.Invert( ViewMatrix ),
-                InvProjectionMatrix = Matrix.Invert( ProjMatrix ),
+                InvViewMatrix = instance.ViewMatrix.Inverted(),
+                InvProjectionMatrix = instance.ProjMatrix.Inverted(),
 
                 DiffuseColor = new( 1f, 1f, 1f ),
                 EmissiveColor = new( 0f, 0f, 0f ),
@@ -76,21 +75,19 @@ namespace VfxEditor.DirectX.Mesh {
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
         }
 
-        protected override void GBufferPass() {
+        protected override void GBufferPass( ModelDeferredInstance instance ) {
             Model.Draw(
                 Ctx, PassType.GBuffer,
                 [VertexShaderBuffer, MaterialVertexShaderBuffer],
                 [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
 
-        protected override void QuadPass() {
+        protected override void QuadPass( ModelDeferredInstance instance ) {
             Quad.Draw(
                 Ctx, PassType.Final,
                     [VertexShaderBuffer, MaterialVertexShaderBuffer],
                     [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
-
-        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXMaterials();
 
         public override void Dispose() {
             base.Dispose();

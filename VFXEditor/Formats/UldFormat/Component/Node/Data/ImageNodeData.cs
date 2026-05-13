@@ -26,8 +26,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedInt Wrap = new( "换行", size: 1 );
         private readonly ParsedEnum<UldDrawMode> DrawMode = new( "绘制模式", size: 1 );
 
-        public ImageNodeData() {
-            PartListId = new();
+        public ImageNodeData( UldFile file ) {
+            PartListId = new( file );
             PartId = new( PartListId );
         }
 

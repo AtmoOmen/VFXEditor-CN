@@ -19,28 +19,35 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsLocal = new( "是否位于本地", "bLcl" );
 
         public readonly AvfxCurve1Axis CF = new( "CF", "CF" );
-        public readonly AvfxCurve1Axis CFR = new( "随机 CF", "CFR" );
-        public readonly AvfxCurve1Axis Width = new( "宽度", "Wd" );
-        public readonly AvfxCurve1Axis WidthRandom = new( "随机宽度", "WdR" );
-        public readonly AvfxCurve1Axis WidthBegin = new( "起始宽度", "WdB" );
-        public readonly AvfxCurve1Axis WidthBeginRandom = new( "随机起始宽度", "WdBR" );
-        public readonly AvfxCurve1Axis WidthCenter = new( "中心宽度", "WdC" );
-        public readonly AvfxCurve1Axis WidthCenterRandom = new( "随机中心宽度", "WdCR" );
-        public readonly AvfxCurve1Axis WidthEnd = new( "结束宽度", "WdE" );
-        public readonly AvfxCurve1Axis WidthEndRandom = new( "随机结束宽度", "WdER" );
-        public readonly AvfxCurve1Axis Length = new( "长度", "Len" );
-        public readonly AvfxCurve1Axis LengthRandom = new( "随机长度", "LenR" );
-        public readonly AvfxCurve1Axis Softness = new( "模糊度", "Sft" );
-        public readonly AvfxCurve1Axis SoftRandom = new( "随机模糊度", "SftR" );
-        public readonly AvfxCurve1Axis PnDs = new( "PnDs (未知)", "PnDs" );
-        public readonly AvfxCurveColor ColorBegin = new( name: "起始颜色", "ColB" );
-        public readonly AvfxCurveColor ColorCenter = new( name: "中心颜色", "ColC" );
-        public readonly AvfxCurveColor ColorEnd = new( name: "结束颜色", "ColE" );
-        public readonly AvfxCurveColor ColorEdgeBegin = new( name: "起始颜色渐变", "CoEB" );
-        public readonly AvfxCurveColor ColorEdgeCenter = new( name: "中心颜色渐变", "CoEC" );
-        public readonly AvfxCurveColor ColorEdgeEnd = new( name: "结束颜色渐变", "CoEE" );
+        public readonly AvfxCurve1Axis CFR = new( "CF Random", "CFR" );
+        public readonly AvfxCurve1Axis Width = new( "Width", "Wd" );
+        public readonly AvfxCurve1Axis WidthRandom = new( "Width Random", "WdR" );
+        public readonly AvfxCurve1Axis WidthBegin = new( "Width Begin", "WdB" );
+        public readonly AvfxCurve1Axis WidthBeginRandom = new( "Width Begin Random", "WdBR" );
+        public readonly AvfxCurve1Axis WidthCenter = new( "Width Center", "WdC" );
+        public readonly AvfxCurve1Axis WidthCenterRandom = new( "Width Center Random", "WdCR" );
+        public readonly AvfxCurve1Axis WidthEnd = new( "Width End", "WdE" );
+        public readonly AvfxCurve1Axis WidthEndRandom = new( "Width End Random", "WdER" );
+        public readonly AvfxCurve1Axis Length = new( "Length", "Len" );
+        public readonly AvfxCurve1Axis LengthRandom = new( "Length Random", "LenR" );
+        public readonly AvfxCurve1Axis Softness = new( "Softness", "Sft" );
+        public readonly AvfxCurve1Axis SoftRandom = new( "Softness Random", "SftR" );
+        public readonly AvfxCurve1Axis PnDs = new( "Point Distortion", "PnDs" );
+        public readonly AvfxCurveColor ColorBegin;
+        public readonly AvfxCurveColor ColorCenter;
+        public readonly AvfxCurveColor ColorEnd;
+        public readonly AvfxCurveColor ColorEdgeBegin;
+        public readonly AvfxCurveColor ColorEdgeCenter;
+        public readonly AvfxCurveColor ColorEdgeEnd;
 
-        public AvfxParticleDataPolyline() : base() {
+        public AvfxParticleDataPolyline( AvfxFile file ) : base() {
+            ColorBegin = new( file, name: "Color Begin", "ColB" );
+            ColorCenter = new( file, name: "Color Center", "ColC" );
+            ColorEnd = new( file, name: "Color End", "ColE" );
+            ColorEdgeBegin = new( file, name: "Color Edge Begin", "CoEB" );
+            ColorEdgeCenter = new( file, name: "Color Edge Center", "CoEC" );
+            ColorEdgeEnd = new( file, name: "Color Edge End", "CoEE" );
+
             Parsed = [
                 CreateLineType,
                 NotBillBoardBaseAxisType,

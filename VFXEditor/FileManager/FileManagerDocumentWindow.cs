@@ -11,7 +11,7 @@ namespace VfxEditor.FileManager {
         private readonly FileManager<T, R, S> Manager;
         private static bool ShowSourceColumn => Plugin.Configuration.DocumentPopoutShowSource;
 
-        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, new( 600, 400 ), manager.WindowSystem ) {
+        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]##{manager.WindowId}", false, new( 600, 400 ), manager.WindowSystem ) {
             Manager = manager;
         }
 
@@ -65,10 +65,7 @@ namespace VfxEditor.FileManager {
 
                 using var popup = ImRaii.Popup( "DocumentPopup" );
                 if( popup ) {
-                    var deleteDisabled = Manager.Documents.Count < 2;
-                    using( var disabled = ImRaii.Disabled( deleteDisabled ) ) {
-                        if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "删除" ) && !deleteDisabled ) Manager.RemoveDocument( document );
-                    }
+                    if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) Manager.RemoveDocument( document );
                     document.DrawRename();
                 }
             }

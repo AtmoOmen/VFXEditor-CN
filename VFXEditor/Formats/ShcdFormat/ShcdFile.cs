@@ -2,6 +2,7 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
@@ -27,7 +28,7 @@ namespace VfxEditor.Formats.ShcdFormat {
             var shaderOffset = reader.ReadUInt32();
             var parameterOffset = reader.ReadUInt32();
 
-            Shader = new( reader, Stage.Value, DxVersion, !Shcd3, ShaderFileType.Shcd, false );
+            Shader = new( reader, Stage.Value, ShpkFile.HULL_DOMAIN_GEO_SHADERS_VERSION, DxVersion, !Shcd3, ShaderFileType.Shcd, false );
             Shader.Read( reader, parameterOffset, shaderOffset );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );

@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiTimelineItemSequencer ItemSplit;
         private readonly List<IUiItem> Display;
 
-        public AvfxTimeline( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.TimelineColor ) {
+        public AvfxTimeline( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( file, NAME, AvfxNodeGroupSet.TimelineColor ) {
             NodeGroups = groupSet;
 
             Parsed = [

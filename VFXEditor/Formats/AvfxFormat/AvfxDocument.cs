@@ -51,18 +51,17 @@ namespace VfxEditor.AvfxFormat {
             if( File != null && System.IO.File.Exists( path ) ) File.Import( path );
         }
 
-        public void ShowExportDialog( AvfxNode node ) => File.ShowExportDialog( node );
-
         public void OpenTemplate( string path ) =>
             SetSource( new SelectResult( SelectResultType.Local, "", "[模板]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
 
-        public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
             Renaming = File.GetRenamingMap(),
-            Disabled = Disabled
+            Disabled = Disabled,
+            WindowIndex = windowIdx
         };
 
         // ========= DRAWING =============

@@ -18,7 +18,7 @@ namespace VfxEditor.ScdFormat {
 
         public readonly List<ScdAudioEntry> Audio = [];
         public readonly List<ScdSoundEntry> Sounds = [];
-        private List<ScdLayoutEntry> Layouts => Sounds.Select( x => x.Layout ).ToList();
+        private List<ScdLayoutEntry> Layouts => [.. Sounds.Select( x => x.Layout )];
         public readonly List<ScdTrackEntry> Tracks = [];
         public readonly List<ScdAttributeEntry> Attributes = [];
 
@@ -73,8 +73,8 @@ namespace VfxEditor.ScdFormat {
                 Verified = VerifiedStatus.UNSUPPORTED;
             }
 
-            AudioSplitView = new( Audio );
-            SoundView = new( "音效", Sounds, true, null, () => new ScdSoundEntry() );
+            AudioSplitView = new( this, Audio );
+            SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry() );
             TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry() );
             AttributeView = new( "Attribute", Attributes, false );
         }
@@ -215,12 +215,8 @@ namespace VfxEditor.ScdFormat {
 
         public async void Import( string path, ScdAudioEntry entry ) {
             await Task.Run( () => {
-                var newEntry = entry.Data switch {
-                    ScdAdpcm _ => ( Path.GetExtension( path ) == ".wav" ) ? ScdAdpcm.ImportWav( path, entry ) : ScdVorbis.ImportOgg( path, entry ),
-                    ScdVorbis _ => ( Path.GetExtension( path ) == ".wav" ) ? ScdVorbis.ImportWav( path, entry ) : ScdVorbis.ImportOgg( path, entry ),
-                    _ => null
-                };
-
+                if( !entry.Data.GetImportActions().TryGetValue( Path.GetExtension( path ).Replace(".", ""), out var importFunc ) ) return;
+                var newEntry = importFunc( path, entry );
                 if( newEntry != null ) Replace( entry, newEntry );
             } );
         }

@@ -1,13 +1,20 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Render;
+using FlatSharp;
+using HelixToolkit.Maths;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileManager;
+using VfxEditor.Flatbuffer;
+using VfxEditor.Formats.PbdFormat.Extended;
 using VfxEditor.Utils;
+using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.Formats.PbdFormat {
     public class PbdFile : FileManagerFile {
@@ -19,6 +26,9 @@ namespace VfxEditor.Formats.PbdFormat {
 
         private PbdConnection Selected;
         private PbdConnection Dragging;
+
+        public const uint ExtendedType = 'E' | ( ( uint )'P' << 8 ) | ( ( uint )'B' << 16 ) | ( ( uint )'D' << 24 );
+        public PbdExtended Extended;
 
         public PbdFile( BinaryReader reader, bool verify ) : base() {
             var count = reader.ReadInt32();
@@ -32,7 +42,21 @@ namespace VfxEditor.Formats.PbdFormat {
             }
             foreach( var connection in Connections ) connection.Populate( Connections );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
+            List<(int, int)> ignoreRange = null;
+            var diff = 0;
+
+            var packReader = new PackReader( reader );
+            if( packReader.TryGetPrior( ExtendedType, out var extendedData ) ) {
+                Extended = new( extendedData );
+                ignoreRange = [(( int )packReader.StartPos, ( int )reader.BaseStream.Length)];
+                diff = extendedData.Data.Length - Extended.GetEpbdData().Length;
+                Dalamud.Log( $"Flatbuffer diff is: {diff}" );
+            }
+
+            if( verify ) {
+                Verified = FileUtils.Verify( reader, ToBytes(), ignoreRange, diff );
+                if( Verified == VerifiedStatus.VERIFIED && Extended != null ) Verified = VerifiedStatus.PARTIAL;
+            }
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -52,11 +76,32 @@ namespace VfxEditor.Formats.PbdFormat {
                 writer.BaseStream.Position = placeholder;
                 writer.Write( ( int )dataPositions[deformer] );
             }
+
+            if( Extended != null ) {
+                writer.BaseStream.Position = writer.BaseStream.Length;
+                FileUtils.PadTo( writer, 16 );
+                Extended.Write( writer );
+            }
         }
 
         public override void Draw() {
             ImGui.Separator();
 
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Entries" ) ) {
+                if( tab ) DrawEntries();
+            }
+
+
+            if( Extended != null ) {
+                using var tab = ImRaii.TabItem( "Extended" );
+                if( tab ) Extended.Draw();
+            }
+        }
+
+        private void DrawEntries() {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var table = ImRaii.Table( "Table", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendY, new( -1, ImGui.GetContentRegionAvail().Y ) );
             if( !table ) return;

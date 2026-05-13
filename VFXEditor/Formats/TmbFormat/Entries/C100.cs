@@ -12,11 +12,12 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x20;
         public override int ExtraSize => 0;
 
-        private readonly ParsedBool Enabled = new( "启用" );
-        private readonly ParsedInt Unk2 = new( "未知 2" );
-        private readonly ParsedBool Visiblity = new( "可见性" );
-        private readonly ParsedInt Unk4 = new( "未知 4" );
-        private readonly ParsedInt Unk5 = new( "未知 5" );
+        private readonly ParsedBool Enabled = new( "Enabled" );
+        private readonly ParsedInt Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort Visiblity = new( "Visibility" );
+        private readonly ParsedShort Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Unk5 = new( "Unknown 5" );
 
         public C100( TmbFile file ) : base( file ) { }
 
@@ -26,6 +27,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Enabled,
             Unk2,
             Visiblity,
+            Unk3,
             Unk4,
             Unk5
         ];

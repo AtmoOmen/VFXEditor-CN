@@ -4,6 +4,7 @@
     "Punchline": "VFX 编辑器、查看器 (中文汉化版)",
     "Description": "游戏内视觉效果、动画与音频编辑插件 | 图标来源: PAPACHIN | 本地化维护: AtmoOmen",
     "InternalName": "VFXEditorCN",
+    "AssemblyVersion": "1.9.4.0",
     "RepoUrl": "https://github.com/AtmoOmen/VFXEditor-CN",
     "ApplicableVersion": "any",
     "Tags": [ "VFX", "AVFX" ],

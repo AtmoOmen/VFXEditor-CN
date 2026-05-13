@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +10,7 @@ using VfxEditor.FileBrowser;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
+using VfxEditor.DirectX;
 using static VfxEditor.DirectX.ModelPreview;
 
 namespace VfxEditor.AvfxFormat {
@@ -30,11 +31,13 @@ namespace VfxEditor.AvfxFormat {
         private readonly CommandTable<UiEmitVertex> VertexTable;
         private readonly CommandTable<UiVertexNumber> VertexNumberTable;
 
+        public readonly int RenderId = RenderInstance.NewId;
+        private bool NeedsRender = false;
+
         private int Mode = ( int )RenderMode.Color;
-        private bool Refresh = false;
         private readonly UiModelUvView UvView;
 
-        public AvfxModel() : base( NAME, AvfxNodeGroupSet.ModelColor ) {
+        public AvfxModel( AvfxFile file ) : base( file, NAME, AvfxNodeGroupSet.ModelColor ) {
             Parsed = [
                 EmitVertexNumbers,
                 EmitVertexes,
@@ -42,20 +45,20 @@ namespace VfxEditor.AvfxFormat {
                 Indexes
             ];
 
-            NodeView = new( this );
+            NodeView = new( file, this );
             UvView = new UiModelUvView();
 
             VertexNumberTable = new( "Number", true, true, AllVertexNumbers, [
                 ( "数字", ImGuiTableColumnFlags.None, -1 )
             ],
-            () => new( new() ), ( UiVertexNumber item, bool add ) => RefreshModelPreview() );
+            () => new( new() ), ( item, add ) => Updated() );
 
             VertexTable = new( "Emit", true, true, AllEmitVertexes, [
                 ( "位置", ImGuiTableColumnFlags.None, -1 ),
                 ( "法线", ImGuiTableColumnFlags.None, -1 ),
                 ( "颜色", ImGuiTableColumnFlags.None, - 1),
             ],
-            () => new( this, new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
+            () => new( this, new() ), ( item, add ) => Updated() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -119,12 +122,15 @@ namespace VfxEditor.AvfxFormat {
                 using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
                     if( popup ) {
                         if( ImGui.Selectable( ".gltf" ) ) ExportDialog();
-                        if( ImGui.Selectable( ".avfx" ) ) Plugin.AvfxManager.ShowExportDialog( this );
+                        if( ImGui.Selectable( ".avfx" ) ) File.ShowExportDialog( this );
                     }
                 }
 
                 ImGui.SameLine();
                 if( ImGui.Button( "替换" ) ) ImportDialog();
+
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace Emitters" ) ) ImportEmitDialog();
 
                 ImGui.SameLine();
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
@@ -143,8 +149,8 @@ namespace VfxEditor.AvfxFormat {
                 if( tab ) UvView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "顶点顺序" ) ) {
-                if( tab ) DrawVertexnumbers();
+            using( var tab = ImRaii.TabItem( "Vertex Order" ) ) {
+                if( tab ) DrawVertexNumbers();
             }
 
             using( var tab = ImRaii.TabItem( "发射器顶点" ) ) {
@@ -162,68 +168,70 @@ namespace VfxEditor.AvfxFormat {
             if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.EmitterVertexSplitOpen ) ) Plugin.Configuration.Save();
 
             if( Plugin.Configuration.EmitterVertexSplitOpen ) {
-                CheckRefresh();
-                Plugin.DirectXManager.ModelPreview.DrawInline();
+                if( NeedsRender ) UpdateRender();
+                Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );
             }
         }
 
-        private void DrawVertexnumbers() {
+        private void DrawVertexNumbers() {
             VertexNumberTable.Draw();
-        }
-
-        public void OnSelect() {
-            Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Color );
-            UvView.LoadModel( this );
         }
 
         private void DrawModel3D() {
             using var _ = ImRaii.PushId( "3DModel" );
 
-            if( ImGui.Checkbox( "线框", ref Plugin.Configuration.ModelWireframe ) ) {
-                Plugin.DirectXManager.ModelPreview.RefreshRasterizeState();
-                Plugin.DirectXManager.ModelPreview.Draw();
-                Plugin.Configuration.Save();
-            }
+            if( ImGui.Checkbox( "Show Edges", ref Plugin.Configuration.ModelShowEdges ) ) Plugin.DirectXManager.Redraw();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "显示边缘", ref Plugin.Configuration.ModelShowEdges ) ) {
-                Plugin.DirectXManager.ModelPreview.Draw();
-                Plugin.Configuration.Save();
-            }
+            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.Configuration.ModelShowEmitters ) ) Plugin.DirectXManager.Redraw();
+
+            if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "显示发射器顶点", ref Plugin.Configuration.ModelShowEmitters ) ) {
-                Plugin.DirectXManager.ModelPreview.Draw();
-                Plugin.Configuration.Save();
-            }
-
-            if( ImGui.RadioButton( "颜色", ref Mode, ( int )RenderMode.Color ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Color );
+            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv1 );
+            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv2 );
+            if( ImGui.RadioButton( "UV 3", ref Mode, ( int )RenderMode.Uv3 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 3", ref Mode, ( int )RenderMode.Uv3 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv3 );
+            if( ImGui.RadioButton( "UV 4", ref Mode, ( int )RenderMode.Uv4 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 4", ref Mode, ( int )RenderMode.Uv4 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv4 );
+            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
 
-            ImGui.SameLine();
-            if( ImGui.RadioButton( "法线", ref Mode, ( int )RenderMode.Normal ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Normal );
-
-            CheckRefresh();
-            Plugin.DirectXManager.ModelPreview.DrawInline();
+            if( NeedsRender ) UpdateRender();
+            Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );
         }
 
-        private void CheckRefresh() {
-            if( !Refresh ) return;
-
-            Plugin.DirectXManager.ModelPreview.LoadModel( this, ( RenderMode )Mode );
+        public void UpdateRender() {
+            Plugin.DirectXManager.ModelRenderer.SetModel( RenderId, File.ModelInstance, this, ( RenderMode )Mode );
             UvView.LoadModel( this );
-            Refresh = false;
+            NeedsRender = false;
+        }
+
+        private void ImportEmitDialog() {
+            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( ok, res ) => {
+                if( !ok ) return;
+                try {
+                    if( GltfModel.ImportEmitterModel( res, out var newEmitVertexes, out var newEmitNumbers ) ) {
+                        List<UiEmitVertex> uiEmits = [];
+                        List<UiVertexNumber> uiNums = [];
+                        foreach( var vert in newEmitVertexes ) {
+                            uiEmits.Add( new UiEmitVertex( this, vert ) );
+                        }
+                        foreach( var vert in newEmitNumbers ) {
+                            uiNums.Add( new UiVertexNumber( vert ) );
+                        }
+                        CommandManager.Add( new AvfxEmitImportCommand( this, uiEmits, uiNums ) );
+                    }
+                }
+                catch( Exception e ) {
+                    Dalamud.Error( e, "Could not import data" );
+                }
+            } );
         }
 
         private void ImportDialog() {
@@ -247,7 +255,7 @@ namespace VfxEditor.AvfxFormat {
             } );
         }
 
-        public void RefreshModelPreview() { Refresh = true; }
+        public void Updated() { NeedsRender = true; }
 
         public override string GetDefaultText() => $"模型 {GetIdx()}";
 

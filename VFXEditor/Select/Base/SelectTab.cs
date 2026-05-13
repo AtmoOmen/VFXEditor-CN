@@ -73,12 +73,12 @@ namespace VfxEditor.Select {
 
             if( !ItemsLoaded ) return;
 
-            Searched ??= new List<T>( Items );
+            Searched ??= [.. Items];
 
             var resetScroll = false;
             DrawExtra();
-            if( ImGui.InputTextWithHint( "##Search", "搜索", ref SearchInput, 255 ) ) {
-                Searched = Items.Where( x => CheckMatch( x, SearchInput ) ).ToList();
+            if( ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 ) ) {
+                Searched = [.. Items.Where( x => CheckMatch( x, SearchInput ) )];
                 resetScroll = true;
             }
 
@@ -119,25 +119,22 @@ namespace VfxEditor.Select {
 
                         ImGui.SetCursorPos( startPos );
                         using( var group = ImRaii.Group() ) {
-                            if( group ) {
-                                var iconId = ( item as ISelectItemWithIcon ).GetIconId();
-                                if( iconId <= 0 ) {
-                                    ImGui.Dummy( new( itemHeight, itemHeight ) );
+                            var iconId = ( item as ISelectItemWithIcon ).GetIconId();
+                            if( iconId <= 0 ) {
+                                ImGui.Dummy( new( itemHeight, itemHeight ) );
+                            }
+                            else {
+                                var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
+                                if( icon != null && icon.Handle != IntPtr.Zero ) {
+                                    ImGui.Image( icon.Handle, new Vector2( ( itemHeight / icon.Height ) * icon.Width, itemHeight ) );
                                 }
-                                else {
-                                    var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
-                                    if( icon != null && icon.Handle != IntPtr.Zero ) {
-                                        ImGui.Image( icon.Handle, new Vector2( ( itemHeight / icon.Height ) * icon.Width, itemHeight ) );
-                                    }
-                                }
-
-                                ImGui.SameLine();
-                                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + ( itemHeight - ImGui.GetTextLineHeight() ) / 2f );
-                                ImGui.Text( item.GetName() );
                             }
 
-
+                            ImGui.SameLine();
+                            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + ( itemHeight - ImGui.GetTextLineHeight() ) / 2f );
+                            ImGui.Text( item.GetName() );
                         }
+
                         ImGui.SetCursorPos( endPos );
                     }
                     else {

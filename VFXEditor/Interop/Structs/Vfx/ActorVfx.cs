@@ -6,11 +6,11 @@ namespace VfxEditor.Structs.Vfx {
         public ActorVfx( IGameObject caster, IGameObject target, string path ) : this( caster.Address, target.Address, path ) { }
 
         public ActorVfx( IntPtr caster, IntPtr target, string path ) : base( path ) {
-            Vfx = ( VfxStruct* )Plugin.ResourceLoader.ActorVfxCreate( path, caster, target, -1, ( char )0, 0, ( char )0 );
+            Vfx = Plugin.ResourceLoader.ActorVfxCreate( path, caster, target, -1, ( char )0, 0, ( char )0 );
         }
 
         public override void Remove() {
-            Plugin.ResourceLoader.ActorVfxRemove( ( IntPtr )Vfx, ( char )1 );
+            Plugin.ResourceLoader.ActorVfxRemove( Vfx, ( char )1 );
         }
     }
 }

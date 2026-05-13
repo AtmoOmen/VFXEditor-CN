@@ -13,24 +13,24 @@ namespace VfxEditor.Select.Tabs.Emotes {
 
     public class EmoteRow : ISelectItemWithIcon {
         public readonly int RowId;
-        public readonly ushort Icon;
+        public readonly uint Icon;
         public readonly string Name;
 
         public readonly List<(string, byte)> Keys;
         public readonly string Command;
 
-        public List<string> TmbFiles => Keys.Select( x => ActionRow.ToTmbPath( x.Item1 ) ).Distinct().ToList();
+        public List<string> TmbFiles => [.. Keys.Select( x => ActionRow.ToTmbPath( x.Item1 ) ).Distinct()];
 
-        public List<string> VfxPapFiles => Keys.Where( x => x.Item1.Contains( "emote_sp" ) ).Select( x => $"chara/human/c0101/animation/a0001/bt_common/{x.Item1}.pap" ).ToList();
+        public List<string> VfxPapFiles => [.. Keys.Where( x => x.Item1.Contains( "emote_sp" ) ).Select( x => $"chara/human/c0101/animation/a0001/bt_common/{x.Item1}.pap" )];
 
-        public List<(string, EmoteRowType)> Items => Keys.Select( ToPap ).Where( x => !string.IsNullOrEmpty( x.Item1 ) ).GroupBy( x => x.Item1 ).Select( x => x.First() ).ToList();
+        public List<(string, EmoteRowType)> Items => [.. Keys.Select( ToPap ).Where( x => !string.IsNullOrEmpty( x.Item1 ) ).GroupBy( x => x.Item1 ).Select( x => x.First() )];
 
         public EmoteRow( Emote emote ) {
             RowId = ( int )emote.RowId;
-            Icon = ( ushort )( emote.Icon == 64350 ? 405 : emote.Icon );
+            Icon = emote.Icon == 246325 ? 405 : emote.Icon;
             Name = emote.Name.ToString();
 
-            Keys = emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x.ValueNullable?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType) ).ToList();
+            Keys = [.. emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x.ValueNullable?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType) )];
             Command = emote.TextCommand.ValueNullable?.Command.ToString() ?? "";
         }
 

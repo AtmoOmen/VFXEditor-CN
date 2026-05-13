@@ -6,21 +6,25 @@ using VfxEditor.UldFormat.Texture;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartItem {
-        public readonly ParsedShort2 Offset = new( "偏移" );
-        public readonly ParsedShort2 Size = new( "大小" );
+        private readonly UldFile File;
+        public readonly ParsedShort2 Offset = new( "Offset" );
+        public readonly ParsedShort2 Size = new( "Size" );
 
-        public readonly ParsedIntSelect<UldTexture> TextureId = new( "Texture", 0,
-            () => Plugin.UldManager.File.TextureSplitView,
-            item => ( int )item.Id.Value,
-            ( item, _ ) => item.GetText()
-        );
+        public readonly ParsedIntSelect<UldTexture> TextureId;
         public UldTexture CurrentTexture => TextureId.Selected;
 
         public bool ShowHd = false;
 
-        public UldPartItem() { }
+        public UldPartItem( UldFile file ) {
+            File = file;
+            TextureId = new( "Texture", 0,
+                () => File.TextureSplitView,
+                item => ( int )item.Id.Value,
+                ( item, _ ) => item.GetText()
+            );
+        }
 
-        public UldPartItem( BinaryReader reader ) {
+        public UldPartItem( UldFile file, BinaryReader reader ) : this( file ) {
             TextureId.Read( reader );
             Offset.Read( reader );
             Size.Read( reader );

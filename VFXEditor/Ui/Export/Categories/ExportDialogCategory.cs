@@ -8,17 +8,17 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Export.Categories {
     public class ExportDialogCategory {
-        public readonly IFileManager Manager;
+        public readonly IFileManagerGroup Group;
 
         private bool ExportAll = false;
         private readonly Dictionary<IFileDocument, bool> ToExport = [];
 
-        public ExportDialogCategory( IFileManager manager ) {
-            Manager = manager;
+        public ExportDialogCategory( IFileManagerGroup group ) {
+            Group = group;
         }
 
         public void Draw() {
-            var id = Manager.GetId();
+            var id = Group.GetId();
             using var _ = ImRaii.PushId( id );
 
             if( ImGui.Checkbox( "##All", ref ExportAll ) ) {
@@ -27,14 +27,14 @@ namespace VfxEditor.Ui.Export.Categories {
 
             ImGui.SameLine();
             var selectedCount = GetItemsToExport().Count();
-            var totalCount = Manager.GetDocuments().Where( x => x.CanExport() ).Count();
+            var totalCount = Group.GetDocuments().Where( x => x.CanExport() ).Count();
             using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.DALAMUD_ORANGE, selectedCount > 0 );
             if( ImGui.CollapsingHeader( $"{id} [{selectedCount}/{totalCount}]##{id}" ) ) {
                 color.Pop();
 
                 using var indent = ImRaii.PushIndent();
 
-                var items = Manager.GetDocuments();
+                var items = Group.GetDocuments();
                 if( !items.Any() ) return;
 
                 using var table = ImRaii.Table( "##Table", 3, ImGuiTableFlags.RowBg );
@@ -72,7 +72,7 @@ namespace VfxEditor.Ui.Export.Categories {
             }
         }
 
-        public IEnumerable<IFileDocument> GetItemsToExport() => Manager.GetDocuments().Where( DoExport );
+        public IEnumerable<IFileDocument> GetItemsToExport() => Group.GetDocuments().Where( DoExport );
 
         public void Reset() => ToExport.Clear();
 
@@ -80,19 +80,19 @@ namespace VfxEditor.Ui.Export.Categories {
 
         private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
 
-        public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManager, int> offsets ) {
-            if( !files.TryGetValue( Manager.GetId(), out var data ) ) return;
+        public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManagerGroup, int> offsets ) {
+            if( !files.TryGetValue( Group.GetId(), out var data ) ) return;
             var indexes = JsonConvert.DeserializeObject<int[]>( data );
-            var documents = Manager.GetDocuments().ToList();
-            foreach( var index in indexes ) ToExport[documents[index + ( offsets.TryGetValue( Manager, out var offset ) ? offset : 0 )]] = true;
+            var documents = Group.GetDocuments().ToList();
+            foreach( var index in indexes ) ToExport[documents[index + ( offsets.TryGetValue( Group, out var offset ) ? offset : 0 )]] = true;
         }
 
         public void WorkspaceExport( Dictionary<string, string> files ) {
             var indexes = new List<int>();
-            foreach( var (item, idx) in Manager.GetDocuments().WithIndex() ) {
+            foreach( var (item, idx) in Group.GetDocuments().WithIndex() ) {
                 if( DoExport( item ) ) indexes.Add( idx );
             }
-            files[Manager.GetId()] = JsonConvert.SerializeObject( indexes.ToArray() );
+            files[Group.GetId()] = JsonConvert.SerializeObject( indexes.ToArray() );
         }
     }
 }

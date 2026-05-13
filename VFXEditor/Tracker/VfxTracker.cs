@@ -1,16 +1,16 @@
-﻿using SharpDX;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.Structs.Vfx;
+using System.Numerics;
 
 namespace VfxEditor.Tracker {
     public unsafe class VfxTracker : Tracker {
         private class VfxData {
             public bool IsStatic = false;
             public string Path;
-            public VfxStruct* Vfx;
+            public VfxObject* Vfx;
             public bool Removed = false;
             public DateTime RemovedTime;
 
@@ -30,7 +30,7 @@ namespace VfxEditor.Tracker {
 
         public VfxTracker() { }
 
-        public void AddActor( VfxStruct* vfx, string path ) {
+        public void AddActor( VfxObject* vfx, string path ) {
             if( !Enabled ) return;
             ActorVfxs.TryAdd( new IntPtr( vfx ), new VfxData() {
                 Path = path,
@@ -38,7 +38,7 @@ namespace VfxEditor.Tracker {
             } );
         }
 
-        public void RemoveActor( VfxStruct* vfx ) {
+        public void RemoveActor( VfxObject* vfx ) {
             if( !Enabled ) return;
             if( ActorVfxs.TryGetValue( new IntPtr( vfx ), out var item ) ) {
                 item.Removed = true;
@@ -46,7 +46,7 @@ namespace VfxEditor.Tracker {
             }
         }
 
-        public void AddStatic( VfxStruct* vfx, string path ) {
+        public void AddStatic( VfxObject* vfx, string path ) {
             if( !Enabled ) return;
             StaticVfxs.TryAdd( new IntPtr( vfx ), new VfxData() {
                 IsStatic = true,
@@ -55,7 +55,7 @@ namespace VfxEditor.Tracker {
             } );
         }
 
-        public void RemoveStatic( VfxStruct* vfx ) {
+        public void RemoveStatic( VfxObject* vfx ) {
             if( !Enabled ) return;
             if( StaticVfxs.TryGetValue( new IntPtr( vfx ), out var item ) ) {
                 item.Removed = true;

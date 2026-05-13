@@ -15,7 +15,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
         public PenumbraOption() { }
 
         // Used for workspace imports
-        public PenumbraOption( PenumbraOptionStruct workspaceOption, bool isDefault, Dictionary<IFileManager, int> offsets ) : this() {
+        public PenumbraOption( PenumbraOptionStruct workspaceOption, bool isDefault, Dictionary<IFileManagerGroup, int> offsets ) : this() {
             Name = workspaceOption.Name;
             Default = isDefault;
             Priority = workspaceOption.Priority;

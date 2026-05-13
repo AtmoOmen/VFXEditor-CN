@@ -16,13 +16,14 @@ namespace VfxEditor.UldFormat {
 
         protected override UldFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
 
-        public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
+        public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
             Name = Name,
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
             Renaming = File.GetRenamingMap(),
-            Disabled = Disabled
+            Disabled = Disabled,
+            WindowIndex = windowIdx
         };
     }
 }

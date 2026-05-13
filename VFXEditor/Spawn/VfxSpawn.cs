@@ -3,6 +3,7 @@ using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Structs.Vfx;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
 namespace VfxEditor.Spawn {
     public enum SpawnType {
@@ -90,8 +91,8 @@ namespace VfxEditor.Spawn {
             ToLoop.Clear();
         }
 
-        public static void InteropRemoved( IntPtr data ) {
-            if( !GetVfx( data, out var vfx ) ) return;
+        public static void InteropRemoved( VfxObject* data ) {
+            if( !GetVfx( (nint)data, out var vfx ) ) return;
             var item = Vfxs[vfx];
 
             if( Plugin.Configuration.VfxSpawnLoop && item.CanLoop ) ToLoop.Add( new( item, DateTime.Now ) );

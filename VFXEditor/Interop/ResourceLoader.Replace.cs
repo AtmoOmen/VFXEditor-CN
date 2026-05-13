@@ -1,4 +1,6 @@
-﻿using Dalamud.Hooking;
+using Dalamud.Hooking;
+using FFXIVClientStructs.FFXIV.Client.System.Resource;
+using InteropGenerator.Runtime;
 using Penumbra.String;
 using Penumbra.String.Classes;
 using System;
@@ -21,11 +23,11 @@ namespace VfxEditor.Interop {
 
         public delegate byte ReadSqpackPrototype( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync );
 
-        public delegate void* GetResourceSyncPrototype( IntPtr resourceManager, uint* categoryId, ResourceType* resourceType,
-            int* resourceHash, byte* path, GetResourceParameters* resParams );
+        public delegate void* GetResourceSyncPrototype( ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
+            void* unknown, void* unkDebugPtr, uint unkDebugInt );
 
-        public delegate void* GetResourceAsyncPrototype( IntPtr resourceManager, uint* categoryId, ResourceType* resourceType,
-            int* resourceHash, byte* path, GetResourceParameters* resParams, bool isUnknown );
+        public delegate void* GetResourceAsyncPrototype( ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
+            void* unknown, bool isUnknown, void* unkDebugPtr, uint unkDebugInt );
 
         // ====== FILES HOOKS ========
 
@@ -38,49 +40,30 @@ namespace VfxEditor.Interop {
         public ReadFilePrototype ReadFile { get; private set; }
 
         private void* GetResourceSyncDetour(
-            IntPtr resourceManager,
-            uint* categoryId,
-            ResourceType* resourceType,
-            int* resourceHash,
-            byte* path,
-            GetResourceParameters* resParams
-        ) => GetResourceHandler( true, resourceManager, categoryId, resourceType, resourceHash, path, resParams, false );
+            ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
+            void* unknown, void* unkDebugPtr, uint unkDebugInt
+        ) => GetResourceHandler( true, resourceManager, category, type, hash, path, unknown, false, unkDebugPtr, unkDebugInt );
 
         private void* GetResourceAsyncDetour(
-            IntPtr resourceManager,
-            uint* categoryId,
-            ResourceType* resourceType,
-            int* resourceHash,
-            byte* path,
-            GetResourceParameters* resParams,
-            bool isUnknown
-        ) => GetResourceHandler( false, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+            ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
+            void* unknown, bool isUnknown, void* unkDebugPtr, uint unkDebugInt
+        ) => GetResourceHandler( false, resourceManager, category, type, hash, path, unknown, isUnknown, unkDebugPtr, unkDebugInt );
 
         private void* CallOriginalHandler(
             bool isSync,
-            IntPtr resourceManager,
-            uint* categoryId,
-            ResourceType* resourceType,
-            int* resourceHash,
-            byte* path,
-            GetResourceParameters* resParams,
-            bool isUnknown
+            ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
+            void* unknown, bool isUnknown, void* unkDebugPtr, uint unkDebugInt
         ) => isSync
-            ? GetResourceSyncHook.Original( resourceManager, categoryId, resourceType, resourceHash, path, resParams )
-            : GetResourceAsyncHook.Original( resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+            ? GetResourceSyncHook.Original( resourceManager, category, type, hash, path, unknown, unkDebugPtr, unkDebugInt )
+            : GetResourceAsyncHook.Original( resourceManager, category, type, hash, path, unknown, isUnknown, unkDebugPtr, unkDebugInt );
 
         private void* GetResourceHandler(
             bool isSync,
-            IntPtr resourceManager,
-            uint* categoryId,
-            ResourceType* resourceType,
-            int* resourceHash,
-            byte* path,
-            GetResourceParameters* resParams,
-            bool isUnknown
+            ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
+            void* unknown, bool isUnknown, void* unkDebugPtr, uint unkDebugInt
         ) {
             if( !Utf8GamePath.FromPointer( path, MetaDataComputation.None, out var gamePath ) ) {
-                return CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+                return CallOriginalHandler( isSync, resourceManager, category, type, hash, path, unknown, isUnknown, unkDebugPtr, unkDebugInt );
             }
 
             var gamePathString = gamePath.ToString();
@@ -94,18 +77,18 @@ namespace VfxEditor.Interop {
             var replacedPath = GetReplacePath( gamePathString, out var localPath ) ? localPath : null;
 
             if( replacedPath == null || replacedPath.Length >= 260 ) {
-                var unreplaced = CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+                var unreplaced = CallOriginalHandler( isSync, resourceManager, category, type, hash, path, unknown, isUnknown, unkDebugPtr, unkDebugInt );
                 if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePathString ) ) Dalamud.Log( $"[GetResourceHandler] ORIGINAL: {gamePathString} -> " + new IntPtr( unreplaced ).ToString( "X8" ) );
                 return unreplaced;
             }
 
             var resolvedPath = new FullPath( replacedPath );
-            PathResolved?.Invoke( *resourceType, resolvedPath );
+            PathResolved?.Invoke( (ResourceType)(*type), resolvedPath );
 
-            *resourceHash = InteropUtils.ComputeHash( resolvedPath.InternalName, resParams );
+            *hash = ( uint )InteropUtils.ComputeHash( resolvedPath.InternalName, ( GetResourceParameters* )unknown  ) ;
             path = resolvedPath.InternalName.Path;
 
-            var replaced = CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
+            var replaced = CallOriginalHandler( isSync, resourceManager, category, type, hash, path, unknown, isUnknown, unkDebugPtr, unkDebugInt );
             if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[GetResourceHandler] REPLACED: {gamePathString} -> {replacedPath} -> " + new IntPtr( replaced ).ToString( "X8" ) );
             return replaced;
         }

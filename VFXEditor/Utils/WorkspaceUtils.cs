@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Select;
 
 namespace VfxEditor.Utils {
@@ -12,6 +13,7 @@ namespace VfxEditor.Utils {
         public bool Disabled;
         public Dictionary<string, string> Renaming;
         public string RelativeLocation;
+        public int? WindowIndex;
     }
 
     public struct WorkspaceMetaTex {
@@ -28,6 +30,18 @@ namespace VfxEditor.Utils {
         public SelectResult Replace;
         public bool Disabled;
         public string RelativeLocation;
+        public int? WindowIndex;
+    }
+
+    public struct WorkspaceWindow {
+        public Vector2? Position;
+        public Vector2? Size;
+        public bool? UseWindowColor;
+        public Vector4? WindowColor;
+    }
+
+    public struct WorkspaceWindowMeta {
+        public Dictionary<string, WorkspaceWindow[]> Windows;
     }
 
     public static class WorkspaceUtils {
@@ -36,6 +50,11 @@ namespace VfxEditor.Utils {
         public static T[] ReadFromMeta<T>( JObject meta, string key ) {
             if( !meta.ContainsKey( key ) ) return null;
             return JsonConvert.DeserializeObject<T[]>( meta[key].ToString() );
+        }
+
+        public static WorkspaceWindow[]? GetWindowData( JObject meta, string key ) {
+            if( !meta.ContainsKey( "windows" ) ) return null;
+            return JsonConvert.DeserializeObject<WorkspaceWindowMeta>( meta["windows"].ToString() ).Windows.GetValueOrDefault( key );
         }
 
         public static void WriteToMeta<T>( Dictionary<string, string> meta, T[] items, string key ) {

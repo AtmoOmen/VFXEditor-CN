@@ -10,10 +10,13 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
+using VfxEditor.Ui.Import;
 using VfxEditor.Utils;
+using static VfxEditor.Ui.Import.PenumbraImportDialog;
 
 namespace VfxEditor {
     public enum WorkspaceState {
@@ -73,14 +76,68 @@ namespace VfxEditor {
             State = WorkspaceState.Loading;
             await Task.Run( async () => {
                 await Task.Delay( 100 );
-                WorkspaceFileCount = Managers.Count - 1;
-                foreach( var manager in Managers.Where( x => x != null ) ) manager.Reset( ResetType.ToDefault );
+                WorkspaceFileCount = Groups.Count - 1;
+
+                foreach( var group in Groups.Where( x => x != null ) ) {
+                    var isOpen = group.AnyWindowsOpen();
+                    group.Reset( false );
+                    if( group is FileManagerGroupBase g ) g.AddDefaultDocument();
+                    if( isOpen ) group.Show();
+                }
+
                 FileBrowserManager.Dispose();
                 ExportDialog.Reset();
 
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
+        }
+
+        private static void OpenWorkspacePenumbra( bool reset ) {
+            PenumbraImportDialog.SetReset( reset );
+            PenumbraImportDialog.SetCallback( CreateWorkspaceFromPenumbra );
+            PenumbraImportDialog.Show();
+        }
+
+        private static async void CreateWorkspaceFromPenumbra( PenumbraImportResult res ) {
+            State = WorkspaceState.Loading;
+            var mod = res.Mod;
+
+            var loadCount = 0;
+            foreach( var option in mod.SourceFiles ) {
+                foreach( var file in option.Value ) {
+                    loadCount++;
+                }
+            }
+            WorkspaceFileCount = loadCount;
+            await Task.Run( () => {
+                if( res.Reset ) {
+                    foreach( var manager in Groups.Where( x => x != null ) ) manager.Reset( false );
+                }
+                foreach( var option in mod.SourceFiles ) {
+                    var optionName = option.Key;
+                    if( !res.Options.Contains( optionName ) ) continue;
+
+                    foreach( var file in option.Value ) {
+                        var gamePath = "";
+                        var filePath = "";
+                        if( file.Contains( '|' ) ) {
+                            var split = file.Split( "|" );
+                            gamePath = split[0];
+                            filePath = split[1];
+                        }
+                        var selectedFile = new SelectResult( SelectResultType.Local, gamePath, $"[PEN] {optionName} : {gamePath}", filePath );
+                        var replacedFile = new SelectResult( SelectResultType.Local, gamePath, $"{gamePath}", gamePath );
+                        foreach( var manager in Groups.Where( x => x != null ) ) {
+                            if( manager.CanImport( gamePath ) ) {
+                                manager.PenumbraImport( selectedFile, replacedFile );
+                                Dalamud.Log( "Imported " + selectedFile.Path );
+                            }
+                        }
+                    }
+                }
+            } );
+            State = WorkspaceState.None;
         }
 
         private static void OpenWorkspace( bool reset ) {
@@ -134,16 +191,16 @@ namespace VfxEditor {
                 return false;
             }
 
-            var offsets = new Dictionary<IFileManager, int>(); // Number of documents before import
+            var offsets = new Dictionary<IFileManagerGroup, int>(); // Number of documents before import
             var meta = JObject.Parse( File.ReadAllText( metaPath ) );
-            foreach( var manager in Managers.Where( x => x != null ) ) {
-                if( reset ) manager.Reset( ResetType.Reset );
-                offsets[manager] = manager.GetDocuments().Count();
-                manager.WorkspaceImport( meta, loadLocation );
+            foreach( var group in Groups.Where( x => x != null ) ) {
+                if( reset ) group.Reset( false );
+                offsets[group] = group.GetDocuments().Count();
+                group.WorkspaceImport( meta, loadLocation );
             }
 
             if( reset ) ExportDialog.Reset();
-            PenumbraDialog.WorkspaceImport( meta, offsets );
+            PenumbraExportDialog.WorkspaceImport( meta, offsets );
 
             FileBrowserManager.Dispose();
 
@@ -152,7 +209,7 @@ namespace VfxEditor {
 
         private static void DrawLoadingDialog() {
             if( ImGui.Begin( "Loading Workspace...", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
-                var count = WorkspaceFileCount == 0 ? 0 : Managers.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();
+                var count = WorkspaceFileCount == 0 ? 0 : Groups.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();
                 ImGui.Text( $"{count} / {WorkspaceFileCount}" );
 
                 var pos = ImGui.GetCursorScreenPos();
@@ -202,8 +259,13 @@ namespace VfxEditor {
                     Directory.CreateDirectory( saveLocation );
 
                     var meta = new Dictionary<string, string>();
-                    Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
-                    PenumbraDialog.WorkspaceExport( meta );
+                    var windows = new Dictionary<string, WorkspaceWindow[]>();
+                    Groups.ForEach( x => x?.WorkspaceExport( meta, saveLocation, windows ) );
+                    meta["windows"] = JsonConvert.SerializeObject( new WorkspaceWindowMeta() {
+                        Windows = windows
+                    } );
+
+                    PenumbraExportDialog.WorkspaceExport( meta );
 
                     var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
                     var metaString = JsonConvert.SerializeObject( meta );

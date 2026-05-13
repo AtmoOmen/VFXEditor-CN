@@ -16,8 +16,8 @@ namespace VfxEditor.AvfxFormat {
 
         public string PathTrimmed => Path.Value.Trim( '\0' );
 
-        public AvfxTexture() : base( NAME, AvfxNodeGroupSet.TextureColor ) {
-            NodeView = new( this );
+        public AvfxTexture( AvfxFile file ) : base( file, NAME, AvfxNodeGroupSet.TextureColor ) {
+            NodeView = new( file, this );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => Path.ReadContents( reader, size );

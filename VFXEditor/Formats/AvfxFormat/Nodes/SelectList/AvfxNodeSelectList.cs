@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
 
         private bool Enabled = true;
-        private int Limit;
+        private readonly int Limit;
 
         public AvfxNodeSelectList( AvfxNode node, string name, NodeGroup<T> group, AvfxIntList literal, int limit = 4 ) : base( node ) {
             Name = name;
@@ -32,7 +32,7 @@ namespace VfxEditor.AvfxFormat {
 
         // an item was removed from the group, for example
         // 255 = -1 = nothing selected
-        public override void UpdateLiteral() => Literal.SetItems( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
+        public override void UpdateLiteral() => Literal.SetItems( [.. Selected.Select( x => x == null ? 255 : x.GetIdx() )] );
 
         public override void Initialize() {
             for( var idx = 0; idx < Literal.GetItems().Count; idx++ ) {
@@ -163,7 +163,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected[idx] == null );
-                    if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected[idx] );
+                    if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) File.SelectItem( Selected[idx] );
                 }
 
                 UiUtils.Tooltip( "导航至选中的节点" );

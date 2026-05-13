@@ -1,12 +1,13 @@
 using VfxEditor.FileManager;
+using VfxEditor.Formats.UldFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat {
     public unsafe class UldManager : FileManager<UldDocument, UldFile, WorkspaceMetaRenamed> {
-        public UldManager() : base( "Uld Editor", "Uld" ) {
-            SourceSelect = new UldSelectDialog( "选择文件 [原始]###ULD", this, true );
-            ReplaceSelect = new UldSelectDialog( "选择文件 [替换]###ULD", this, false );
+        public UldManager( UldManagerGroup group ) : base( group ) {
+            SourceSelect = new UldSelectDialog( "Uld Select [LOADED]", this, true );
+            ReplaceSelect = new UldSelectDialog( "Uld Select [REPLACED]", this, false );
         }
 
         protected override UldDocument GetNewDocument() => new( this, NewWriteLocation );

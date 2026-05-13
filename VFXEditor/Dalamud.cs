@@ -1,5 +1,3 @@
-﻿using Dalamud.Game;
-using Dalamud.Game.ClientState.Objects;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -30,19 +28,25 @@ namespace VfxEditor {
         public static void Log( string messages ) => PluginLog.Info( messages );
 
 #nullable enable
-        public static void OkNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+        public static void OkNotification( string content, string? title = "VFXEditorCN" ) => Notification.AddNotification( new() {
             Content = content,
             Title = title,
             Type = NotificationType.Success,
         } );
 
-        public static void ErrorNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+        public static void InfoNotification( string content, string? title = "VFXEditorCN" ) => Notification.AddNotification( new() {
+            Content = content,
+            Title = title,
+            Type = NotificationType.Info,
+        } );
+
+        public static void ErrorNotification( string content, string? title = "VFXEditorCN" ) => Notification.AddNotification( new() {
             Content = content,
             Title = title,
             Type = NotificationType.Error,
         } );
 
-        public static void WarningNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+        public static void WarningNotification( string content, string? title = "VFXEditorCN" ) => Notification.AddNotification( new() {
             Content = content,
             Title = title,
             Type = NotificationType.Warning,

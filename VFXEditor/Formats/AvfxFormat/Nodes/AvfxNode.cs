@@ -2,6 +2,7 @@
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxNode : AvfxWorkspaceItem {
+        public readonly AvfxFile File;
         public uint GraphColor;
         public List<AvfxNode> ChildNodes = [];
         public List<AvfxNodeSelect> Parents = [];
@@ -9,7 +10,8 @@ namespace VfxEditor.AvfxFormat {
         public bool IsDeleted = false;
         public UiNodeGraph Graph = null;
 
-        public AvfxNode( string avfxName, uint graphColor ) : base( avfxName ) {
+        public AvfxNode( AvfxFile file, string avfxName, uint graphColor ) : base( avfxName ) {
+            File = file;
             GraphColor = graphColor;
         }
 

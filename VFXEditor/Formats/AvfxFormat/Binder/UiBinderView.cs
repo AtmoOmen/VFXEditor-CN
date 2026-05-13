@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
         public override void OnSelect( AvfxBinder item ) { }
 
         public override AvfxBinder Read( BinaryReader reader, int size ) {
-            var item = new AvfxBinder(); // never has dependencies
+            var item = new AvfxBinder( File ); // never has dependencies
             item.Read( reader, size );
             return item;
         }

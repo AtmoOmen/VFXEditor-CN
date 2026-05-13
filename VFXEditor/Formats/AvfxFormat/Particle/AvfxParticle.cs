@@ -52,20 +52,20 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat DepthOffset = new( "深度偏移", "DpOf" );
         public readonly AvfxBool SimpleAnimEnable = new( "使用简易动画", "bSCt" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve1Axis Gravity = new( "重力", "Gra" );
-        public readonly AvfxCurve1Axis GravityRandom = new( "随机重力", "GraR" );
-        public readonly AvfxCurve1Axis AirResistance = new( "空气阻力", "ARs", locked: true );
-        public readonly AvfxCurve1Axis AirResistanceRandom = new( "随机空气阻力", "ARsR", locked: true );
-        public readonly AvfxCurve3Axis Scale = new( "缩放", "Scl", locked: true );
-        public readonly AvfxCurve3Axis Rotation = new( "旋转", "Rot", CurveType.Angle, locked: true );
-        public readonly AvfxCurve3Axis Position = new( "位置", "Pos", locked: true );
-        public readonly AvfxCurve1Axis RotVelX = new( "X 轴旋转速度", "VRX" );
-        public readonly AvfxCurve1Axis RotVelXRandom = new( "随机 X 轴旋转速度", "VRXR" );
-        public readonly AvfxCurve1Axis RotVelY = new( "Y 轴旋转速度", "VRY" );
-        public readonly AvfxCurve1Axis RotVelYRandom = new( "随机 Y 轴旋转速度", "VRYR" );
-        public readonly AvfxCurve1Axis RotVelZ = new( "Z 轴旋转速度", "VRZ" );
-        public readonly AvfxCurve1Axis RotVelZRandom = new( "随机 Z 轴旋转速度", "VRZR" );
-        public readonly AvfxCurveColor Color = new( "颜色", locked: true );
+        public readonly AvfxCurve1Axis Gravity = new( "Gravity", "Gra" );
+        public readonly AvfxCurve1Axis GravityRandom = new( "Gravity Random", "GraR" );
+        public readonly AvfxCurve1Axis AirResistance = new( "Air Resistance", "ARs", locked: true );
+        public readonly AvfxCurve1Axis AirResistanceRandom = new( "Air Resistance Random", "ARsR", locked: true );
+        public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
+        public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
+        public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
+        public readonly AvfxCurve1Axis RotVelX = new( "Rotation Velocity X", "VRX" );
+        public readonly AvfxCurve1Axis RotVelXRandom = new( "Rotation Velocity X Random", "VRXR" );
+        public readonly AvfxCurve1Axis RotVelY = new( "Rotation Velocity Y", "VRY" );
+        public readonly AvfxCurve1Axis RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
+        public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
+        public readonly AvfxCurve1Axis RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
+        public readonly AvfxCurveColor Color;
 
         // initialize these later
         public readonly AvfxParticleTextureColor1 TC1;
@@ -89,7 +89,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
         private readonly UiDisplayList Parameters;
 
-        public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {
+        public AvfxParticle( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( file, NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {
             NodeGroups = groupSet;
 
             // Initialize the remaining ones
@@ -103,6 +103,7 @@ namespace VfxEditor.AvfxFormat {
             TD = new AvfxParticleTextureDistortion( this );
             TP = new AvfxParticleTexturePalette( this );
             Simple = new AvfxParticleSimple( this );
+            Color = new( File, "Color", locked: true );
 
             // Parsing
 
@@ -177,8 +178,8 @@ namespace VfxEditor.AvfxFormat {
             
             // Drawing
 
-            Parameters = new( "参数", [
-                new UiNodeGraphView( this ),
+            Parameters = new( "Parameters", [
+                new UiNodeGraphView( file, this ),
                 LoopStart,
                 LoopEnd,
                 SimpleAnimEnable,
@@ -292,18 +293,18 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Parameter => null,
                 ParticleType.Powder => new AvfxParticleDataPowder(),
                 ParticleType.Windmill => new AvfxParticleDataWindmill(),
-                ParticleType.Line => new AvfxParticleDataLine(),
-                ParticleType.Model => new AvfxParticleDataModel( this ),
-                ParticleType.Polyline => new AvfxParticleDataPolyline(),
+                ParticleType.Line => new AvfxParticleDataLine( File ),
+                ParticleType.Model => new AvfxParticleDataModel( File, this ),
+                ParticleType.Polyline => new AvfxParticleDataPolyline( File ),
                 ParticleType.Quad => new AvfxParticleDataQuad(),
                 ParticleType.Polygon => new AvfxParticleDataPolygon(),
                 ParticleType.Decal => new AvfxParticleDataDecal(),
                 ParticleType.DecalRing => new AvfxParticleDataDecalRing(),
-                ParticleType.Disc => new AvfxParticleDataDisc(),
+                ParticleType.Disc => new AvfxParticleDataDisc( File ),
                 ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
                 ParticleType.Laser => new AvfxParticleDataLaser(),
-                ParticleType.ModelSkin => new AvfxParticleDataModelSkin(),
-                ParticleType.Dissolve => new AvfxParticleDataDissolve(),
+                ParticleType.ModelSkin => new AvfxParticleDataModelSkin( File ),
+                ParticleType.Dissolve => new AvfxParticleDataDissolve( File ),
                 _ => null,
             };
 
